@@ -10,3 +10,5 @@ conan_basic_setup()
 
 add_executable( ${PROJ_NAME} ${PROJ_SOURCES} )
 target_link_libraries(${PROJ_NAME} ${CONAN_LIBS})
+
+set_property(TARGET ${PROJ_NAME} PROPERTY CXX_STANDARD 14)

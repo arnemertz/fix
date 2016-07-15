@@ -1,5 +1,6 @@
-#include <iostream>
+#include "Server/FixServer.h"
 
-int main() {
-  std::cout << "Hello World!\n";
+int main(int argc, char** argv) {
+  fix::Server::FixServer server;
+  return server.run(argc, argv);
 }
