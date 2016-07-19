@@ -15,25 +15,10 @@ namespace Fix {
   namespace Server {
 
     class FixServer : public Poco::Util::ServerApplication {
-      void initialize(Application &self) override {
-        loadConfiguration();
-        ServerApplication::initialize(self);
-      }
+      void initialize(Application &self) override;
+      int main(const std::vector<std::string> &args) override;
 
-      int main(const std::vector<std::string> &args) override {
-        using namespace Poco::Net;
-        Poco::UInt16 port = config().getInt("FixServer.port", 8080);
-
-        ServerSocket svs{port};
-        HTTPServer srv{new RequestHandlerFactory, svs, new HTTPServerParams};
-        srv.start();
-        logger().information("Server started.");
-        waitForTerminationRequest();
-        srv.stop();
-        logger().information("Server stopped.");
-
-        return Application::EXIT_OK;
-      }
+      void serve();
     };
 
   }
