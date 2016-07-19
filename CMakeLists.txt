@@ -4,6 +4,8 @@ project( fix )
 include(build/conanbuildinfo.cmake)
 conan_basic_setup()
 
+include_directories(src/)
+
 
 set( PROJ_NAME main )
 file( GLOB_RECURSE PROJ_SOURCES src/*.cpp )
