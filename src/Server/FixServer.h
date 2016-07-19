@@ -18,6 +18,7 @@ namespace Fix {
       void initialize(Application &self) override;
       int main(const std::vector<std::string> &args) override;
 
+      void createFixDirectory() const;
       void serve();
     };
 
