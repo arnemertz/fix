@@ -3,7 +3,7 @@
 
 #include "Poco/Net/HTTPRequestHandlerFactory.h"
 
-namespace fix {
+namespace Fix {
   namespace Server {
 
     class RequestHandlerFactory : public Poco::Net::HTTPRequestHandlerFactory {

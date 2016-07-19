@@ -2,10 +2,15 @@
 #include "Poco/Net/HTTPServerRequest.h"
 #include "Poco/Net/HTTPServerResponse.h"
 
+#include "HTMLRequestHandler.h"
+
 using namespace Poco::Net;
 
-using namespace fix::Server;
+using namespace Fix::Server;
 
 HTTPRequestHandler* RequestHandlerFactory::createRequestHandler(HTTPServerRequest const &request) {
-  return nullptr;
+  if (request.getURI() == "/")
+    return new HTMLRequestHandler;
+  else
+    return nullptr;
 }
