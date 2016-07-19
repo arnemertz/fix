@@ -9,6 +9,7 @@ set( PROJ_NAME main )
 file( GLOB_RECURSE PROJ_SOURCES src/*.cpp )
 add_executable( ${PROJ_NAME} ${PROJ_SOURCES} )
 target_link_libraries( ${PROJ_NAME} ${CONAN_LIBS} )
+set_property(TARGET ${PROJ_NAME} PROPERTY CXX_STANDARD 14)
 
 
 set( TEST_PROJ_NAME unit_tests )
@@ -17,5 +18,4 @@ add_executable( ${TEST_PROJ_NAME} ${TEST_PROJ_SOURCES} )
 target_link_libraries( ${TEST_PROJ_NAME} ${CONAN_LIBS} )
 enable_testing()
 ADD_TEST( ${TEST_PROJ_NAME} ${TEST_PROJ_NAME} )
-
 
