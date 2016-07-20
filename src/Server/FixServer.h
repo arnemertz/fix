@@ -12,9 +12,17 @@ using Poco::Util::OptionSet;
 using Poco::Util::ServerApplication;
 
 namespace Fix {
+
+  class RestApi;
+
   namespace Server {
 
     class FixServer : public Poco::Util::ServerApplication {
+      RestApi& restApi;
+    public:
+      FixServer(RestApi& api);
+    private:
+
       void initialize(Application &self) override;
       int main(const std::vector<std::string> &args) override;
 

@@ -5,6 +5,10 @@
 
 using namespace Fix::Server;
 
+FixServer::FixServer(RestApi& api)
+    : restApi{api}
+{}
+
 int FixServer::main(const std::vector<std::string> &args) {
   createFixDirectory();
   serve();
@@ -24,7 +28,7 @@ void FixServer::serve() {
   using namespace Poco::Net;
   Poco::UInt16 port = config().getInt("FixServer.port", 8080);
   ServerSocket svs{port};
-  HTTPServer srv{new RequestHandlerFactory, svs, new HTTPServerParams};
+  HTTPServer srv{new RequestHandlerFactory(restApi), svs, new HTTPServerParams};
   srv.start();
   logger().information("Server started.");
   waitForTerminationRequest();
