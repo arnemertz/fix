@@ -11,7 +11,6 @@ RESTRequestHandler::RESTRequestHandler(RestApi &api)
   : restApi{api}
 {}
 
-
 void RESTRequestHandler::handleRequest(Poco::Net::HTTPServerRequest& request, Poco::Net::HTTPServerResponse& response)
 {
   auto uri = request.getURI();
@@ -26,5 +25,5 @@ void RESTRequestHandler::handleRequest(Poco::Net::HTTPServerRequest& request, Po
   response.setContentType("application/json");
 
   std::ostream& ostr = response.send();
-  ostr << apiResponse ;
+  ostr << apiResponse;
 }
