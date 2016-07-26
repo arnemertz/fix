@@ -1,24 +1,34 @@
-#include "catch.hpp"
+#include "TestFrameworks.h"
 
-#include "RestApi.h"
 #include "Json.h"
+#include "RestApi.h"
+#include "Storage.h"
 using namespace Fix;
 
+class StorageMock : public Storage {
+public:
+  MAKE_MOCK1(insertIssue, void(Json), override);
+};
+
 TEST_CASE( "Creating an issue returns the issue with its data and an ID", "[issue]" ) {
-  Fix::RestApi api;
+  StorageMock storage;
+  Fix::RestApi api{storage};
 
   std::string uri = "issue/new";
   std::string method = "POST";
-  Json issue = {
+  Json requestedIssue = {
       { "data", {
         { "summary", "New Issue" },
         { "description", "Some lengthy text here to describe the issue" }
       }}
   };
 
-  Json response = api.process(uri, method, issue.dump());
+  Json expectedIssue = requestedIssue;
+  expectedIssue["data"]["ID"] = 1;
 
-  Json requiredResponse = issue;
-  requiredResponse["data"]["ID"] = 1;
-  REQUIRE(response == requiredResponse);
+  REQUIRE_CALL(storage, insertIssue(expectedIssue));
+
+  Json response = api.process(uri, method, requestedIssue.dump());
+
+  REQUIRE(response == expectedIssue);
 }
