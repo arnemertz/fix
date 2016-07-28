@@ -11,7 +11,11 @@ namespace Fix {
     Storage& storage;
   public:
     RestApi(Storage& st);
-    Json process(std::string const &requestUri, std::string const &requestMethod, std::string const &requestContent) const;
+    Json process(std::string const& requestUri, std::string const& requestMethod, std::string const& requestContent) const;
+  private:
+    static Json status400(std::string const &message);
+
+    Json createIssue(const Json &requestedIssue) const;
   };
 
 }
