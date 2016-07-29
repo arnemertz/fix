@@ -3,7 +3,7 @@
 #include "Poco/File.h"
 #include "Poco/Path.h"
 
-using namespace Fix::Server;
+using namespace fix::server;
 
 FixServer::FixServer(RestApi& api)
     : restApi{api}

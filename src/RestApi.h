@@ -5,7 +5,7 @@
 #include "Json.h"
 #include "Storage.h"
 
-namespace Fix {
+namespace fix {
 
   class RestApi {
     Storage& storage;

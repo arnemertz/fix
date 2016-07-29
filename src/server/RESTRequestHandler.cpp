@@ -5,7 +5,7 @@
 #include "Json.h"
 #include "RestApi.h"
 
-using namespace Fix::Server;
+using namespace fix::server;
 
 RESTRequestHandler::RESTRequestHandler(RestApi &api)
   : restApi{api}

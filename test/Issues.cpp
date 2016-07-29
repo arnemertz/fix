@@ -3,7 +3,7 @@
 #include "Json.h"
 #include "RestApi.h"
 #include "Storage.h"
-using namespace Fix;
+using namespace fix;
 
 class StorageMock : public Storage {
 public:
@@ -12,7 +12,7 @@ public:
 
 TEST_CASE( "Creating an issue...", "[issue]" ) {
   StorageMock storage;
-  Fix::RestApi api{storage};
+  fix::RestApi api{storage};
 
   std::string uri = "issue/new";
   std::string method = "POST";

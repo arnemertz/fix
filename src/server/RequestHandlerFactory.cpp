@@ -6,7 +6,7 @@
 #include "RESTRequestHandler.h"
 
 using namespace Poco::Net;
-using namespace Fix::Server;
+using namespace fix::server;
 
 RequestHandlerFactory::RequestHandlerFactory(RestApi& api)
     : restApi{api}

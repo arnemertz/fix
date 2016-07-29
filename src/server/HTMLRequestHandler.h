@@ -3,8 +3,8 @@
 
 #include "Poco/Net/HTTPRequestHandler.h"
 
-namespace Fix {
-  namespace Server {
+namespace fix {
+  namespace server {
 
     class HTMLRequestHandler : public Poco::Net::HTTPRequestHandler {
       void handleRequest(Poco::Net::HTTPServerRequest& request, Poco::Net::HTTPServerResponse& response) override;

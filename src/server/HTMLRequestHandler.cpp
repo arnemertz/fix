@@ -1,7 +1,7 @@
 #include "HTMLRequestHandler.h"
 #include "Poco/Net/HTTPServerResponse.h"
 
-using namespace Fix::Server;
+using namespace fix::server;
 
 void HTMLRequestHandler::handleRequest(Poco::Net::HTTPServerRequest& request, Poco::Net::HTTPServerResponse& response)
 {

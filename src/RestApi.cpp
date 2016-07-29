@@ -1,6 +1,6 @@
 #include "RestApi.h"
 
-using namespace Fix;
+using namespace fix;
 
 RestApi::RestApi(Storage &st)
   : storage{st} {
