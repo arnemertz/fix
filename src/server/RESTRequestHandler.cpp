@@ -1,6 +1,7 @@
 #include "RESTRequestHandler.h"
 #include "Poco/Net/HTTPServerResponse.h"
 #include "Poco/Net/HTTPServerRequest.h"
+#include "Poco/StreamCopier.h"
 
 #include "Json.h"
 #include "RestApi.h"
@@ -15,9 +16,9 @@ void RESTRequestHandler::handleRequest(Poco::Net::HTTPServerRequest& request, Po
 {
   auto uri = request.getURI();
   auto method = request.getMethod();
-  std::ostringstream stream;
-  request.write(stream);
-  auto content = stream.str();
+
+  std::string content;
+  Poco::StreamCopier::copyToString(request.stream(), content);
 
   auto apiResponse = restApi.process(uri, method, content);
 

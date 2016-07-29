@@ -1,4 +1,5 @@
 #include "RestApi.h"
+#include "Storage.h"
 
 using namespace fix;
 
@@ -7,7 +8,7 @@ RestApi::RestApi(Storage &st)
 }
 
 Json RestApi::process(std::string const &requestUri, std::string const &requestMethod, std::string const &requestContent) const {
-  if (requestUri == "issue/new") {
+  if (requestUri == "/issue/new") {
     if (requestMethod != "POST") {
       return status400("expected POST method for " + requestUri);
     }

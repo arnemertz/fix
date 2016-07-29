@@ -14,7 +14,7 @@ TEST_CASE( "Creating an issue...", "[issue]" ) {
   StorageMock storage;
   fix::RestApi api{storage};
 
-  std::string uri = "issue/new";
+  std::string uri = "/issue/new";
   std::string method = "POST";
   auto requestedIssue = Json {
       { "data", {
