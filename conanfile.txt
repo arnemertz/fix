@@ -1,7 +1,7 @@
 [requires]
 Poco/1.7.3@lasote/stable
 catch/1.5.0@TyRoXx/stable
-nlJson/2.0.1@arnemertz/testing
+nlJson/2.0.2@arnemertz/stable
 trompeloeil/v17@rollbear/stable
 
 [generators]
