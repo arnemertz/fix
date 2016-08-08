@@ -1,15 +1,12 @@
-#include "Server/FixServer.h"
+#include "server/FixServer.h"
 #include "RestApi.h"
-#include "Storage.h"
-
-class DummyStorage : public Fix::Storage {
-  void insertIssue(Fix::Json) override {}
-};
+#include "storage/TextFileStorage.h"
 
 int main(int argc, char** argv) {
-  DummyStorage storage;
-  Fix::RestApi api{storage};
+  using namespace fix;
+  storage::TextFileStorage storage;
+  RestApi api{storage};
 
-  Fix::Server::FixServer server{api};
+  server::FixServer server{api};
   return server.run(argc, argv);
 }

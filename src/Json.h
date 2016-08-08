@@ -2,7 +2,7 @@
 #define FIX_JSON_H
 
 #include "json.hpp"
-namespace Fix {
+namespace fix {
   using Json = nlohmann::json;
 }
 

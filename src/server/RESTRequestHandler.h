@@ -3,11 +3,11 @@
 
 #include "Poco/Net/HTTPRequestHandler.h"
 
-namespace Fix {
+namespace fix {
 
   class RestApi;
 
-  namespace Server {
+  namespace server {
 
     class RESTRequestHandler : public Poco::Net::HTTPRequestHandler {
       RestApi& restApi;

@@ -11,11 +11,11 @@ using Poco::Util::Application;
 using Poco::Util::OptionSet;
 using Poco::Util::ServerApplication;
 
-namespace Fix {
+namespace fix {
 
   class RestApi;
 
-  namespace Server {
+  namespace server {
 
     class FixServer : public Poco::Util::ServerApplication {
       RestApi& restApi;

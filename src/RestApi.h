@@ -3,9 +3,9 @@
 
 #include <string>
 #include "Json.h"
-#include "Storage.h"
 
-namespace Fix {
+namespace fix {
+  class Storage;
 
   class RestApi {
     Storage& storage;

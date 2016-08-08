@@ -3,7 +3,7 @@
 
 #include "Json.h"
 
-namespace Fix {
+namespace fix {
 
   class Storage {
   public:
