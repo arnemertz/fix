@@ -5,14 +5,15 @@ include(build/conanbuildinfo.cmake)
 conan_basic_setup()
 
 
-include_directories(src/)
+include_directories(src/cpp/)
 
 
-file( GLOB_RECURSE PROJ_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp )
-list( REMOVE_ITEM PROJ_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/fix.cpp )
+set( PROJ_MAIN_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/fix.cpp )
+file( GLOB_RECURSE PROJ_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/*.cpp )
+list( REMOVE_ITEM PROJ_SOURCES ${PROJ_MAIN_SRC} )
 
 set( PROJ_NAME main )
-add_executable( ${PROJ_NAME} ${PROJ_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/src/fix.cpp )
+add_executable( ${PROJ_NAME} ${PROJ_SOURCES} ${PROJ_MAIN_SRC} )
 target_link_libraries( ${PROJ_NAME} ${CONAN_LIBS} )
 set_property(TARGET ${PROJ_NAME} PROPERTY CXX_STANDARD 14)
 
