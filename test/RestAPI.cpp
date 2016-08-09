@@ -8,6 +8,7 @@ using namespace fix;
 class StorageMock : public Storage {
 public:
   MAKE_MOCK1(insertIssue, void(Json), override);
+  MAKE_CONST_MOCK0(selectMaxIssueID, unsigned(), override);
 };
 
 TEST_CASE( "Creating an issue...", "[issue]" ) {
@@ -25,21 +26,29 @@ TEST_CASE( "Creating an issue...", "[issue]" ) {
   auto request = requestedIssue.dump();
 
 
-  SECTION("... creates and returns the issue with its data and an ID if the input is correct.") {
+  SECTION("... inserts the issue into storage and returns it with its data if the input is correct.") {
     auto expectedIssue = requestedIssue;
-    expectedIssue["data"]["ID"] = 1;
+    auto maxIDCall = NAMED_FORBID_CALL(storage, selectMaxIssueID());
 
-    REQUIRE_CALL(storage, insertIssue(expectedIssue));
+    SECTION("IDs are assigned in ascending order") {
+      maxIDCall = NAMED_REQUIRE_CALL(storage, selectMaxIssueID()).RETURN(22);
+      expectedIssue["data"]["ID"] = 23;
+    }
+
+    SECTION("Lowest assigned ID is 1") {
+      maxIDCall = NAMED_REQUIRE_CALL(storage, selectMaxIssueID()).RETURN(0);
+      expectedIssue["data"]["ID"] = 1;
+    }
+
+    ALLOW_CALL(storage, insertIssue(expectedIssue));
     auto response = api.process(uri, method, request);
     REQUIRE(response == expectedIssue);
   }
 
 
   SECTION("... returns status 400 with corresponding error message if...") {
-    using trompeloeil::_;
     auto status400 = Json {{ "status", 400 }};
     auto response = Json {};
-    FORBID_CALL(storage, insertIssue(_));
 
     SECTION("... the method is wrong.") {
       status400["error"] = "expected POST method for " + uri;

@@ -15,6 +15,7 @@ namespace fix {
 
       TextFileStorage();
       void insertIssue(Json) override;
+      unsigned selectMaxIssueID() const override;
     };
 
   }

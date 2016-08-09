@@ -35,3 +35,7 @@ void TextFileStorage::insertIssue(Json issue) {
   issueStream << issue.dump(STORED_JSON_INDENTATION) << std::endl;
 }
 
+unsigned TextFileStorage::selectMaxIssueID() const {
+  return 0;
+}
+

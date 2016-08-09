@@ -33,7 +33,7 @@ Json RestApi::process(std::string const &requestUri, std::string const &requestM
 
 Json RestApi::createIssue(Json const &requestedIssue) const {
   auto newIssue = requestedIssue;
-  newIssue["data"]["ID"] = 1;
+  newIssue["data"]["ID"] = storage.selectMaxIssueID() + 1;
   return newIssue;
 }
 
