@@ -12,7 +12,7 @@ set( PROJ_MAIN_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/fix.cpp )
 file( GLOB_RECURSE PROJ_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/*.cpp )
 list( REMOVE_ITEM PROJ_SOURCES ${PROJ_MAIN_SRC} )
 
-set( PROJ_NAME main )
+set( PROJ_NAME fix )
 add_executable( ${PROJ_NAME} ${PROJ_SOURCES} ${PROJ_MAIN_SRC} )
 target_link_libraries( ${PROJ_NAME} ${CONAN_LIBS} )
 set_property(TARGET ${PROJ_NAME} PROPERTY CXX_STANDARD 14)
