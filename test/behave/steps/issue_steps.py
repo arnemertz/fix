@@ -45,7 +45,7 @@ def file_exists(file_name, context):
 
 
 def get_fix_dir(context):
-    fix_dir = context.tempdir + '/.fix/'
+    fix_dir = context.fix_context.get_tempdir() + '/.fix/'
     create_if_missing_dir(fix_dir)
     return fix_dir
 
