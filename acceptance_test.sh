@@ -6,6 +6,6 @@ cmake .. && cmake --build . --target fix
 
 PATH=$PATH:$(pwd)/bin
 
-behave ../test/behave/
+behave ../test/behave/ $@
 
 

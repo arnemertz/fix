@@ -1,4 +1,5 @@
 #include <Poco/File.h>
+#include <Poco/DirectoryIterator.h>
 #include <fstream>
 #include "TextFileStorage.h"
 
@@ -36,6 +37,16 @@ void TextFileStorage::insertIssue(Json issue) {
 }
 
 unsigned TextFileStorage::selectMaxIssueID() const {
-  return 0;
+  auto maxID = 0u;
+  for (Poco::DirectoryIterator it{issueDirectoryPath}, end{}; it != end; ++it) {
+    auto path = it.path();
+    if (path.getExtension() != "json") {
+      continue;
+    }
+    auto baseName = path.getBaseName();
+    maxID = std::max(maxID, static_cast<unsigned>(std::stoul(baseName)));
+
+  }
+  return maxID;
 }
 
