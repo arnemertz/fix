@@ -9,6 +9,7 @@ class StorageMock : public Storage {
 public:
   MAKE_MOCK1(insertIssue, void(Json), override);
   MAKE_CONST_MOCK0(selectMaxIssueID, unsigned(), override);
+  MAKE_MOCK1(insertIssueIncreasedID, Json(Json const& requestedIssue), override);
 };
 
 TEST_CASE( "Creating an issue...", "[issue]" ) {
@@ -28,20 +29,11 @@ TEST_CASE( "Creating an issue...", "[issue]" ) {
 
   SECTION("... inserts the issue into storage and returns it with its data if the input is correct.") {
     auto expectedIssue = requestedIssue;
-    auto maxIDCall = NAMED_FORBID_CALL(storage, selectMaxIssueID());
 
-    SECTION("IDs are assigned in ascending order") {
-      maxIDCall = NAMED_REQUIRE_CALL(storage, selectMaxIssueID()).RETURN(22);
-      expectedIssue["data"]["ID"] = 23;
-    }
-
-    SECTION("Lowest assigned ID is 1") {
-      maxIDCall = NAMED_REQUIRE_CALL(storage, selectMaxIssueID()).RETURN(0);
-      expectedIssue["data"]["ID"] = 1;
-    }
-
-    ALLOW_CALL(storage, insertIssue(expectedIssue));
+    expectedIssue["data"]["ID"] = 1;
+    REQUIRE_CALL(storage, insertIssueIncreasedID(requestedIssue)).RETURN(expectedIssue);
     auto response = api.process(uri, method, request);
+
     REQUIRE(response == expectedIssue);
   }
 

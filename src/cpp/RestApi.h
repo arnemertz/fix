@@ -15,7 +15,7 @@ namespace fix {
   private:
     static Json status400(std::string const &message);
 
-    Json createIssue(const Json &requestedIssue) const;
+    Json insertIssueIncreasedID(const Json &requestedIssue) const;
   };
 
 }

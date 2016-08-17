@@ -1,3 +1,4 @@
+#include "RestApi.h"
 #include <Poco/File.h>
 #include <Poco/DirectoryIterator.h>
 #include <fstream>
@@ -50,3 +51,9 @@ unsigned TextFileStorage::selectMaxIssueID() const {
   return maxID;
 }
 
+Json TextFileStorage::insertIssueIncreasedID(Json const &requestedIssue) {
+  auto newIssue = requestedIssue;
+  newIssue["data"]["ID"] = selectMaxIssueID() + 1;
+  insertIssue(newIssue);
+  return newIssue;
+}

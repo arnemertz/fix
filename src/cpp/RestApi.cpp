@@ -15,9 +15,7 @@ Json RestApi::process(std::string const &requestUri, std::string const &requestM
 
     try {
       auto requestedIssue = Json::parse(requestContent);
-      auto newIssue = createIssue(requestedIssue);
-      storage.insertIssue(newIssue);
-      return newIssue;
+      return storage.insertIssueIncreasedID(requestedIssue);
     } catch(std::invalid_argument&) {
       return status400("error parsing request");
     }
@@ -29,12 +27,6 @@ Json RestApi::process(std::string const &requestUri, std::string const &requestM
       }},
       { "links",  requestUri }
   };
-}
-
-Json RestApi::createIssue(Json const &requestedIssue) const {
-  auto newIssue = requestedIssue;
-  newIssue["data"]["ID"] = storage.selectMaxIssueID() + 1;
-  return newIssue;
 }
 
 Json RestApi::status400(std::string const &message) {
