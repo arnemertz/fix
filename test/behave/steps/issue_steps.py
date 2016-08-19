@@ -1,7 +1,6 @@
-from behave import *
-from pathlib import Path
-import requests
 import json
+import requests
+from behave import *
 
 
 @given('an empty Fix repository')
@@ -13,10 +12,17 @@ def step_impl(context):
 def step_impl(context):
     table = context.table
     issue_keys = table.headings
-    issue_dir = get_issue_dir(context)
     for row in table:
-        issue_json = extract_issue_json(issue_keys, row)
-        create_issue_file(issue_json, issue_dir)
+        create_issue_file(context, issue_keys, row)
+
+
+def create_issue_file(context, issue_keys, row):
+    issue_json = extract_issue_json(issue_keys, row)
+    issue_id = issue_json['data']['ID']
+    issue_filename = issue_id + '.json'
+    file_content = json.dumps(issue_json, sort_keys=True, indent=4, separators=(',', ': '))
+    fix_context = context.fix_context
+    fix_context.create_issue_file(issue_filename, file_content)
 
 
 @when('we create issues')
@@ -30,36 +36,17 @@ def step_impl(context):
 
 @then('an issue file "{file_name}" exists in the repository')
 def step_impl(context, file_name):
-    assert file_exists(file_name, context)
+    assert context.fix_context.issue_file_exists(file_name)
 
 
 @then('an issue file "{file_name}" does not exist in the repository')
 def step_impl(context, file_name):
-    assert not file_exists(file_name, context)
+    assert not context.fix_context.issue_file_exists(file_name)
 
 
-def file_exists(file_name, context):
-    issue_dir = get_issue_dir(context)
-    expected_file = Path(issue_dir + file_name)
-    return expected_file.exists()
-
-
-def get_fix_dir(context):
-    fix_dir = context.fix_context.get_tempdir() + '/.fix/'
-    create_if_missing_dir(fix_dir)
-    return fix_dir
-
-
-def get_issue_dir(context):
-    issue_dir = get_fix_dir(context) + 'issues/'
-    create_if_missing_dir(issue_dir)
-    return issue_dir
-
-
-def create_if_missing_dir(issue_dir):
-    issue_path = Path(issue_dir)
-    if not issue_path.exists():
-        issue_path.mkdir()
+def create_issue_rest(issue_json):
+    r = requests.post('http://localhost:8080/issue/new', json=issue_json)
+    assert r.status_code == 200
 
 
 def extract_issue_json(issue_keys, row):
@@ -68,17 +55,3 @@ def extract_issue_json(issue_keys, row):
         issue_data[key] = row[key]
     issue_json = {'data': issue_data}
     return issue_json
-
-
-def create_issue_rest(issue_json):
-    r = requests.post('http://localhost:8080/issue/new', json=issue_json)
-    assert r.status_code == 200
-
-
-def create_issue_file(issue_json, issue_dir):
-    issue_id = issue_json['data']['ID']
-    issue_filename = issue_id + '.json'
-    issue_file = Path(issue_dir + issue_filename)
-    assert not issue_file.exists()
-    with open(str(issue_file), 'w') as f:
-        f.write(json.dumps(issue_json, sort_keys=True, indent=4, separators=(',', ': ')))

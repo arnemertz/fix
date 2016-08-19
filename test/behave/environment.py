@@ -1,19 +1,17 @@
 from tempfile import mkdtemp
 import shutil
-import subprocess
 from steps.fix_context import FixContext
 
 
 def before_scenario(context, scenario):
     del scenario
-    tempdir = mkdtemp()
-    context.fix_context = FixContext(tempdir)
-    context.fix_process = subprocess.Popen(['fix'], cwd=tempdir)
+    fix_base_dir = mkdtemp()
+    context.fix_context = FixContext(fix_base_dir)
 
 
 def after_scenario(context, scenario):
     del scenario
-    context.fix_process.kill()
+    context.fix_context.finish()
     if not context.failed:
-        shutil.rmtree(context.fix_context.get_tempdir())
+        shutil.rmtree(context.fix_context.get_base_dir())
 
