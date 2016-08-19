@@ -3,7 +3,9 @@
 #include "Json.h"
 #include "RestApi.h"
 #include "Storage.h"
+#include <string>
 using namespace fix;
+using namespace std::string_literals;
 
 class StorageMock : public Storage {
 public:
@@ -52,6 +54,27 @@ TEST_CASE( "Creating an issue...", "[issue]" ) {
       response = api.process(uri, method, "{ some non-json string");
     }
 
-    REQUIRE(response == status400);
+    SECTION("... the request contains no issue data.") {
+      status400["error"] = "request contains no data";
+      response = api.process(uri, method, "{}");
+    }
+
+    SECTION("... the request contains an ID for the new issue.") {
+      status400["error"] = "can not create issue with predefined ID";
+      auto requestedIssueWithID = requestedIssue;
+      requestedIssueWithID["data"]["ID"] = 44;
+      response = api.process(uri, method, requestedIssueWithID.dump());
+    }
+
+    for (auto name : {"summary"s, "description"s}) {
+      SECTION("... the requested issue does not contain the "s + name + " attribute"s) {
+        status400["error"] = "issue is missing required attribute " + name;
+        auto requestedIssueWithoutAttribute = requestedIssue;
+        requestedIssueWithoutAttribute["data"].erase(name);
+        response = api.process(uri, method, requestedIssueWithoutAttribute.dump());
+      }
+    }
+
+    CHECK(response == status400);
   }
 }

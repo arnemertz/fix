@@ -2,6 +2,7 @@
 #include "Storage.h"
 
 using namespace fix;
+using namespace std::string_literals;
 
 RestApi::RestApi(Storage &st)
   : storage{st} {
@@ -15,6 +16,17 @@ Json RestApi::process(std::string const &requestUri, std::string const &requestM
 
     try {
       auto requestedIssue = Json::parse(requestContent);
+      if (requestedIssue.count("data") == 0) {
+        return status400("request contains no data");
+      }
+      if (requestedIssue["data"].count("ID") != 0) {
+        return status400("can not create issue with predefined ID");
+      }
+      for (auto const& attribute : {"summary"s, "description"s}) {
+        if (requestedIssue["data"].count(attribute) == 0) {
+          return status400("issue is missing required attribute " + attribute);
+        }
+      }
       return storage.insertIssueIncreasedID(requestedIssue);
     } catch(std::invalid_argument&) {
       return status400("error parsing request");
