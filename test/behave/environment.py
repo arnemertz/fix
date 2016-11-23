@@ -3,6 +3,12 @@ import shutil
 from steps.fix_context import FixContext
 
 
+def before_all(context):
+    import logging
+    logging.getLogger("requests").setLevel(logging.WARNING)
+    del context
+
+
 def before_scenario(context, scenario):
     del scenario
     fix_base_dir = mkdtemp()

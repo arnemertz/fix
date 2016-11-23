@@ -8,6 +8,11 @@ def step_impl(context):
     del context
 
 
+@given('a Fix repository')
+def step_impl(context):
+    del context
+
+
 @given('a Fix repository with issues')
 def step_impl(context):
     table = context.table
@@ -31,7 +36,23 @@ def step_impl(context):
     issue_keys = table.headings
     for row in table:
         issue_json = extract_issue_json(issue_keys, row)
-        create_issue_rest(issue_json)
+        create_issue_rest(context, issue_json)
+
+
+@when('we create an issue')
+def step_impl(context):
+    table = context.table
+    issue_keys = table.headings
+    issue_values = table.rows
+    assert (len(issue_values) is 1)
+    issue_json = extract_issue_json(issue_keys, issue_values[0])
+    create_issue_rest(context, issue_json)
+
+
+@when('we list all issues')
+def step_impl(context):
+    r = requests.get('http://localhost:8080/issue/list')
+    del context
 
 
 @then('an issue file "{file_name}" exists in the repository')
@@ -44,9 +65,19 @@ def step_impl(context, file_name):
     assert not context.fix_context.issue_file_exists(file_name)
 
 
-def create_issue_rest(issue_json):
-    r = requests.post('http://localhost:8080/issue/new', json=issue_json)
-    assert r.status_code == 200
+@then('the response is a list with {count} entries')
+def step_impl(context, count):
+    assert_response_code(context, 200)
+    response_json = context.rest_response.json
+    response_list = response_json["data"]
+    if count == 0:
+        assert response_list == []
+    else:
+        assert False
+
+
+def create_issue_rest(context, issue_json):
+    context.rest_response = requests.post('http://localhost:8080/issue/new', json=issue_json)
 
 
 def extract_issue_json(issue_keys, row):
@@ -55,3 +86,12 @@ def extract_issue_json(issue_keys, row):
         issue_data[key] = row[key]
     issue_json = {'data': issue_data}
     return issue_json
+
+
+@then('the response has http code {code:d}')
+def step_impl(context, code):
+    assert_response_code(context, code)
+
+
+def assert_response_code(context, code):
+    assert context.rest_response.status_code == code

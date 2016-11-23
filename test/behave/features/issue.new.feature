@@ -6,8 +6,9 @@ Feature: creating new issues
         | summary      | description  |
         | First issue  | A serious problem: the issue database was empty! |
     Then an issue file "1.json" exists in the repository
+    And the response has http code 200
 
-  Scenario: new issues count upwards
+  Scenario: new issues get assigned increasing IDs
     Given a Fix repository with issues
         | ID | summary       | description |
         | 1  | First issue   | Issue number one.  |
@@ -20,3 +21,11 @@ Feature: creating new issues
         | Yet another  | There's more!  |
     Then an issue file "8.json" exists in the repository
     And an issue file "9.json" exists in the repository
+    And the response has http code 200
+
+#  Scenario: new issue requests may not contain IDs
+#    Given a Fix repository
+#    When we create an issue
+#        | summary | description | ID |
+#        | Issue   | with ID     | 22 |
+#    Then the response has http code 400
