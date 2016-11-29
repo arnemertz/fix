@@ -8,7 +8,7 @@ RestApi::RestApi(Storage &st)
   : storage{st} {
 }
 
-Json RestApi::process(std::string const &requestUri, std::string const &requestMethod, std::string const &requestContent) const {
+RestApi::Response RestApi::process(std::string const &requestUri, std::string const &requestMethod, std::string const &requestContent) const {
   if (requestUri == "/issue/new") {
     if (requestMethod != "POST") {
       return status400("expected POST method for " + requestUri);
@@ -27,24 +27,24 @@ Json RestApi::process(std::string const &requestUri, std::string const &requestM
           return status400("issue is missing required attribute " + attribute);
         }
       }
-      return storage.insertIssueIncreasedID(requestedIssue);
+      return {storage.insertIssueIncreasedID(requestedIssue), 200};
     } catch(std::invalid_argument&) {
       return status400("error parsing request");
     }
   }
 
   return {
-      { "error", {
-        { "message", "Unsupported operation." }
-      }},
-      { "links",  requestUri }
+      Json{}, 405
   };
 }
 
-Json RestApi::status400(std::string const &message) {
-  return Json{
-      {"status", 400},
-      {"error", message}
+RestApi::Response RestApi::status400(std::string const &message) {
+  return {
+      Json{
+          {"status", 400},
+          {"error",  message}
+      },
+      400
   };
 }
 

@@ -9,15 +9,21 @@ namespace fix {
 
   class RestApi {
     Storage& storage;
+
   public:
+    struct Response {
+      Json content;
+      int httpCode;
+    };
+
     RestApi(Storage& st);
-    Json process(std::string const& requestUri, std::string const& requestMethod, std::string const& requestContent) const;
+    Response process(std::string const& requestUri, std::string const& requestMethod, std::string const& requestContent) const;
   private:
-    static Json status400(std::string const &message);
+    static Response status400(std::string const &message);
 
     Json insertIssueIncreasedID(const Json &requestedIssue) const;
   };
-
 }
+
 
 #endif //FIX_RESTAPI_H

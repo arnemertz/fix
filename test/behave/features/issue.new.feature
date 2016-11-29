@@ -23,9 +23,9 @@ Feature: creating new issues
     And an issue file "9.json" exists in the repository
     And the response has http code 200
 
-#  Scenario: new issue requests may not contain IDs
-#    Given a Fix repository
-#    When we create an issue
-#        | summary | description | ID |
-#        | Issue   | with ID     | 22 |
-#    Then the response has http code 400
+  Scenario: new issue requests may not contain IDs
+    Given a Fix repository
+    When we create an issue
+        | summary | description | ID |
+        | Issue   | with ID     | 22 |
+    Then the response has http code 400

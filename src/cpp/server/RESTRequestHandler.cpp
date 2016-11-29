@@ -24,7 +24,8 @@ void RESTRequestHandler::handleRequest(Poco::Net::HTTPServerRequest& request, Po
 
   response.setChunkedTransferEncoding(true);
   response.setContentType("application/json");
+  response.setStatus(static_cast<Poco::Net::HTTPResponse::HTTPStatus>(apiResponse.httpCode));
 
   std::ostream& ostr = response.send();
-  ostr << apiResponse;
+  ostr << apiResponse.content;
 }
