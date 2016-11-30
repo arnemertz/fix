@@ -20,8 +20,6 @@ namespace fix {
     Response process(std::string const& requestUri, std::string const& requestMethod, std::string const& requestContent) const;
   private:
     static Response status400(std::string const &message);
-
-    Json insertIssueIncreasedID(const Json &requestedIssue) const;
   };
 }
 

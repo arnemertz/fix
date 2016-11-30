@@ -7,7 +7,6 @@ namespace fix {
 
   class Storage {
   public:
-    virtual void insertIssue(Json) = 0;
     virtual unsigned selectMaxIssueID() const = 0;
     virtual Json insertIssueIncreasedID(const Json &requestedIssue) = 0;
   };

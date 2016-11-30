@@ -3,13 +3,12 @@
 #include "Json.h"
 #include "RestApi.h"
 #include "Storage.h"
-#include <string>
+
 using namespace fix;
 using namespace std::string_literals;
 
 class StorageMock : public Storage {
 public:
-  MAKE_MOCK1(insertIssue, void(Json), override);
   MAKE_CONST_MOCK0(selectMaxIssueID, unsigned(), override);
   MAKE_MOCK1(insertIssueIncreasedID, Json(Json const& requestedIssue), override);
 };

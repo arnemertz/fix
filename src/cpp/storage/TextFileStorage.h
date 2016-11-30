@@ -1,9 +1,8 @@
 #ifndef FIX_TEXTFILESTORAGE_H
 #define FIX_TEXTFILESTORAGE_H
 
-#include "Storage.h"
-#include <mutex>
 #include <Poco/Path.h>
+#include "Storage.h"
 
 namespace fix {
   namespace storage {
@@ -12,18 +11,17 @@ namespace fix {
       static unsigned const STORED_JSON_INDENTATION = 2;
       Poco::Path const storageDirectoryPath;
       Poco::Path const issueDirectoryPath;
-      std::mutex mutex;
     public:
 
       TextFileStorage();
-      void insertIssue(Json) override;
       unsigned selectMaxIssueID() const override;
       Json insertIssueIncreasedID(const Json &requestedIssue) override;
+
+    private:
+      void insertIssue(Json);
     };
 
   }
 }
-
-
 
 #endif //FIX_TEXTFILESTORAGE_H

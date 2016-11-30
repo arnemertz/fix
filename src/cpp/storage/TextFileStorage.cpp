@@ -1,7 +1,6 @@
-#include "RestApi.h"
+#include <fstream>
 #include <Poco/File.h>
 #include <Poco/DirectoryIterator.h>
-#include <fstream>
 #include "TextFileStorage.h"
 
 using namespace fix::storage;
@@ -27,16 +26,6 @@ TextFileStorage::TextFileStorage()
   issueDir.createDirectory();
 }
 
-void TextFileStorage::insertIssue(Json issue) {
-  auto issueID = issue["data"]["ID"].dump();
-  Path issuePath{issueDirectoryPath, issueID + ".json"};
-  File issueFile{issuePath};
-  issueFile.createFile();
-
-  std::ofstream issueStream{issuePath.toString()};
-  issueStream << issue.dump(STORED_JSON_INDENTATION) << std::endl;
-}
-
 unsigned TextFileStorage::selectMaxIssueID() const {
   auto maxID = 0u;
   for (Poco::DirectoryIterator it{issueDirectoryPath}, end{}; it != end; ++it) {
@@ -56,4 +45,14 @@ Json TextFileStorage::insertIssueIncreasedID(Json const &requestedIssue) {
   newIssue["data"]["ID"] = selectMaxIssueID() + 1;
   insertIssue(newIssue);
   return newIssue;
+}
+
+void TextFileStorage::insertIssue(Json issue) {
+  auto issueID = issue["data"]["ID"].dump();
+  Path issuePath{issueDirectoryPath, issueID + ".json"};
+  File issueFile{issuePath};
+  issueFile.createFile();
+
+  std::ofstream issueStream{issuePath.toString()};
+  issueStream << issue.dump(STORED_JSON_INDENTATION) << std::endl;
 }
