@@ -66,7 +66,7 @@ TEST_CASE( "Creating an issue...", "[issue]" ) {
       response = api.process(uri, method, requestedIssueWithID.dump());
     }
 
-    for (auto name : {"summary"s, "description"s}) {
+    for (auto const& name : {"summary"s, "description"s}) {
       SECTION("... the requested issue does not contain the "s + name + " attribute"s) {
         status400Json["error"] = "issue is missing required attribute " + name;
         auto requestedIssueWithoutAttribute = requestedIssue;
@@ -77,5 +77,31 @@ TEST_CASE( "Creating an issue...", "[issue]" ) {
 
     CHECK(response.content == status400Json);
     CHECK(response.httpCode == 400);
+  }
+}
+
+TEST_CASE( "Listing all issues...", "[issue]" ) {
+  StorageMock storage;
+  RestApi api{storage};
+
+  std::string uri = "/issue/list";
+  std::string method = "GET";
+
+  Json expectedResponse = Json{
+      { "data", {
+          {"issues", Json::array()}
+      }}
+  };
+
+  SECTION( "... returns an empty list" ) {
+    auto response = api.process(uri, method, "");
+    CHECK(response.httpCode == 200);
+    CHECK(response.content == expectedResponse);
+  }
+
+  SECTION("... returns status 405 with corresponding error message if the method is wrong.") {
+    auto response = api.process(uri, "POST", "");
+    CHECK(response.httpCode == 405);
+    CHECK(response.content == Json{});
   }
 }

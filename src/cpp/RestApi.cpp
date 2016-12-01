@@ -8,7 +8,7 @@ RestApi::RestApi(Storage &st)
   : storage{st} {
 }
 
-RestApi::Response RestApi::process(std::string const &requestUri, std::string const &requestMethod, std::string const &requestContent) const {
+RestApi::Response RestApi::process(std::string const& requestUri, std::string const& requestMethod, std::string const& requestContent) const {
   if (requestUri == "/issue/new") {
     if (requestMethod != "POST") {
       return status400("expected POST method for " + requestUri);
@@ -28,9 +28,22 @@ RestApi::Response RestApi::process(std::string const &requestUri, std::string co
         }
       }
       return {storage.insertIssueIncreasedID(requestedIssue), 200};
-    } catch(std::invalid_argument&) {
+    } catch(std::invalid_argument &) {
       return status400("error parsing request");
     }
+  } else if (requestUri == "/issue/list") {
+    if (requestMethod != "GET") {
+      return {
+          Json{}, 405
+      };
+    }
+
+    Json response = Json::object();
+    response["data"]["issues"] = Json::array();
+
+    return {
+      response, 200
+    };
   }
 
   return {

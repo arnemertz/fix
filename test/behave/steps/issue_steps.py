@@ -51,8 +51,7 @@ def step_impl(context):
 
 @when('we list all issues')
 def step_impl(context):
-    r = requests.get('http://localhost:8080/issue/list')
-    del context
+    context.rest_response = requests.get('http://localhost:8080/issue/list')
 
 
 @then('an issue file "{file_name}" exists in the repository')
@@ -65,11 +64,11 @@ def step_impl(context, file_name):
     assert not context.fix_context.issue_file_exists(file_name)
 
 
-@then('the response is a list with {count} entries')
+@then('the response is a list with {count:d} entries')
 def step_impl(context, count):
     assert_response_code(context, 200)
-    response_json = context.rest_response.json
-    response_list = response_json["data"]
+    response_json = context.rest_response.json()
+    response_list = response_json["data"]["issues"]
     if count == 0:
         assert response_list == []
     else:

@@ -1,10 +1,10 @@
-#Feature: listing all issues
-#
-#  Scenario: Empty list
-#    Given an empty Fix repository
-#    When we list all issues
-#    Then the response is a list with 0 entries
-#
+Feature: listing all issues
+
+  Scenario: Empty list
+    Given an empty Fix repository
+    When we list all issues
+    Then the response is a list with 0 entries
+
 #  Scenario: List with mutiple items
 #    Given a Fix repository with issues
 #      | ID | summary       | description        |
