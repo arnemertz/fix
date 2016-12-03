@@ -11,6 +11,7 @@ class StorageMock : public Storage {
 public:
   MAKE_CONST_MOCK0(selectMaxIssueID, unsigned(), override);
   MAKE_MOCK1(insertIssueIncreasedID, Json(Json const& requestedIssue), override);
+  MAKE_CONST_MOCK0(allIssues, std::vector<Json>(), override);
 };
 
 TEST_CASE( "Creating an issue...", "[issue]" ) {
@@ -93,11 +94,47 @@ TEST_CASE( "Listing all issues...", "[issue]" ) {
       }}
   };
 
-  SECTION( "... returns an empty list" ) {
+  SECTION( "... returns an empty list if no issues are in the storage" ) {
+    REQUIRE_CALL(storage, allIssues()).RETURN(std::vector<Json>{});
     auto response = api.process(uri, method, "");
     CHECK(response.httpCode == 200);
     CHECK(response.content == expectedResponse);
   }
+
+  SECTION( "... returns a list with all issues present in the storage" ) {
+    Json issue1{
+        { "data", {
+            { "ID", 1 },
+            { "summary", "New Issue" },
+            { "description", "Some lengthy text here to describe the issue" }
+        }}
+    };
+    Json issue2{
+        { "data", {
+            { "ID", 2 },
+            { "summary", "Another Issue" },
+            { "description", "That's it then" }
+        }}
+    };
+
+    auto expected_issues = Json::array({
+      { { "ID", 1 },
+        { "summary", "New Issue" }
+      },
+      { { "ID", 2 },
+        { "summary", "Another Issue" }
+      }
+    });
+
+    expectedResponse["data"]["issues"] = expected_issues;
+
+    REQUIRE_CALL(storage, allIssues()).RETURN(std::vector<Json>{issue1, issue2});
+    auto response = api.process(uri, method, "");
+    CHECK(response.httpCode == 200);
+    CHECK(response.content == expectedResponse);
+
+  }
+
 
   SECTION("... returns status 405 with corresponding error message if the method is wrong.") {
     auto response = api.process(uri, "POST", "");

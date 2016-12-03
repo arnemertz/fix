@@ -38,11 +38,18 @@ RestApi::Response RestApi::process(std::string const& requestUri, std::string co
       };
     }
 
-    Json response = Json::object();
-    response["data"]["issues"] = Json::array();
-
+    Json data{
+        {"issues", Json::array()}
+    };
+    auto all_issues = storage.allIssues();
+    for (Json issue : all_issues) {
+      issue["data"].erase("description");
+      data["issues"].push_back( std::move(issue["data"]) );
+    }
+    //std::copy(std::begin(all_issues), std::end(all_issues), std::back_inserter(data["issues"]));
     return {
-      response, 200
+        Json{ {"data", data} },
+        200
     };
   }
 

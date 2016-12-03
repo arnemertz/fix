@@ -16,6 +16,7 @@ namespace fix {
       TextFileStorage();
       unsigned selectMaxIssueID() const override;
       Json insertIssueIncreasedID(const Json &requestedIssue) override;
+      std::vector<Json> allIssues() const override;
 
     private:
       void insertIssue(Json);

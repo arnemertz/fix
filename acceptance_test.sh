@@ -5,7 +5,12 @@ cd build
 cmake .. && cmake --build . --target fix
 
 PATH=$PATH:$(pwd)/bin
+cd ..
 
-behave ../test/behave/ $@
+if [ $# -eq 0 ]; then
+    behave test/behave/ $@
+else
+    behave $@
+fi
 
 

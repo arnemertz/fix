@@ -69,10 +69,16 @@ def step_impl(context, count):
     assert_response_code(context, 200)
     response_json = context.rest_response.json()
     response_list = response_json["data"]["issues"]
-    if count == 0:
-        assert response_list == []
-    else:
-        assert False
+    assert (isinstance(response_list, list))
+    print(str(response_list))
+    assert count == len(response_list)
+    table = context.table
+    if not table:
+        return
+    issue_keys = table.headings
+    for row in table:
+        issue_json = row_to_object(issue_keys, row)
+        assert issue_json in response_list
 
 
 def create_issue_rest(context, issue_json):
@@ -80,11 +86,14 @@ def create_issue_rest(context, issue_json):
 
 
 def extract_issue_json(issue_keys, row):
+    return {'data': (row_to_object(issue_keys, row))}
+
+
+def row_to_object(keys, row):
     issue_data = {}
-    for key in issue_keys:
+    for key in keys:
         issue_data[key] = row[key]
-    issue_json = {'data': issue_data}
-    return issue_json
+    return issue_data
 
 
 @then('the response has http code {code:d}')

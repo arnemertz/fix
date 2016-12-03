@@ -56,3 +56,20 @@ void TextFileStorage::insertIssue(Json issue) {
   std::ofstream issueStream{issuePath.toString()};
   issueStream << issue.dump(STORED_JSON_INDENTATION) << std::endl;
 }
+
+std::vector<Json> TextFileStorage::allIssues() const{
+  std::vector<Json> issues;
+  for (Poco::DirectoryIterator it{issueDirectoryPath}, end{}; it != end; ++it) {
+    auto path = it.path();
+    char const* czPath = path.toString().data();
+    if (path.getExtension() != "json") {
+      continue;
+    }
+
+    std::ifstream issueStream{path.toString()};
+    Json issue;
+    issueStream >> issue;
+    issues.push_back(issue);
+  }
+  return issues;
+}
