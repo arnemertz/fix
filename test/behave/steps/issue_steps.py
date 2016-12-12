@@ -54,6 +54,11 @@ def step_impl(context):
     context.rest_response = requests.get('http://localhost:8080/issue/list')
 
 
+@when('we query the issue with ID {issue_id:d}')
+def step_impl(context, issue_id):
+    context.rest_response = requests.get('http://localhost:8080/issue/' + str(issue_id))
+
+
 @then('an issue file "{file_name}" exists in the repository')
 def step_impl(context, file_name):
     assert context.fix_context.issue_file_exists(file_name)
@@ -66,19 +71,38 @@ def step_impl(context, file_name):
 
 @then('the response is a list with {count:d} entries')
 def step_impl(context, count):
+    response_data = get_response_data(context)
+    response_list = response_data["issues"]
+    assert (isinstance(response_list, list))
+    assert count == len(response_list)
+    issue_list = table_to_json_list(context)
+    for issue_json in issue_list:
+        assert issue_json in response_list
+
+
+@then('the response is an object')
+def step_impl(context):
+    response_data = get_response_data(context)
+    assert response_data
+    expected_object = table_to_json_list(context)[0]
+    assert response_data == expected_object
+
+
+def table_to_json_list(context):
+    table = context.table
+    table_objects = []
+    if table:
+        keys = table.headings
+        for row in table:
+            table_objects.append(row_to_object(keys, row))
+    return table_objects
+
+
+def get_response_data(context):
     assert_response_code(context, 200)
     response_json = context.rest_response.json()
-    response_list = response_json["data"]["issues"]
-    assert (isinstance(response_list, list))
-    print(str(response_list))
-    assert count == len(response_list)
-    table = context.table
-    if not table:
-        return
-    issue_keys = table.headings
-    for row in table:
-        issue_json = row_to_object(issue_keys, row)
-        assert issue_json in response_list
+    response_data = response_json["data"]
+    return response_data
 
 
 def create_issue_rest(context, issue_json):
