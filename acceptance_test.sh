@@ -3,6 +3,9 @@
 ./conan_install.sh Debug
 cd build
 cmake .. && cmake --build . --target fix
+if [ $? -ne 0 ]; then
+  exit
+fi
 
 PATH=$PATH:$(pwd)/bin
 cd ..

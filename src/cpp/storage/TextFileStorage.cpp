@@ -61,15 +61,25 @@ std::vector<Json> TextFileStorage::allIssues() const{
   std::vector<Json> issues;
   for (Poco::DirectoryIterator it{issueDirectoryPath}, end{}; it != end; ++it) {
     auto path = it.path();
-    char const* czPath = path.toString().data();
-    if (path.getExtension() != "json") {
-      continue;
+    if (path.getExtension() == "json") {
+      issues.push_back(readIssue(path));
     }
-
-    std::ifstream issueStream{path.toString()};
-    Json issue;
-    issueStream >> issue;
-    issues.push_back(issue);
   }
   return issues;
+}
+
+Json TextFileStorage::issue(unsigned id) const {
+  Path issuePath{issueDirectoryPath, std::to_string(id) + ".json"};
+  if (File{issuePath}.exists()) {
+    return readIssue(issuePath);
+  }
+
+  return Json{};
+}
+
+Json TextFileStorage::readIssue(const Path &path) const {
+  std::ifstream issueStream{path.toString()};
+  Json issue;
+  issueStream >> issue;
+  return issue;
 }

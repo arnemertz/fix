@@ -12,6 +12,7 @@ public:
   MAKE_CONST_MOCK0(selectMaxIssueID, unsigned(), override);
   MAKE_MOCK1(insertIssueIncreasedID, Json(Json const& requestedIssue), override);
   MAKE_CONST_MOCK0(allIssues, std::vector<Json>(), override);
+  MAKE_CONST_MOCK1(issue, Json(unsigned id), override);
 };
 
 TEST_CASE( "Creating an issue...", "[issue]" ) {
@@ -136,9 +137,40 @@ TEST_CASE( "Listing all issues...", "[issue]" ) {
   }
 
 
-  SECTION("... returns status 405 with corresponding error message if the method is wrong.") {
+  SECTION("... returns status 405 if the method is wrong.") {
     auto response = api.process(uri, "POST", "");
     CHECK(response.httpCode == 405);
     CHECK(response.content == Json{});
   }
+}
+
+TEST_CASE( "Querying an issue by ID...", "[issue]" ) {
+  StorageMock storage;
+  RestApi api{storage};
+
+  std::string uri = "/issue/32";
+  std::string method = "GET";
+
+  SECTION( "... returns the JSON object describing the issue if it is in the storage" ) {
+    auto requestedIssue = Json {
+        { "data", {
+                      { "ID", 32 },
+                      { "summary", "New Issue" },
+                      { "description", "Some lengthy text here to describe the issue" }
+                  }}
+    };
+    REQUIRE_CALL(storage, issue(32)).RETURN(requestedIssue);
+    auto response = api.process(uri, method, "");
+    CHECK(response.httpCode == 200);
+    CHECK(response.content == requestedIssue);
+  }
+
+  SECTION( "... returns a 404 error if no issue with the ID is in the storage" ) {
+    uri = "/issue/12";
+    REQUIRE_CALL(storage, issue(12)).RETURN(Json{});
+    auto response = api.process(uri, method, "");
+    CHECK(response.httpCode == 404);
+    CHECK(response.content == Json{});
+  }
+
 }

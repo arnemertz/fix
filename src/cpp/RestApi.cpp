@@ -1,4 +1,5 @@
 #include "RestApi.h"
+#include <regex>
 #include "Storage.h"
 
 using namespace fix;
@@ -46,11 +47,21 @@ RestApi::Response RestApi::process(std::string const& requestUri, std::string co
       issue["data"].erase("description");
       data["issues"].push_back( std::move(issue["data"]) );
     }
-    //std::copy(std::begin(all_issues), std::end(all_issues), std::back_inserter(data["issues"]));
     return {
         Json{ {"data", data} },
         200
     };
+  } else {
+    std::regex issue_id_regex{"/issue/([0-9]*)"};
+    std::smatch id_match;
+    if (std::regex_match(requestUri, id_match, issue_id_regex)) {
+      auto id_string = id_match[1].str();
+      Json issue = storage.issue(std::stoul(id_string));
+      if (!issue.empty()) {
+        return {issue, 200};
+      }
+      return { Json{}, 404 };
+    }
   }
 
   return {

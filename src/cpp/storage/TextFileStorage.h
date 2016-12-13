@@ -17,9 +17,12 @@ namespace fix {
       unsigned selectMaxIssueID() const override;
       Json insertIssueIncreasedID(const Json &requestedIssue) override;
       std::vector<Json> allIssues() const override;
+      Json issue(unsigned id) const override;
 
     private:
       void insertIssue(Json);
+
+      Json readIssue(const Poco::Path &path) const;
     };
 
   }

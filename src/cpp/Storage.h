@@ -10,6 +10,7 @@ namespace fix {
     virtual unsigned selectMaxIssueID() const = 0;
     virtual Json insertIssueIncreasedID(const Json &requestedIssue) = 0;
     virtual std::vector<Json> allIssues() const = 0;
+    virtual Json issue(unsigned id) const = 0;
   };
   
 }
