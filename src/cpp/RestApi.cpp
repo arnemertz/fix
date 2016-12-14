@@ -12,25 +12,25 @@ RestApi::RestApi(Storage &st)
 RestApi::Response RestApi::process(std::string const& requestUri, std::string const& requestMethod, std::string const& requestContent) const {
   if (requestUri == "/issue/new") {
     if (requestMethod != "POST") {
-      return status400("expected POST method for " + requestUri);
+      return status400();
     }
 
     try {
       auto requestedIssue = Json::parse(requestContent);
       if (requestedIssue.count("data") == 0) {
-        return status400("request contains no data");
+        return status400();
       }
       if (requestedIssue["data"].count("ID") != 0) {
-        return status400("can not create issue with predefined ID");
+        return status400();
       }
       for (auto const& attribute : {"summary"s, "description"s}) {
         if (requestedIssue["data"].count(attribute) == 0) {
-          return status400("issue is missing required attribute " + attribute);
+          return status400();
         }
       }
       return {storage.insertIssueIncreasedID(requestedIssue), 200};
     } catch(std::invalid_argument &) {
-      return status400("error parsing request");
+      return status400();
     }
   } else if (requestUri == "/issue/list") {
     if (requestMethod != "GET") {
@@ -69,12 +69,9 @@ RestApi::Response RestApi::process(std::string const& requestUri, std::string co
   };
 }
 
-RestApi::Response RestApi::status400(std::string const &message) {
+RestApi::Response RestApi::status400() {
   return {
-      Json{
-          {"status", 400},
-          {"error",  message}
-      },
+      Json{},
       400
   };
 }

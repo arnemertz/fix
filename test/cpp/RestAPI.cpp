@@ -43,26 +43,21 @@ TEST_CASE( "Creating an issue...", "[issue]" ) {
 
 
   SECTION("... returns status 400 with corresponding error message if...") {
-    auto status400Json = Json {{ "status", 400 }};
     RestApi::Response response = {Json{}, 0};
 
     SECTION("... the method is wrong.") {
-      status400Json["error"] = "expected POST method for " + uri;
       response = api.process(uri, "GET", request);
     }
 
     SECTION("... the request can not be parsed.") {
-      status400Json["error"] = "error parsing request";
       response = api.process(uri, method, "{ some non-json string");
     }
 
     SECTION("... the request contains no issue data.") {
-      status400Json["error"] = "request contains no data";
       response = api.process(uri, method, "{}");
     }
 
     SECTION("... the request contains an ID for the new issue.") {
-      status400Json["error"] = "can not create issue with predefined ID";
       auto requestedIssueWithID = requestedIssue;
       requestedIssueWithID["data"]["ID"] = 44;
       response = api.process(uri, method, requestedIssueWithID.dump());
@@ -70,14 +65,13 @@ TEST_CASE( "Creating an issue...", "[issue]" ) {
 
     for (auto const& name : {"summary"s, "description"s}) {
       SECTION("... the requested issue does not contain the "s + name + " attribute"s) {
-        status400Json["error"] = "issue is missing required attribute " + name;
         auto requestedIssueWithoutAttribute = requestedIssue;
         requestedIssueWithoutAttribute["data"].erase(name);
         response = api.process(uri, method, requestedIssueWithoutAttribute.dump());
       }
     }
 
-    CHECK(response.content == status400Json);
+    CHECK(response.content == Json{});
     CHECK(response.httpCode == 400);
   }
 }
