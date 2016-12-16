@@ -1,7 +1,7 @@
 #! /bin/bash
 
 ./conan_install.sh Debug
-cd build
+cd cmake-build-debug
 cmake .. && cmake --build . --target fix
 if [ $? -ne 0 ]; then
   exit
