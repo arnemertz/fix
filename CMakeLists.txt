@@ -1,12 +1,16 @@
 cmake_minimum_required(VERSION 2.8.12)
-
 project( fix )
-include(build/conanbuildinfo.cmake)
+
+# execute_process(COMMAND conan install .. -s build_type=${CMAKE_BUILD_TYPE} --build missing
+#         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+#         OUTPUT_VARIABLE conan_ver)
+# message(STATUS "Conan: \n${conan_ver}")
+# message(STATUS "End Conan")
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
 
 include_directories(src/cpp/)
-
 
 set( PROJ_MAIN_SRC ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/fix.cpp )
 file( GLOB_RECURSE PROJ_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/cpp/*.cpp )
