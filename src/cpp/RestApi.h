@@ -3,10 +3,10 @@
 
 #include <string>
 #include "Json.h"
-#include "Issue.h"
 
 namespace fix {
   class Storage;
+  class IssueParseResult;
 
   class RestApi {
     Storage& storage;
@@ -22,7 +22,7 @@ namespace fix {
   private:
     static RestApi::Response status400();
 
-    bool parseIssue(const std::string &requestContent, IssueData &requestedIssue) const;
+    IssueParseResult parseIssue(const std::string &requestContent) const;
   };
 }
 

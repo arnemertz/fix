@@ -4,8 +4,19 @@
 #include "Json.h"
 
 namespace fix {
-  struct IssueData {
+  class IssueData {
     Json content;
+  public:
+    IssueData(Json requestJson) : content{std::move(requestJson)} {}
+    IssueData() = default;
+    Json toStorageJson() const {
+      return content;
+    }
+  };
+
+  struct IssueParseResult {
+    IssueData issueData;
+    bool success;
   };
 }
 

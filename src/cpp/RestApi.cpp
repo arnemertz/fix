@@ -17,12 +17,13 @@ RestApi::Response RestApi::process(std::string const& requestUri, std::string co
     }
 
     try {
-      IssueData requestedIssue;
-      if (!parseIssue(requestContent, requestedIssue)) {
+      auto parsedIssue = parseIssue(requestContent);
+      if (!parsedIssue.success) {
         return status400();
       }
 
-      return {storage.insertIssueIncreasedID(requestedIssue.content), 200};
+      auto requestedIssue = parsedIssue.issueData;
+      return {storage.insertIssueIncreasedID(requestedIssue.toStorageJson()), 200};
     } catch(std::invalid_argument &) {
       return status400();
     }
@@ -63,21 +64,21 @@ RestApi::Response RestApi::process(std::string const& requestUri, std::string co
   };
 }
 
-bool RestApi::parseIssue(const std::string &requestContent, IssueData &requestedIssue) const {
+IssueParseResult RestApi::parseIssue(const std::string &requestContent) const {
   auto issueJson = Json::parse(requestContent);
+
   if (issueJson.count("data") == 0) {
-    return false;
+    return {{}, false};
   }
   if (issueJson["data"].count("ID") != 0) {
-    return false;
+    return {{}, false};
   }
   for (auto const &attribute : {"summary"s, "description"s}) {
     if (issueJson["data"].count(attribute) == 0) {
-      return false;
+      return {{}, false};
     }
   }
-  requestedIssue.content = issueJson;
-  return true;
+  return {IssueData{issueJson}, true};
 }
 
 RestApi::Response RestApi::status400() {
