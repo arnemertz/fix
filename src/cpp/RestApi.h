@@ -3,6 +3,7 @@
 
 #include <string>
 #include "Json.h"
+#include "Issue.h"
 
 namespace fix {
   class Storage;
@@ -20,6 +21,8 @@ namespace fix {
     Response process(std::string const& requestUri, std::string const& requestMethod, std::string const& requestContent) const;
   private:
     static RestApi::Response status400();
+
+    bool parseIssue(const std::string &requestContent, IssueData &requestedIssue) const;
   };
 }
 

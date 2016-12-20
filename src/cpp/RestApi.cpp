@@ -1,6 +1,7 @@
 #include "RestApi.h"
 #include <regex>
 #include "Storage.h"
+#include "Issue.h"
 
 using namespace fix;
 using namespace std::string_literals;
@@ -16,19 +17,12 @@ RestApi::Response RestApi::process(std::string const& requestUri, std::string co
     }
 
     try {
-      auto requestedIssue = Json::parse(requestContent);
-      if (requestedIssue.count("data") == 0) {
+      IssueData requestedIssue;
+      if (!parseIssue(requestContent, requestedIssue)) {
         return status400();
       }
-      if (requestedIssue["data"].count("ID") != 0) {
-        return status400();
-      }
-      for (auto const& attribute : {"summary"s, "description"s}) {
-        if (requestedIssue["data"].count(attribute) == 0) {
-          return status400();
-        }
-      }
-      return {storage.insertIssueIncreasedID(requestedIssue), 200};
+
+      return {storage.insertIssueIncreasedID(requestedIssue.content), 200};
     } catch(std::invalid_argument &) {
       return status400();
     }
@@ -67,6 +61,23 @@ RestApi::Response RestApi::process(std::string const& requestUri, std::string co
   return {
       Json{}, 405
   };
+}
+
+bool RestApi::parseIssue(const std::string &requestContent, IssueData &requestedIssue) const {
+  auto issueJson = Json::parse(requestContent);
+  if (issueJson.count("data") == 0) {
+    return false;
+  }
+  if (issueJson["data"].count("ID") != 0) {
+    return false;
+  }
+  for (auto const &attribute : {"summary"s, "description"s}) {
+    if (issueJson["data"].count(attribute) == 0) {
+      return false;
+    }
+  }
+  requestedIssue.content = issueJson;
+  return true;
 }
 
 RestApi::Response RestApi::status400() {
