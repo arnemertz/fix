@@ -21,8 +21,6 @@ namespace fix {
     Response process(std::string const& requestUri, std::string const& requestMethod, std::string const& requestContent) const;
   private:
     static RestApi::Response status400();
-
-    IssueParseResult parseIssue(const std::string &requestContent) const;
   };
 }
 

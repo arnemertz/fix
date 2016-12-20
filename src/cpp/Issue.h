@@ -4,6 +4,8 @@
 #include "Json.h"
 
 namespace fix {
+  class IssueParseResult;
+
   class IssueData {
     Json content;
   public:
@@ -12,6 +14,8 @@ namespace fix {
     Json toStorageJson() const {
       return content;
     }
+
+    static IssueParseResult parse(Json const& issueJson);
   };
 
   struct IssueParseResult {

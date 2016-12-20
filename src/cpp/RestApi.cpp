@@ -4,7 +4,6 @@
 #include "Issue.h"
 
 using namespace fix;
-using namespace std::string_literals;
 
 RestApi::RestApi(Storage &st)
   : storage{st} {
@@ -17,7 +16,8 @@ RestApi::Response RestApi::process(std::string const& requestUri, std::string co
     }
 
     try {
-      auto parsedIssue = parseIssue(requestContent);
+      auto issueJson = Json::parse(requestContent);
+      auto parsedIssue = IssueData::parse(issueJson);
       if (!parsedIssue.success) {
         return status400();
       }
@@ -62,23 +62,6 @@ RestApi::Response RestApi::process(std::string const& requestUri, std::string co
   return {
       Json{}, 405
   };
-}
-
-IssueParseResult RestApi::parseIssue(const std::string &requestContent) const {
-  auto issueJson = Json::parse(requestContent);
-
-  if (issueJson.count("data") == 0) {
-    return {{}, false};
-  }
-  if (issueJson["data"].count("ID") != 0) {
-    return {{}, false};
-  }
-  for (auto const &attribute : {"summary"s, "description"s}) {
-    if (issueJson["data"].count(attribute) == 0) {
-      return {{}, false};
-    }
-  }
-  return {IssueData{issueJson}, true};
 }
 
 RestApi::Response RestApi::status400() {
