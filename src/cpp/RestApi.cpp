@@ -33,7 +33,7 @@ RestApi::Response RestApi::process(std::string const& requestUri, std::string co
     }
   }
 
-  return Response::methodNotAllowed();
+  return Response::notFound();
 }
 
 RestApi::Response RestApi::issue_id(std::string const& id_string) const {

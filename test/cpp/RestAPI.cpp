@@ -15,6 +15,17 @@ public:
   MAKE_CONST_MOCK1(issue, Json(unsigned id), override);
 };
 
+TEST_CASE( "Bad URIs give 404" ) {
+  StorageMock storage;
+  RestApi api{storage};
+
+  auto response = api.process("/some/bad/uri", "POST", "");
+
+  REQUIRE(response.content == Json{});
+  REQUIRE(response.httpCode == 404);
+}
+
+
 TEST_CASE( "Creating an issue...", "[issue]" ) {
   StorageMock storage;
   RestApi api{storage};
