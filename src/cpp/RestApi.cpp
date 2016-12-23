@@ -13,14 +13,12 @@ RestApi::Response RestApi::process(std::string const& requestUri, std::string co
                                    std::string const& requestContent) const {
   if (requestUri == "/issue/new") {
     if (requestMethod != "POST") {
-      return status400();
+      return Response::badRequest();
     }
     return issue_new(requestContent);
   } else if (requestUri == "/issue/list") {
     if (requestMethod != "GET") {
-      return {
-          Json{}, 405
-      };
+      return Response::methodNotAllowed();
     }
     return issue_list();
   } else {
@@ -32,17 +30,15 @@ RestApi::Response RestApi::process(std::string const& requestUri, std::string co
     }
   }
 
-  return {
-      Json{}, 405
-  };
+  return Response::methodNotAllowed();
 }
 
 RestApi::Response RestApi::issue_id(std::string const& id_string) const {
   Json issue = storage.issue(stoul(id_string));
   if (!issue.empty()) {
-    return {issue, 200};
+    return Response::ok(issue);
   }
-  return {Json{}, 404};
+  return Response::notFound();
 }
 
 RestApi::Response RestApi::issue_list() const {
@@ -54,10 +50,7 @@ RestApi::Response RestApi::issue_list() const {
     issue["data"].erase("description");
     data["issues"].push_back(std::move(issue["data"]));
   }
-  return {
-      Json{{"data", data}},
-      200
-  };
+  return Response::ok(Json{{"data", data}});
 }
 
 RestApi::Response RestApi::issue_new(std::string const& requestContent) const {
@@ -65,20 +58,13 @@ RestApi::Response RestApi::issue_new(std::string const& requestContent) const {
     auto issueJson = Json::parse(requestContent);
     auto parsedIssue = IssueData::parse(issueJson);
     if (!parsedIssue.success) {
-      return status400();
+      return Response::badRequest();
     }
 
     auto requestedIssue = parsedIssue.issueData;
     return {storage.insertIssueIncreasedID(requestedIssue.toStorageJson()), 200};
   } catch (std::invalid_argument&) {
-    return status400();
+    return Response::badRequest();
   }
-}
-
-RestApi::Response RestApi::status400() {
-  return {
-      Json{},
-      400
-  };
 }
 
