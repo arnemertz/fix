@@ -11,52 +11,58 @@ RestApi::RestApi(Storage& st)
 
 RestApi::Response RestApi::process(std::string const& requestUri, std::string const& requestMethod,
                                    std::string const& requestContent) const {
+
+  using ResourceFunction = std::function<Response(std::string const&, std::smatch const&)>;
+
   {
-    std::regex issue_id_regex{"/issue/new"};
-    std::smatch id_match;
-    if (std::regex_match(requestUri, id_match, issue_id_regex)) {
-      if (requestMethod != "POST") {
+    std::string uriPattern = "/issue/new";
+    std::string allowedMethod = "POST";
+    ResourceFunction impl = [this](std::string const& requestContent, std::smatch const& id_match) {
+      return issue_new(requestContent);
+    };
+
+    std::regex uriRegex{uriPattern};
+    std::smatch uriMatch;
+    if (std::regex_match(requestUri, uriMatch, uriRegex)) {
+      if (requestMethod != allowedMethod) {
         return Response::methodNotAllowed();
       }
-
-      auto impl = [this](std::string const& requestContent, std::smatch const& id_match) {
-        return issue_new(requestContent);
-      };
-
-      return impl(requestContent, id_match);
+      return impl(requestContent, uriMatch);
     }
   }
 
   {
-    std::regex issue_id_regex{"/issue/list"};
-    std::smatch id_match;
-    if (std::regex_match(requestUri, id_match, issue_id_regex)) {
-      if (requestMethod != "GET") {
+    std::string uriPattern = "/issue/list";
+    std::string allowedMethod = "GET";
+    ResourceFunction impl = [this](std::string const& requestContent, std::smatch const& id_match) {
+      return issue_list();
+    };
+
+    std::regex uriRegex{uriPattern};
+    std::smatch uriMatch;
+    if (std::regex_match(requestUri, uriMatch, uriRegex)) {
+      if (requestMethod != allowedMethod) {
         return Response::methodNotAllowed();
       }
-
-      auto impl = [this](std::string const& requestContent, std::smatch const& id_match) {
-        return issue_list();
-      };
-
-      return impl(requestContent, id_match);
+      return impl(requestContent, uriMatch);
     }
   }
 
   {
-    std::regex issue_id_regex{"/issue/([0-9]*)"};
-    std::smatch id_match;
-    if (std::regex_match(requestUri, id_match, issue_id_regex)) {
-      if (requestMethod != "GET") {
+    std::string uriPattern = "/issue/([0-9]*)";
+    std::string allowedMethod = "GET";
+    ResourceFunction impl = [this](std::string const& requestContent, std::smatch const& id_match) {
+      auto id_string = id_match[1].str();
+      return issue_id(id_string);
+    };
+
+    std::regex uriRegex{uriPattern};
+    std::smatch uriMatch;
+    if (std::regex_match(requestUri, uriMatch, uriRegex)) {
+      if (requestMethod != allowedMethod) {
         return Response::methodNotAllowed();
       }
-
-      auto impl = [this](std::string const& requestContent, std::smatch const& id_match) {
-        auto id_string = id_match[1].str();
-        return issue_id(id_string);
-      };
-
-      return impl(requestContent, id_match);
+      return impl(requestContent, uriMatch);
     }
   }
 
