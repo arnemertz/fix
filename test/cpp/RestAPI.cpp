@@ -153,4 +153,9 @@ TEST_CASE( "Querying an issue by ID...", "[issue]" ) {
     CHECK(response.content == Json{});
   }
 
+  SECTION("... returns status 405 if the method is wrong.") {
+    auto response = api.process(uri, "POST", "");
+    CHECK(response.httpCode == 405);
+    CHECK(response.content == Json{});
+  }
 }

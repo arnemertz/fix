@@ -25,6 +25,9 @@ RestApi::Response RestApi::process(std::string const& requestUri, std::string co
     std::regex issue_id_regex{"/issue/([0-9]*)"};
     std::smatch id_match;
     if (std::regex_match(requestUri, id_match, issue_id_regex)) {
+      if (requestMethod != "GET") {
+        return Response::methodNotAllowed();
+      }
       auto id_string = id_match[1].str();
       return issue_id(id_string);
     }
@@ -35,10 +38,10 @@ RestApi::Response RestApi::process(std::string const& requestUri, std::string co
 
 RestApi::Response RestApi::issue_id(std::string const& id_string) const {
   Json issue = storage.issue(stoul(id_string));
-  if (!issue.empty()) {
-    return Response::ok(issue);
+  if (issue.empty()) {
+    return Response::notFound();
   }
-  return Response::notFound();
+  return Response::ok(issue);
 }
 
 RestApi::Response RestApi::issue_list() const {
