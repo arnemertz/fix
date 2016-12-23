@@ -13,7 +13,7 @@ RestApi::Response RestApi::process(std::string const& requestUri, std::string co
                                    std::string const& requestContent) const {
   if (requestUri == "/issue/new") {
     if (requestMethod != "POST") {
-      return Response::badRequest();
+      return Response::methodNotAllowed();
     }
     return issue_new(requestContent);
   } else if (requestUri == "/issue/list") {

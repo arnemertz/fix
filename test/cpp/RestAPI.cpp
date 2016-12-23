@@ -56,10 +56,6 @@ TEST_CASE( "Creating an issue...", "[issue]" ) {
   SECTION("... returns status 400 with corresponding error message if...") {
     RestApi::Response response = {Json{}, 0};
 
-    SECTION("... the method is wrong.") {
-      response = api.process(uri, "GET", request);
-    }
-
     SECTION("... the request can not be parsed.") {
       response = api.process(uri, method, "{ some non-json string");
     }
@@ -70,6 +66,12 @@ TEST_CASE( "Creating an issue...", "[issue]" ) {
 
     CHECK(response.content == Json{});
     CHECK(response.httpCode == 400);
+  }
+
+  SECTION("... returns status 405 if the method is wrong.") {
+    auto response = api.process(uri, "GET", "");
+    CHECK(response.httpCode == 405);
+    CHECK(response.content == Json{});
   }
 }
 
