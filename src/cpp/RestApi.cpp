@@ -1,78 +1,96 @@
 #include "RestApi.h"
 #include <regex>
 #include "Storage.h"
+#include "Issue.h"
 
 using namespace fix;
-using namespace std::string_literals;
 
-RestApi::RestApi(Storage &st)
+RestApi::RestApi(Storage& st)
   : storage{st} {
 }
 
-RestApi::Response RestApi::process(std::string const& requestUri, std::string const& requestMethod, std::string const& requestContent) const {
-  if (requestUri == "/issue/new") {
-    if (requestMethod != "POST") {
-      return status400();
-    }
+RestApi::Response RestApi::process(std::string const& requestUri, std::string const& requestMethod,
+                                   std::string const& requestContent) const {
 
-    try {
-      auto requestedIssue = Json::parse(requestContent);
-      if (requestedIssue.count("data") == 0) {
-        return status400();
-      }
-      if (requestedIssue["data"].count("ID") != 0) {
-        return status400();
-      }
-      for (auto const& attribute : {"summary"s, "description"s}) {
-        if (requestedIssue["data"].count(attribute) == 0) {
-          return status400();
-        }
-      }
-      return {storage.insertIssueIncreasedID(requestedIssue), 200};
-    } catch(std::invalid_argument &) {
-      return status400();
-    }
-  } else if (requestUri == "/issue/list") {
-    if (requestMethod != "GET") {
-      return {
-          Json{}, 405
-      };
-    }
+  using ResourceFunction = std::function<Response(std::string const&, std::smatch const&)>;
+  struct Resource {
+    std::string uriPattern;
+    std::string allowedMethod;
+    ResourceFunction impl;
+  };
 
-    Json data{
-        {"issues", Json::array()}
-    };
-    auto all_issues = storage.allIssues();
-    for (Json issue : all_issues) {
-      issue["data"].erase("description");
-      data["issues"].push_back( std::move(issue["data"]) );
-    }
-    return {
-        Json{ {"data", data} },
-        200
-    };
-  } else {
-    std::regex issue_id_regex{"/issue/([0-9]*)"};
-    std::smatch id_match;
-    if (std::regex_match(requestUri, id_match, issue_id_regex)) {
-      auto id_string = id_match[1].str();
-      Json issue = storage.issue(std::stoul(id_string));
-      if (!issue.empty()) {
-        return {issue, 200};
+  std::vector<Resource> resources {
+      {
+          "/issue/new",
+          "POST",
+          [this](std::string const& requestContent, std::smatch const& id_match) {
+            return issue_new(requestContent);
+          }
+      },
+      {
+          "/issue/list",
+          "GET",
+          [this](std::string const& requestContent, std::smatch const& id_match) {
+            return issue_list();
+          }
+      },
+      {
+          "/issue/([0-9]*)",
+          "GET",
+          [this](std::string const& requestContent, std::smatch const& id_match) {
+            auto id_string = id_match[1].str();
+            return issue_id(id_string);
+          }
       }
-      return { Json{}, 404 };
+  };
+
+  for (auto const& resource : resources)
+  {
+    std::regex uriRegex{resource.uriPattern};
+    std::smatch uriMatch;
+    if (std::regex_match(requestUri, uriMatch, uriRegex)) {
+      if (requestMethod != resource.allowedMethod) {
+        return Response::methodNotAllowed();
+      }
+      return resource.impl(requestContent, uriMatch);
     }
   }
 
-  return {
-      Json{}, 405
-  };
+  return Response::notFound();
 }
 
-RestApi::Response RestApi::status400() {
-  return {
-      Json{},
-      400
+RestApi::Response RestApi::issue_id(std::string const& id_string) const {
+  Json issue = storage.issue(stoul(id_string));
+  if (issue.empty()) {
+    return Response::notFound();
+  }
+  return Response::ok(issue);
+}
+
+RestApi::Response RestApi::issue_list() const {
+  Json data{
+      {"issues", Json::array()}
   };
+  auto all_issues = storage.allIssues();
+  for (Json issue : all_issues) {
+    issue["data"].erase("description");
+    data["issues"].push_back(std::move(issue["data"]));
+  }
+  return Response::ok(Json{{"data", data}});
+}
+
+RestApi::Response RestApi::issue_new(std::string const& requestContent) const {
+  try {
+    auto issueJson = Json::parse(requestContent);
+    auto parsedIssue = IssueData::parse(issueJson);
+    if (!parsedIssue.success) {
+      return Response::badRequest();
+    }
+
+    auto requestedIssue = parsedIssue.issueData;
+    return {storage.insertIssueIncreasedID(requestedIssue.toStorageJson()), 200};
+  } catch (std::invalid_argument&) {
+    return Response::badRequest();
+  }
 }
 
