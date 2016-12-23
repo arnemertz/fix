@@ -7,13 +7,19 @@ IssueParseResult IssueData::parse(Json const& issueJson) {
   if (issueJson.count("data") == 0) {
     return {{}, false};
   }
-  if (issueJson["data"].count("ID") != 0) {
+  auto const& dataJson = issueJson["data"];
+  if (dataJson.count("ID") != 0) {
     return {{}, false};
   }
+
   for (auto const &attribute : {"summary"s, "description"s}) {
-    if (issueJson["data"].count(attribute) == 0) {
+    if (dataJson.count(attribute) == 0) {
       return {{}, false};
     }
   }
-  return {IssueData{issueJson}, true};
+
+  IssueData issueData;
+  issueData.summary = dataJson["summary"];
+  issueData.description = dataJson["description"];
+  return {issueData, true};
 }

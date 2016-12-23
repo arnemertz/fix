@@ -7,12 +7,16 @@ namespace fix {
   class IssueParseResult;
 
   class IssueData {
-    Json content;
+    std::string summary;
+    std::string description;
   public:
-    IssueData(Json requestJson) : content{std::move(requestJson)} {}
-    IssueData() = default;
     Json toStorageJson() const {
-      return content;
+      return Json{
+        {"data", {
+          {"summary", summary},
+          {"description", description}
+        }}
+      };
     }
 
     static IssueParseResult parse(Json const& issueJson);
