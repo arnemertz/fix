@@ -11,17 +11,29 @@ RestApi::RestApi(Storage& st)
 
 RestApi::Response RestApi::process(std::string const& requestUri, std::string const& requestMethod,
                                    std::string const& requestContent) const {
-  if (requestUri == "/issue/new") {
-    if (requestMethod != "POST") {
-      return Response::methodNotAllowed();
+  {
+    std::regex issue_id_regex{"/issue/new"};
+    std::smatch id_match;
+    if (std::regex_match(requestUri, id_match, issue_id_regex)) {
+      if (requestMethod != "POST") {
+        return Response::methodNotAllowed();
+      }
+      return issue_new(requestContent);
     }
-    return issue_new(requestContent);
-  } else if (requestUri == "/issue/list") {
-    if (requestMethod != "GET") {
-      return Response::methodNotAllowed();
+  }
+
+  {
+    std::regex issue_id_regex{"/issue/list"};
+    std::smatch id_match;
+    if (std::regex_match(requestUri, id_match, issue_id_regex)) {
+      if (requestMethod != "GET") {
+        return Response::methodNotAllowed();
+      }
+      return issue_list();
     }
-    return issue_list();
-  } else {
+  }
+
+  {
     std::regex issue_id_regex{"/issue/([0-9]*)"};
     std::smatch id_match;
     if (std::regex_match(requestUri, id_match, issue_id_regex)) {
