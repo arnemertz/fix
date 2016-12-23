@@ -3,17 +3,19 @@
 
 #include <Poco/Path.h>
 #include "Storage.h"
+#include "FileAccess.h"
 
 namespace fix {
   namespace storage {
 
     class TextFileStorage : public Storage {
       static unsigned const STORED_JSON_INDENTATION = 2;
+      FileAccess& fileAccess;
       Poco::Path const storageDirectoryPath;
       Poco::Path const issueDirectoryPath;
     public:
 
-      TextFileStorage();
+      TextFileStorage(FileAccess& fa);
       unsigned selectMaxIssueID() const override;
       Json insertIssueIncreasedID(const Json &requestedIssue) override;
       std::vector<Json> allIssues() const override;
@@ -23,6 +25,7 @@ namespace fix {
       void insertIssue(Json);
 
       Json readIssue(const Poco::Path &path) const;
+
     };
 
   }

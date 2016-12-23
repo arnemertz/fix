@@ -16,26 +16,23 @@ namespace {
   }
 }
 
-TextFileStorage::TextFileStorage()
-  : storageDirectoryPath{getStorageDirectoryPath()}
+TextFileStorage::TextFileStorage(FileAccess& fa)
+  : fileAccess{fa}
+  , storageDirectoryPath{getStorageDirectoryPath()}
   , issueDirectoryPath{storageDirectoryPath, "issues"}
 {
-  File storageDir{storageDirectoryPath};
-  storageDir.createDirectory();
-  File issueDir{issueDirectoryPath};
-  issueDir.createDirectory();
+  fileAccess.createDirectory(storageDirectoryPath);
+  fileAccess.createDirectory(issueDirectoryPath);
 }
 
 unsigned TextFileStorage::selectMaxIssueID() const {
   auto maxID = 0u;
-  for (Poco::DirectoryIterator it{issueDirectoryPath}, end{}; it != end; ++it) {
-    auto path = it.path();
+  for (auto const& path : fileAccess.listFilesInDirectory(issueDirectoryPath)) {
     if (path.getExtension() != "json") {
       continue;
     }
     auto baseName = path.getBaseName();
     maxID = std::max(maxID, static_cast<unsigned>(std::stoul(baseName)));
-
   }
   return maxID;
 }
@@ -50,36 +47,33 @@ Json TextFileStorage::insertIssueIncreasedID(Json const &requestedIssue) {
 void TextFileStorage::insertIssue(Json issue) {
   auto issueID = issue["data"]["ID"].dump();
   Path issuePath{issueDirectoryPath, issueID + ".json"};
-  File issueFile{issuePath};
-  issueFile.createFile();
 
-  std::ofstream issueStream{issuePath.toString()};
-  issueStream << issue.dump(STORED_JSON_INDENTATION) << std::endl;
+  fileAccess.createFile(issuePath);
+  std::string const& textToStore = issue.dump(STORED_JSON_INDENTATION) + '\n';
+  fileAccess.writeToFile(issuePath, textToStore);
 }
 
 std::vector<Json> TextFileStorage::allIssues() const{
   std::vector<Json> issues;
-  for (Poco::DirectoryIterator it{issueDirectoryPath}, end{}; it != end; ++it) {
-    auto path = it.path();
-    if (path.getExtension() == "json") {
-      issues.push_back(readIssue(path));
+  for (auto const& path : fileAccess.listFilesInDirectory(issueDirectoryPath)) {
+    if (path.getExtension() != "json") {
+      continue;
     }
+    issues.push_back(readIssue(path));
   }
   return issues;
 }
 
 Json TextFileStorage::issue(unsigned id) const {
   Path issuePath{issueDirectoryPath, std::to_string(id) + ".json"};
-  if (File{issuePath}.exists()) {
-    return readIssue(issuePath);
+  if (!fileAccess.fileExists(issuePath)) {
+    return Json{};
   }
-
-  return Json{};
+  return readIssue(issuePath);
 }
 
 Json TextFileStorage::readIssue(const Path &path) const {
-  std::ifstream issueStream{path.toString()};
-  Json issue;
-  issueStream >> issue;
-  return issue;
+  const std::string& content = fileAccess.dumpFile(path);
+  return Json::parse(content);
 }
+
