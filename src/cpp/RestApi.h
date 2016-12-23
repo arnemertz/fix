@@ -21,8 +21,11 @@ namespace fix {
     Response process(std::string const& requestUri, std::string const& requestMethod, std::string const& requestContent) const;
   private:
     static RestApi::Response status400();
+
+    Response issue_new(const std::string &requestContent) const;
+    Response issue_list() const;
+    Response issue_id(const std::basic_string<char, std::char_traits<char>, std::allocator<char>> &id_string) const;
   };
 }
-
 
 #endif //FIX_RESTAPI_H
