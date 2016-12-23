@@ -53,22 +53,8 @@ TEST_CASE( "Creating an issue...", "[issue]" ) {
       response = api.process(uri, method, "{ some non-json string");
     }
 
-    SECTION("... the request contains no issue data.") {
+    SECTION("... the request does not contain parseable issue data.") {
       response = api.process(uri, method, "{}");
-    }
-
-    SECTION("... the request contains an ID for the new issue.") {
-      auto requestedIssueWithID = requestedIssue;
-      requestedIssueWithID["data"]["ID"] = 44;
-      response = api.process(uri, method, requestedIssueWithID.dump());
-    }
-
-    for (auto const& name : {"summary"s, "description"s}) {
-      SECTION("... the requested issue does not contain the "s + name + " attribute"s) {
-        auto requestedIssueWithoutAttribute = requestedIssue;
-        requestedIssueWithoutAttribute["data"].erase(name);
-        response = api.process(uri, method, requestedIssueWithoutAttribute.dump());
-      }
     }
 
     CHECK(response.content == Json{});

@@ -23,3 +23,12 @@ IssueParseResult IssueData::parse(Json const& issueJson) {
   issueData.description = dataJson["description"];
   return {issueData, true};
 }
+
+Json IssueData::toStorageJson() const {
+  return Json{
+    {"data", {
+      {"summary", summary},
+      {"description", description}
+    }}
+  };
+}

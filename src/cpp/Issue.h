@@ -10,15 +10,7 @@ namespace fix {
     std::string summary;
     std::string description;
   public:
-    Json toStorageJson() const {
-      return Json{
-        {"data", {
-          {"summary", summary},
-          {"description", description}
-        }}
-      };
-    }
-
+    Json toStorageJson() const;
     static IssueParseResult parse(Json const& issueJson);
   };
 
