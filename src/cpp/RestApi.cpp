@@ -18,7 +18,12 @@ RestApi::Response RestApi::process(std::string const& requestUri, std::string co
       if (requestMethod != "POST") {
         return Response::methodNotAllowed();
       }
-      return issue_new(requestContent);
+
+      auto impl = [this](std::string const& requestContent, std::smatch const& id_match) {
+        return issue_new(requestContent);
+      };
+
+      return impl(requestContent, id_match);
     }
   }
 
@@ -29,7 +34,12 @@ RestApi::Response RestApi::process(std::string const& requestUri, std::string co
       if (requestMethod != "GET") {
         return Response::methodNotAllowed();
       }
-      return issue_list();
+
+      auto impl = [this](std::string const& requestContent, std::smatch const& id_match) {
+        return issue_list();
+      };
+
+      return impl(requestContent, id_match);
     }
   }
 
@@ -40,8 +50,13 @@ RestApi::Response RestApi::process(std::string const& requestUri, std::string co
       if (requestMethod != "GET") {
         return Response::methodNotAllowed();
       }
-      auto id_string = id_match[1].str();
-      return issue_id(id_string);
+
+      auto impl = [this](std::string const& requestContent, std::smatch const& id_match) {
+        auto id_string = id_match[1].str();
+        return issue_id(id_string);
+      };
+
+      return impl(requestContent, id_match);
     }
   }
 
