@@ -6,6 +6,7 @@
 
 namespace fix {
   class Storage;
+  class IssueParseResult;
 
   class RestApi {
     Storage& storage;
@@ -14,14 +15,23 @@ namespace fix {
     struct Response {
       Json content;
       int httpCode;
+
+      static Response ok(Json response) { return {response, 200}; }
+      static Response badRequest() { return status(400); }
+      static Response notFound() { return status(404); }
+      static Response methodNotAllowed() { return status(405); }
+    private:
+      static Response status(int st) { return {Json{}, st};}
     };
 
     RestApi(Storage& st);
     Response process(std::string const& requestUri, std::string const& requestMethod, std::string const& requestContent) const;
   private:
-    static RestApi::Response status400();
+
+    Response issue_new(const std::string &requestContent) const;
+    Response issue_list() const;
+    Response issue_id(const std::basic_string<char, std::char_traits<char>, std::allocator<char>> &id_string) const;
   };
 }
-
 
 #endif //FIX_RESTAPI_H

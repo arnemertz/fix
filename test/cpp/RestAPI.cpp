@@ -15,6 +15,17 @@ public:
   MAKE_CONST_MOCK1(issue, Json(unsigned id), override);
 };
 
+TEST_CASE( "Bad URIs give 404" ) {
+  StorageMock storage;
+  RestApi api{storage};
+
+  auto response = api.process("/some/bad/uri", "POST", "");
+
+  REQUIRE(response.content == Json{});
+  REQUIRE(response.httpCode == 404);
+}
+
+
 TEST_CASE( "Creating an issue...", "[issue]" ) {
   StorageMock storage;
   RestApi api{storage};
@@ -45,34 +56,22 @@ TEST_CASE( "Creating an issue...", "[issue]" ) {
   SECTION("... returns status 400 with corresponding error message if...") {
     RestApi::Response response = {Json{}, 0};
 
-    SECTION("... the method is wrong.") {
-      response = api.process(uri, "GET", request);
-    }
-
     SECTION("... the request can not be parsed.") {
       response = api.process(uri, method, "{ some non-json string");
     }
 
-    SECTION("... the request contains no issue data.") {
+    SECTION("... the request does not contain parseable issue data.") {
       response = api.process(uri, method, "{}");
-    }
-
-    SECTION("... the request contains an ID for the new issue.") {
-      auto requestedIssueWithID = requestedIssue;
-      requestedIssueWithID["data"]["ID"] = 44;
-      response = api.process(uri, method, requestedIssueWithID.dump());
-    }
-
-    for (auto const& name : {"summary"s, "description"s}) {
-      SECTION("... the requested issue does not contain the "s + name + " attribute"s) {
-        auto requestedIssueWithoutAttribute = requestedIssue;
-        requestedIssueWithoutAttribute["data"].erase(name);
-        response = api.process(uri, method, requestedIssueWithoutAttribute.dump());
-      }
     }
 
     CHECK(response.content == Json{});
     CHECK(response.httpCode == 400);
+  }
+
+  SECTION("... returns status 405 if the method is wrong.") {
+    auto response = api.process(uri, "GET", "");
+    CHECK(response.httpCode == 405);
+    CHECK(response.content == Json{});
   }
 }
 
@@ -167,4 +166,9 @@ TEST_CASE( "Querying an issue by ID...", "[issue]" ) {
     CHECK(response.content == Json{});
   }
 
+  SECTION("... returns status 405 if the method is wrong.") {
+    auto response = api.process(uri, "POST", "");
+    CHECK(response.httpCode == 405);
+    CHECK(response.content == Json{});
+  }
 }
