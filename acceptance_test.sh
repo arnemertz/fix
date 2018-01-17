@@ -1,5 +1,7 @@
 #! /bin/bash
 
+set -e
+
 ./conan_install.sh Debug
 cd cmake-build-debug
 cmake .. && cmake --build . --target fix

@@ -1,8 +1,8 @@
 [requires]
-Poco/1.7.3@lasote/stable
-catch/1.5.0@TyRoXx/stable
-nlJson/2.0.7@arnemertz/stable
-trompeloeil/v20@rollbear/stable
+Poco/1.8.1@pocoproject/stable
+Catch/1.9.6@bincrafters/stable
+jsonformoderncpp/3.0.1@vthiery/stable
+trompeloeil/v29@rollbear/stable
 
 [options]
 Poco:cxx_14=True
