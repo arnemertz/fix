@@ -1,18 +1,10 @@
 # Fix
 
-A lightweight issue tracker.
+A lightweight issue tracker. At least that's the idea.
 
-For more on the project check the posts about it on my blog: http://arne-mertz.de/category/fix/
+This is going to be a project for me to learn and practice techniques, libraries, tools, etc.
 
-In the current state I won't accept pull requests and issues - obviously.
+I will blog along and write a developer diary.
+See http://arne-mertz.de/category/fix/ for more info.
 
-
-## Dependencies
-
-See the conanfile.txt for dependencies managed by Conan.
-
-The acceptance test suite needs some python installations additional to conan:
-
-    pip install behave
-    pip install pathlib
-
+In the current state I won't accept pull requests and issues.
