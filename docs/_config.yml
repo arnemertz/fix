@@ -18,13 +18,13 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Fix - Documentation and Dev Diary
-email: fix@arne-mertz.de
+title: Fix
+
 description: >- # this means to ignore newlines until "baseurl:"
-  You can find the dev diary <a href="https://arne-mertz.de/category/fix-dev-diary/>at my blog</a>
-  as well, among posts about C++ and maintainable code.
-baseurl: "" # the subpath of your site, e.g. /blog
+  Dev diary and associated documentation for the Fix toy project
+baseurl: "/fix" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
+
 twitter_username: arne_mertz
 github_username:  arnemertz
 
@@ -32,6 +32,14 @@ github_username:  arnemertz
 theme: minima
 plugins:
   - jekyll-feed
+
+header_pages:
+  - _pages/frontpage.md
+  - _pages/about.md
+  - _pages/archive.md
+
+include:
+  - _pages
 
 # Exclude from processing.
 # The following items will not be processed, by default.
@@ -52,3 +60,7 @@ plugins:
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
+exclude:
+  - .gitignore
+  - Gemfile
+  - Gemfile.lock
