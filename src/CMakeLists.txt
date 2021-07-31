@@ -8,3 +8,5 @@ target_link_libraries(
     project_warnings
     CONAN_PKG::fmt
 )
+
+add_subdirectory(fix_cli)
