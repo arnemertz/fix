@@ -1,9 +1,10 @@
 ---
 layout: post
 title:  "POC for behave"
-date:   2021-07-25 18:16:05 +0200
+date:   2021-07-30 09:00:05 +0200
 ---
 
+Just to check that behave works as intended before I dive into writing the first actual feature files for Fix.
 
 ### [Add POC for behave](https://github.com/arnemertz/fix/commit/3c95a8b3ecb4b81e7a6eb582ade015086bc81d77)
 

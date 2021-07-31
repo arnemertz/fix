@@ -33,6 +33,8 @@ theme: minima
 plugins:
   - jekyll-feed
 
+show_excerpts: true
+
 header_pages:
   - _pages/frontpage.md
   - _pages/about.md
