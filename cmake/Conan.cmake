@@ -17,7 +17,6 @@ macro(run_conan)
       REQUIRES
       ${CONAN_EXTRA_REQUIRES}
       catch2/2.13.6
-      fmt/8.0.1
       OPTIONS
       ${CONAN_EXTRA_OPTIONS}
       BASIC_SETUP
