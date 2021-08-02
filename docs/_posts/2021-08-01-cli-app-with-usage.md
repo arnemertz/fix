@@ -4,6 +4,9 @@ title:  "CLI app with usage output"
 date:   2021-08-01 13:57:05 +0200
 ---
 
+The first TDD session, and seeing how far we have come in passing the first BDD scenarios. Fix shows usage information, no more "hello world!"
+
+## 2021-08-01
 ### [add cli application class](https://github.com/arnemertz/fix/commit/d5ddcb40de729d4bdc5b24014b3c989ec0f5c22f)
 
 A few things have happened in this commit: At first, I added the `test/fix_cli` directory and `app_test.cpp` inside it. This already reflects a few decisions:
