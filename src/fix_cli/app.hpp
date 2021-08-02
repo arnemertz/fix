@@ -11,7 +11,7 @@ class app {
 public:
   explicit app(std::ostream &out);
 
-  void run(std::vector<std::string_view> const &);
+  auto run(std::vector<std::string_view> const &) -> int;
 };
 
 }

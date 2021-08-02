@@ -21,5 +21,9 @@ app::app(std::ostream &out)
   out << USAGE;
 }
 
-void app::run(const std::vector<std::string_view>& /*args*/) { //NOLINT
+auto app::run(const std::vector<std::string_view>& args) -> int { // NOLINT
+  if (args.empty()) {
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
 }

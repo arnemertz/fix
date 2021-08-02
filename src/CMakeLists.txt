@@ -10,4 +10,3 @@ target_link_libraries(
     project_warnings
     fix_cli
 )
-

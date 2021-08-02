@@ -23,11 +23,11 @@ TEST_CASE("Prints usage and commands...") {
   fix::cli::app app{out};
 
   SECTION("... when run without commands") {
-    app.run({});
+    CHECK(app.run({}) == EXIT_FAILURE);
   }SECTION("... when run with --help option") {
-    app.run({"--help"});
+    CHECK(app.run({"--help"}) == EXIT_SUCCESS);
   }SECTION("... when run with -h option") {
-    app.run({"-h"});
+    CHECK(app.run({"-h"}) == EXIT_SUCCESS);
   }
 
   CHECK(out.str() == USAGE);
