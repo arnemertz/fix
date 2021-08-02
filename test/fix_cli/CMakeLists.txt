@@ -3,4 +3,5 @@ set(FIX_CLI_TEST_SOURCES
     )
 
 add_executable(fix_cli_tests ${FIX_CLI_TEST_SOURCES})
-target_link_libraries(fix_cli_tests PRIVATE project_warnings project_options catch_main fix_cli)
+target_link_libraries(fix_cli_tests
+    PRIVATE project_warnings project_options catch_main CONAN_PKG::fmt fix_cli)

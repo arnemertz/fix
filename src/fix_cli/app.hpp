@@ -8,12 +8,14 @@
 namespace fix::cli {
 
 class app {
-public:
-  explicit app(std::ostream &out);
+  std::ostream& out;
 
-  auto run(std::vector<std::string_view> const &) -> int;
+public:
+  explicit app(std::ostream& out);
+
+  auto run(std::vector<std::string_view> const& args) -> int;
 };
 
-}
+} // namespace fix::cli
 
-#endif //FIX_APP_HPP
+#endif // FIX_APP_HPP

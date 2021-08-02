@@ -1,6 +1,7 @@
 #include "app.hpp"
 
 #include <ostream>
+#include <fmt/core.h>
 
 using namespace fix::cli;
 using namespace std::string_view_literals;
@@ -17,13 +18,20 @@ Available commands:
 }
 
 app::app(std::ostream &out)
-{
-  out << USAGE;
-}
+  : out{out}
+{}
 
 auto app::run(const std::vector<std::string_view>& args) -> int { // NOLINT
   if (args.empty()) {
+    out << USAGE;
     return EXIT_FAILURE;
   }
-  return EXIT_SUCCESS;
+
+  if (args[0] == "--help"sv || args[0] == "-h"sv) {
+    out << USAGE;
+    return EXIT_SUCCESS;
+  }
+
+  out << fmt::format("fix: '{}' is not a fix command. See 'fix --help'.\n", args[0]);
+  return EXIT_FAILURE;
 }
