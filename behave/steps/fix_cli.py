@@ -1,11 +1,8 @@
 from behave import given, when, then
+from assertions import *
 import pexpect
 
 fix_executable = '../cmake-build-debug/bin/fix'
-
-
-def assert_equals(a, b):
-    assert(a == b), "{} should equal {}!".format(a, b)
 
 def _start_fix_with_args(context, args):
     context.fix = pexpect.spawn(fix_executable, args=args)

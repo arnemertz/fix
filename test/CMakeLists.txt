@@ -10,4 +10,3 @@ target_link_libraries(catch_main PUBLIC CONAN_PKG::catch2)
 target_link_libraries(catch_main PRIVATE project_options)
 
 add_subdirectory(fix_cli)
-

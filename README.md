@@ -7,4 +7,4 @@ This is going to be a project for me to learn and practice techniques, libraries
 I will blog along and write a developer diary.
 See http://arne-mertz.de/category/fix/ for more info.
 
-In the current state I won't accept pull requests and issues.
+In the current state I won't accept pull requests.
