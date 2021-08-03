@@ -1,7 +1,7 @@
 #include "app.hpp"
 
-#include <ostream>
 #include <fmt/core.h>
+#include <ostream>
 
 using namespace fix::cli;
 using namespace std::string_view_literals;
@@ -17,9 +17,7 @@ Available commands:
 )"sv;
 }
 
-app::app(std::ostream &out)
-  : out{out}
-{}
+app::app(std::ostream& out) : out{out} {}
 
 auto app::run(const std::vector<std::string_view>& args) -> int { // NOLINT
   if (args.empty()) {

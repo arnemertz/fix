@@ -1,8 +1,8 @@
 #include <catch2/catch.hpp>
 
+#include <fmt/core.h>
 #include <sstream>
 #include <string_view>
-#include <fmt/core.h>
 
 #include "app.hpp"
 
@@ -25,9 +25,11 @@ TEST_CASE("Prints usage and commands...") {
 
   SECTION("... when run without commands") {
     CHECK(app.run({}) == EXIT_FAILURE);
-  }SECTION("... when run with --help option") {
+  }
+  SECTION("... when run with --help option") {
     CHECK(app.run({"--help"}) == EXIT_SUCCESS);
-  }SECTION("... when run with -h option") {
+  }
+  SECTION("... when run with -h option") {
     CHECK(app.run({"-h"}) == EXIT_SUCCESS);
   }
 
@@ -38,7 +40,8 @@ TEST_CASE("Prints 'not a command' ...") {
   std::stringstream out;
   fix::cli::app app{out};
 
-  const auto argv = GENERATE(std::vector{"foo"sv}, std::vector{"bar"sv, "baz"sv}, std::vector{"fruits:"sv, "apple"sv, "banana"sv, "cherries"sv});
+  const auto argv = GENERATE(std::vector{"foo"sv}, std::vector{"bar"sv, "baz"sv},
+                             std::vector{"fruits:"sv, "apple"sv, "banana"sv, "cherries"sv});
 
   CHECK(app.run(argv) == EXIT_FAILURE);
   CHECK(out.str() == fmt::format("fix: '{}' is not a fix command. See 'fix --help'.\n", argv.front()));
