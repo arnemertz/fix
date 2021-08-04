@@ -7,14 +7,7 @@ AllowShortBlocksOnASingleLine: Empty
 AllowShortFunctionsOnASingleLine: Empty
 AlwaysBreakTemplateDeclarations: Yes
 BinPackParameters: false
-BraceWrapping:
-  AfterClass:      false
-  AfterEnum:       true
-  AfterStruct:     true
-  AfterUnion:      true
-  AfterExternBlock: true
 BreakBeforeBinaryOperators: All
-BreakBeforeBraces: Custom
 ColumnLimit:     120
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 DeriveLineEnding: false
