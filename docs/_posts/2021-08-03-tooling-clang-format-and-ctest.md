@@ -20,4 +20,4 @@ I had a go at experimenting with CTest which I have not actively used so far.
 The result is a test suite that includes the unit tests as well as the Behave tests, the latter separated into stable and "work in progress".
 
 I'm quite pleased with how it turned out, as I now can launch all tests from CLion with one click and get to the location of test failures inside the feature file as well.
-![screenshot of behave and ctest integration in CLion]({{site.baseurl}}/assets/img/behave_ctest_integration.png)
+![screenshot of behave and ctest integration in CLion]({{site.baseurl}}{% link /assets/img/behave_ctest_integration.png %})

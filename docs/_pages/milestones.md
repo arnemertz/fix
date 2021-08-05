@@ -17,7 +17,7 @@ An **issue** is an _aggregate_ with the follwing _values_:
 
 - The **title** is a string of restricted length (6-120 characters) and character set (alphanumeric, space, punctuation without backspace and backtick)
 - The **description** is a unicode string, length theoretically unlimited (limited by storage format and other technical boundaries)
-- The **issue ID** is a string that is set when the issue is created and can never be changed. To avoid conflicts when Fix is used with Git (see [here]({% link _pages/about.md %})), consecutive numbers can not be used. Instead, an issue ID has a special format `aaa-bbb-ccc-ddd-xxxxxxx`: four blocks of 2-3 alphanumeric characters each, and a block of 7 hexadecimal characters. Blocks are separated by hyphens.
+- The **issue ID** is a string that is set when the issue is created and can never be changed. To avoid conflicts when Fix is used with Git (see [here]({{site.baseurl}}{% link _pages/about.md %})), consecutive numbers can not be used. Instead, an issue ID has a special format `aaa-bbb-ccc-ddd-xxxxxxx`: four blocks of 2-3 alphanumeric characters each, and a block of 7 hexadecimal characters. Blocks are separated by hyphens.
 - The **status** for now can have two possible values: `open` and `closed`
 
 For this first milestone, I want to be able to do the following:
