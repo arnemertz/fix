@@ -17,7 +17,7 @@ Feature: Fix CLI behavior
     Then it prints "fix: '<arg1>' is not a fix command. See 'fix --help'."
     And terminates with exit code 1
 
-  Examples:
-      | args         | arg1  |
-      | foo          | foo   |
-      | bar baz      | bar   |
+    Examples:
+      | args    | arg1 |
+      | foo     | foo  |
+      | bar baz | bar  |
