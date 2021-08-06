@@ -1,6 +1,5 @@
 Feature: Creating and listing issues
 
-  @wip
   Scenario: list issues for an empty repository shows an empty list
     Given an empty issue repository
     When we list all issues

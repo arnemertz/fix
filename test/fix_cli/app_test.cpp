@@ -46,3 +46,11 @@ TEST_CASE("Prints 'not a command' ...") {
   CHECK(app.run(argv) == EXIT_FAILURE);
   CHECK(out.str() == fmt::format("fix: '{}' is not a fix command. See 'fix --help'.\n", argv.front()));
 }
+
+TEST_CASE("List command prints number of issues") {
+  std::stringstream out;
+  fix::cli::app app{out};
+
+  CHECK(app.run({"list"sv}) == EXIT_SUCCESS);
+  CHECK(out.str() == "total: 0 issues\n");
+}

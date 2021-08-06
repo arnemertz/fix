@@ -30,6 +30,11 @@ auto app::run(const std::vector<std::string_view>& args) -> int { // NOLINT
     return EXIT_SUCCESS;
   }
 
+  if (args[0] == "list"sv) {
+    out << "total: 0 issues\n";
+    return EXIT_SUCCESS;
+  }
+
   out << fmt::format("fix: '{}' is not a fix command. See 'fix --help'.\n", args[0]);
   return EXIT_FAILURE;
 }
