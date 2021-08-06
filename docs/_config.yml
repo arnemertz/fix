@@ -34,6 +34,7 @@ plugins:
   - jekyll-feed
 
 show_excerpts: true
+excerpt_separator: <!--more-->
 
 header_pages:
   - _pages/frontpage.md

@@ -6,6 +6,7 @@ date:   2021-08-05 18:00:00 +0200
 
 The creation of issues is hard to test without being able to list them, and listing issues can only be done if we can create some.
 Therefore, in this step, I'll implement the basics of both features in lockstep.
+<!--more-->
 
 ## 2021-08-05
 ### [behave: create and list issues](https://github.com/arnemertz/fix/commit/067e814d65c9882eed110429520648223cc56b2c)

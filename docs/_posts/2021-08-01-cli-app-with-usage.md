@@ -5,8 +5,9 @@ date:   2021-08-01 13:57:05 +0200
 ---
 
 The first TDD session, and seeing how far we have come in passing the first BDD scenarios. Fix shows usage information, no more "hello world!"
+<!--more-->
 
-## 2021-08-01
+## August 1st
 ### [add cli application class](https://github.com/arnemertz/fix/commit/d5ddcb40de729d4bdc5b24014b3c989ec0f5c22f)
 
 A few things have happened in this commit: At first, I added the `test/fix_cli` directory and `app_test.cpp` inside it. This already reflects a few decisions:
@@ -40,4 +41,3 @@ The other changes you'll see in this commit are changes regarding behave: I remo
 The last piece of this commit is the tags in the feature file and the script to run the behave tests: I'll mark any feature or scenario that is not fully implemented with `@skip` and mark those I am currently working on as `@wip` (work in progress). Those that are not skipped are implemented and should not fail unless I change something in the functionality they describe. The script runs all tests that are not skipped and all that are work in progress.
 
 The current status of the BDD tests is that "Show usage when called with help option" passes, while "Show usage when called without arguments" fails in the last line - the program always terminates with exit code 0. That will be the next step to fix.
-

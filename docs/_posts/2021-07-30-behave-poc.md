@@ -5,7 +5,9 @@ date:   2021-07-30 09:00:05 +0200
 ---
 
 Just to check that behave works as intended before I dive into writing the first actual feature files for Fix.
+<!--more-->
 
+## July 30th
 ### [Add POC for behave](https://github.com/arnemertz/fix/commit/3c95a8b3ecb4b81e7a6eb582ade015086bc81d77)
 
 To test that [behave](https://behave.readthedocs.io/en/stable/) with [pexpect](https://pexpect.readthedocs.io/en/stable/) is suitable for testing Fix in a BDD manner, I wrote this tiny feature and the necessary step definitions. Those 3 lines document the current full functionality of Fix as it is nothing but a hello world example.

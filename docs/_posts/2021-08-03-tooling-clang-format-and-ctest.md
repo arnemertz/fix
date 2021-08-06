@@ -5,8 +5,9 @@ date:   2021-08-03 18:05:05 +0200
 ---
 
 Before I merge the initial features of the CLI app back to the main branch, I want to improve the tooling a bit.
+<!--more-->
 
-## 2021-08-03
+## August 3rd
 ### [tooling: rework and apply clang-format configuration](https://github.com/arnemertz/fix/commit/e6d64ec9fd6ede769ab5b5ecd4015ba6f45a1838)
 
 The clang-format configuration I had come up with during the setup did not seem to work very well.

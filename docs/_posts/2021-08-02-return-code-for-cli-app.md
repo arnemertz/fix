@@ -5,8 +5,9 @@ date:   2021-08-02 17:57:05 +0200
 ---
 
 Finalizing the first two BDD scenarios, Fix now returns a proper exit code.
+<!--more-->
 
-## 2021-08-02
+## August 2nd
 ### [Return exit code from app::run and main](https://github.com/arnemertz/fix/commit/41475f88e7e52391c710719c85759ae2e0612acb)
 
 Yesterday's remaining task was to get the correct exit code from the Fix executable to pass the current WIP scenarios.
