@@ -14,7 +14,7 @@ def start_fix(context, args):
 
 
 @when(u'we call Fix without arguments')
-def start_fix(context):
+def start_fix_no_args(context):
     _start_fix_with_args(context, [])
 
 
@@ -41,5 +41,10 @@ def check_commands(context):
 
 
 @then(u'terminates with exit code {ec:d}')
-def check_exit_code(context, ec):
+def check_exit_code_num(context, ec):
     assert_equals(context.fix.wait(), ec)
+
+@then(u'terminates with exit code {ec:l}')
+def check_exit_code_alpha(context, ec):
+    map={"OK" : 0}
+    check_exit_code_num(context, map[ec])
