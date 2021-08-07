@@ -4,6 +4,7 @@ import pexpect
 
 fix_executable = '../cmake-build-debug/bin/fix'
 
+
 def _start_fix_with_args(context, args):
     context.fix = pexpect.spawn(fix_executable, args=args)
 
@@ -40,11 +41,7 @@ def check_commands(context):
     check_output(context, command_list)
 
 
-@then(u'terminates with exit code {ec:d}')
-def check_exit_code_num(context, ec):
-    assert_equals(context.fix.wait(), ec)
-
 @then(u'terminates with exit code {ec:l}')
 def check_exit_code_alpha(context, ec):
-    map={"OK" : 0}
-    check_exit_code_num(context, map[ec])
+    map = {"OK": 0, "ERROR": 1}
+    assert_equals(context.fix.wait(), map[ec])

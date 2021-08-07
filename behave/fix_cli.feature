@@ -4,18 +4,18 @@ Feature: Fix CLI behavior
     When we call Fix without arguments
     Then it prints usage information
     And it prints a list of available commands
-    And terminates with exit code 1
+    And terminates with exit code ERROR
 
   Scenario: Show usage when called with help option
     When we call Fix with argument list "--help"
     Then it prints usage information
     And it prints a list of available commands
-    And terminates with exit code 0
+    And terminates with exit code OK
 
   Scenario Outline: Show error when called with an unknown argument
     When we call Fix with argument list "<args>"
     Then it prints "fix: '<arg1>' is not a fix command. See 'fix --help'."
-    And terminates with exit code 1
+    And terminates with exit code ERROR
 
     Examples:
       | args    | arg1 |
