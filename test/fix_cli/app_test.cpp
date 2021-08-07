@@ -10,6 +10,7 @@
 #include "app.hpp"
 
 using namespace std::literals;
+using fix::cli::app;
 
 namespace {
 constexpr auto USAGE = R"(usage: fix [--help] <command> [<args>]
@@ -32,39 +33,48 @@ auto split(std::string_view sv) {
   // clang-format on
 }
 
+struct run_result {
+  std::string output;
+  decltype(std::declval<app>().run({})) exit_code;
+};
+
+run_result run_app(std::string_view args) {
+  std::stringstream out;
+  app app{out};
+  auto const exit_code = app.run(split(args));
+  return {out.str(), exit_code};
+}
+
 } // namespace
 
+
 TEST_CASE("Prints usage and commands...") {
-  std::stringstream out;
-  fix::cli::app app{out};
-
   SECTION("... when run without commands") {
-    CHECK(app.run({}) == EXIT_FAILURE);
-  }
-  SECTION("... when run with --help option") {
-    CHECK(app.run({"--help"}) == EXIT_SUCCESS);
-  }
-  SECTION("... when run with -h option") {
-    CHECK(app.run({"-h"}) == EXIT_SUCCESS);
-  }
+    auto const [output, exit_code] = run_app("");
 
-  CHECK(out.str() == USAGE);
+    CHECK(output == USAGE);
+    CHECK(exit_code == EXIT_FAILURE);
+  }
+  SECTION("... when run with --help or -h option") {
+    auto const args = GENERATE("--help"sv, "-h"sv);
+    auto const [output, exit_code] = run_app(args);
+
+    CHECK(output == USAGE);
+    CHECK(exit_code == EXIT_SUCCESS);
+  }
 }
 
 TEST_CASE("Prints 'not a command' ...") {
-  std::stringstream out;
-  fix::cli::app app{out};
+  auto const args = GENERATE("foo"sv, "bar baz"sv, "fruits: apple banana cherries"sv);
+  auto const [output, exit_code] = run_app(args);
 
-  const auto argv = GENERATE(split("foo"), split("bar baz"), split("fruits: apple banana cherries"));
-
-  CHECK(app.run(argv) == EXIT_FAILURE);
-  CHECK(out.str() == fmt::format("fix: '{}' is not a fix command. See 'fix --help'.\n", argv.front()));
+  CHECK(output == fmt::format("fix: '{}' is not a fix command. See 'fix --help'.\n", split(args).front()));
+  CHECK(exit_code == EXIT_FAILURE);
 }
 
 TEST_CASE("List command prints number of issues") {
-  std::stringstream out;
-  fix::cli::app app{out};
+  auto const [output, exit_code] = run_app("list");
 
-  CHECK(app.run({"list"sv}) == EXIT_SUCCESS);
-  CHECK(out.str() == "total: 0 issues\n");
+  CHECK(output == "total: 0 issues\n");
+  CHECK(exit_code == EXIT_SUCCESS);
 }
