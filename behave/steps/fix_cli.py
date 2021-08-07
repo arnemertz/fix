@@ -26,7 +26,7 @@ def check_output(context, output):
 
 @then(u'it prints usage information')
 def check_usage(context):
-    usage = "usage: fix [--help] <command> [<args>]"
+    usage = "usage: fix [--help] <command> [<args>...]"
     check_output(context, usage)
 
 

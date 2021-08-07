@@ -17,6 +17,7 @@ macro(run_conan)
       REQUIRES
       ${CONAN_EXTRA_REQUIRES}
       catch2/2.13.6
+      docopt.cpp/0.6.3
       fmt/8.0.1
       range-v3/0.11.0
       OPTIONS

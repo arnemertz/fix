@@ -13,7 +13,10 @@ using namespace std::literals;
 using fix::cli::app;
 
 namespace {
-constexpr auto USAGE = R"(usage: fix [--help] <command> [<args>]
+constexpr auto USAGE = R"(usage: fix [--help] <command> [<args>...]
+
+Options:
+  -h --help      This help page
 
 Available commands:
    create        Create a new issue
@@ -46,7 +49,6 @@ run_result run_app(std::string_view args) {
 }
 
 } // namespace
-
 
 TEST_CASE("Prints usage and commands...") {
   SECTION("... when run without commands") {
