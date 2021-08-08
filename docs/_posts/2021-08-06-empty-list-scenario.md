@@ -7,7 +7,7 @@ date:   2021-08-06 18:59:25 +0200
 Today was about the first functional scenario: getting a list of 0 issues.
 <!--more-->
 
-## August 6th 2021
+## August 6th
 ### [behave: implement steps for empty list scenario](https://github.com/arnemertz/fix/commit/027039edfe3fef39e1cdf7627f799ef9efa36261)
 
 The "list issues for an empty repository" scenario was still failing due to steps not being implemented.
@@ -84,13 +84,13 @@ Being a C++ specialist is interesting, but it also takes a good measure of gener
 
 There are a handful of things I left to be refactored due to my short tooling detour:
 
-- `cli::app` unit tests. There's a pattern emerging how the app class is tested: create a stringstream to capture the output.
+- `cli::app` unit tests. There's a pattern emerging how the app class is tested: create a `string_stream` to capture the output.
 Assemble a vector of arguments, run it, check the output and return code. 
-The stringstream handling and the vector are mostly boilerplate.
+The `string_stream` handling and the vector are mostly boilerplate.
 The most expressive way to write unit tests would be passing a simple string with space-separated arguments to a function and get something back that has the output string and exit code.
 
 - Argument processing in `cli::app`. Working with the argument vector and handling the different inputs and commands has become unwieldy even before there is any actual functionality to speak of.
 There are several command-line argument processing libraries that may help. I have set my eyes on [docopt](https://github.com/docopt/docopt.cpp) since it looks as if it's going to help a lot with printing the usage strings etc.
 
 - The behave step checking for numeric exit codes is redundant.
-As discussed earlier, I like the semantic exit codes more, so I'll get rid of the numeric one.
+As discussed earlier, I like the semantic exit codes more, so I'll get rid of the numeric ones.

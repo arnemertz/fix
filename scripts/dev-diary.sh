@@ -20,7 +20,7 @@ date:   $(date "+%F %T %z")
 Excerpt placeholder
 <!--more-->
 
-## $(date "+%B %-dth %Y" | sed 's/1th/1st/; s/2th/2nd/; s/3th/3rd/')
+## $(date "+%B %-dth" | sed 's/1th/1st/; s/2th/2nd/; s/3th/3rd/')
 EOF
 fi
 

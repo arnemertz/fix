@@ -8,7 +8,7 @@ The creation of issues is hard to test without being able to list them, and list
 Therefore, in this step, I'll implement the basics of both features in lockstep.
 <!--more-->
 
-## 2021-08-05
+## August 5th
 ### [behave: create and list issues](https://github.com/arnemertz/fix/commit/067e814d65c9882eed110429520648223cc56b2c)
 
 The five scenarios in this commit describe two new functionalities in Fix - namely the creation of an issue and listing all issues.
