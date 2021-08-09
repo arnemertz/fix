@@ -6,7 +6,7 @@ Feature: Creating and listing issues
     Then it prints "total: 0 issues"
     And terminates with exit code OK
 
-  @skip
+  @wip
   Scenario: create an issue
     Given an empty issue repository
     When we create an issue titled "My first issue in Fix" with description
