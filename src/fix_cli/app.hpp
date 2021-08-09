@@ -14,6 +14,9 @@ public:
   explicit app(std::ostream& out);
 
   auto run(std::vector<std::string_view> const& args) -> int;
+
+private:
+  int run_command(std::string const& command);
 };
 
 } // namespace fix::cli

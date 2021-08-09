@@ -41,11 +41,15 @@ struct run_result {
   decltype(std::declval<app>().run({})) exit_code;
 };
 
-run_result run_app(std::string_view args) {
+run_result run_app(std::vector<std::string_view> const& argv) {
   std::stringstream out;
   app app{out};
-  auto const exit_code = app.run(split(args));
+  auto const exit_code = app.run(argv);
   return {out.str(), exit_code};
+}
+
+run_result run_app(std::string_view args) {
+  return run_app(split(args));
 }
 
 } // namespace
@@ -78,5 +82,12 @@ TEST_CASE("List command prints number of issues") {
   auto const [output, exit_code] = run_app("list");
 
   CHECK(output == "total: 0 issues\n");
+  CHECK(exit_code == EXIT_SUCCESS);
+}
+
+TEST_CASE("Create issue command prints issue ID") {
+  auto const [output, exit_code] = run_app({"create", "-t", "this is a new issue", "-d", "some text"});
+
+  CHECK_THAT(output, Catch::Matches("Issue created: thi-is-a-new-[0-9a-f]{7}\n"));
   CHECK(exit_code == EXIT_SUCCESS);
 }

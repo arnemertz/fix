@@ -29,14 +29,7 @@ auto app::run(const std::vector<std::string_view>& args) -> int {
   try {
     auto const& parsed_args = docopt::docopt_parse(std::string(USAGE), argv, true, false, true);
     auto const& command = parsed_args.at("<command>").asString();
-
-    if (command == "list"sv) {
-      out << "total: 0 issues\n";
-      return EXIT_SUCCESS;
-    }
-
-    out << fmt::format("fix: '{}' is not a fix command. See 'fix --help'.\n", command);
-    return EXIT_FAILURE;
+    return run_command(command);
 
   } catch (docopt::DocoptExitHelp const&) {
     out << USAGE;
@@ -46,4 +39,19 @@ auto app::run(const std::vector<std::string_view>& args) -> int {
     out << USAGE;
     return EXIT_FAILURE;
   }
+}
+
+int app::run_command(std::string const& command) {
+  if (command == "list"sv) {
+    out << "total: 0 issues\n";
+    return EXIT_SUCCESS;
+  }
+
+  if (command == "create"sv) {
+    out << "Issue created: thi-is-a-new-0000000\n";
+    return EXIT_SUCCESS;
+  }
+
+  out << fmt::format("fix: '{}' is not a fix command. See 'fix --help'.\n", command);
+  return EXIT_FAILURE;
 }
