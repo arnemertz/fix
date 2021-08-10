@@ -26,7 +26,7 @@ However, I'm practicing techniques here, and especially in larger codebases, thi
 The key element of this refactoring was getting familiar with ranges.
 And finding out that clang 12 does not yet support them, hence the use of ranges-v3.
 
-The `split` function implementation in general holds little surprises:
+The `split` function implementation, in general, holds little surprises:
 - split the parameter `string_view` into a range of subranges
 - convert the subranges to `string_view`s
 - convert the range of `string_view`s to a `vector` of `string_view`s
@@ -42,15 +42,15 @@ With the `split` function in place, I used it to replace the manually constructe
 ### [refactor tests: move app execution boilerplate into separate function](https://github.com/arnemertz/fix/commit/80aa50432b781512ad61ded4b8344b7fc31fd44f)
 
 With the `split` function it was now possible to further simplify the test cases.
-The CLI app's only responsibility for now is to take the command line input and produce output and an exit code. To not clutter the test cases with technical details, I wanted to have a way to convert easily readable input into the two outputs in as little code as possbile.
+The CLI app's only responsibility, for now, is to take the command line input and produce output and an exit code. To not clutter the test cases with technical details, I wanted to have a way to convert easily readable input into the two outputs in as little code as possible.
 
 With the `run_result` struct and the `run_app` function that seems to be achieved.
 For now, at least: The app will have dependencies in the future, and factoring them into the tests will change how the scaffolding for the test cases has to look.
 
 One last detail in this commit is the new `.clang-tidy` configuration for the CLI tests.
-_After_ I had started refactoring the test cases to look more redable, clang-tidy began to complain about the complexity. Talk about irony.
+_After_ I had started refactoring the test cases to look more readable, clang-tidy began to complain about the complexity. Talk about irony.
 The error messages hinted at the Catch2 macros.
-It seems they expand into relativley deeply nested conditionals which triggered the warning.
+It seems they expand into relatively deeply nested conditionals which triggered the warning.
 
 Since I do not plan to write complicated code in the unit tests, I opted to disable that specific warning completely for them.
 
@@ -85,11 +85,11 @@ There is one other test case that triggered the exception.
 The usage pattern, according to the syntax docopt uses, allowed only one argument for the command.
 The test case passing `fruits: apple banana cherries` has multiple arguments, so the usage pattern had to be changed to `[<args>...]` everywhere.
 
-A `ExitHelp` exception is thrown when docopt encounters the `--help` or `-h` option and because the first boolean argument is `true` - otherwise it would throw an `ArgumentError` in my case: 
+An `ExitHelp` exception is thrown when docopt encounters the `--help` or `-h` option and because the first boolean argument is `true` - otherwise it would throw an `ArgumentError` in my case: 
 According to the usage pattern, `--help` alone is not allowed - the `<command>` is not optional.
 
 So I moved the treatment for the `--help` option to the catch block.
-Now there were two empty catch blocks left: `ExitVersion` would never ben thrown because the second boolean parameter of `docopt_parse` is false.
+Now there were two empty catch blocks left: `ExitVersion` would never be thrown because the second boolean parameter of `docopt_parse` is false.
 Since a `--version` option is not a use case right now, I removed the catch block.
 
 I removed the `LanguageError` catch block as well: That exception is thrown when the usage string can not be parsed.
@@ -107,7 +107,7 @@ If they _do_ throw one day, I want to know: let it crash so I can fix it.
 There are a few minor things I observed during this refactoring that nag me a bit:
 - `app::run` now immediately takes the `vector` of `string_view` it gets and converts it into a `vector` of `string` for docopt.
 There is no more reason for the function to require `string_view`s, i.e. the signature can be changed.
-(Docopt is unlikely to change its signature in the near future due to backward compatibility with C++11)
+(Docopt is unlikely to change its signature soon due to backward compatibility with C++11)
 - Whenever I changed the usage pattern in `app.cpp` I had to change it for the unit test, and sometimes for the behave tests as well.
 It is questionable whether the tests should be that restrictive.
 I'll observe this during the next days and weeks - if I have to touch it more often and change the test expectations every time, I will probably loosen them, e.g. just look for "usage: " and "Available commands"
