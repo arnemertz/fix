@@ -51,7 +51,7 @@ int app::run_command(std::string const& command) {
 
   if (command == "create"sv) {
     domain::application_service application_service;
-    const auto issue_id = application_service.create("", "");
+    const auto issue_id = application_service.create("this is a new issue", "");
     out << fmt::format("Issue created: {}\n", issue_id);
     return EXIT_SUCCESS;
   }
