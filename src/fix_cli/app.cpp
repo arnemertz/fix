@@ -4,6 +4,8 @@
 #include <fmt/core.h>
 #include <ostream>
 
+#include "application_service.hpp"
+
 using namespace fix::cli;
 using namespace std::string_view_literals;
 
@@ -48,7 +50,9 @@ int app::run_command(std::string const& command) {
   }
 
   if (command == "create"sv) {
-    out << "Issue created: thi-is-a-new-0000000\n";
+    domain::application_service application_service;
+    const auto issue_id = application_service.create("", "");
+    out << fmt::format("Issue created: {}\n", issue_id);
     return EXIT_SUCCESS;
   }
 
