@@ -34,3 +34,6 @@ For this first milestone, I want to be able to do the following:
 - explicitly setting the issue ID (or part of it) may be a desirable feature for some future milestone
 - more fields for issues, like tags, comments, etc.
 - more allowed values for status
+
+### Notes:
+- **2021-08-13**: issue IDs should be all lower case (prefix and hash)
