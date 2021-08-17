@@ -16,7 +16,7 @@ Feature: Creating and listing issues
     Then it prints "Issue created: my-fir-iss-in-[hash]"
     And terminates with exit code OK
 
-  @skip
+  @wip
   Scenario: created issues are listed in alphabetic order by ID
     Given an empty issue repository
     When we create an issue titled "The first created issue" with description

@@ -23,8 +23,10 @@ def start_fix_no_args(context):
 @then(u'it prints "{output}"')
 def check_output(context, output):
     pattern = output.replace("[hash]", "[0-9a-f]{7}")
-    if pattern != output: context.fix.expect(pattern)
-    else: context.fix.expect_exact(output)
+    if pattern != output:
+        context.fix.expect(pattern)
+    else:
+        context.fix.expect_exact(output)
 
 
 @then(u'it prints usage information')
