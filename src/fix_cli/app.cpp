@@ -52,7 +52,9 @@ auto app::run(const std::vector<std::string_view>& args) -> int {
 
 int app::run_command(std::string const& command, const std::vector<std::string>& argv) {
   if (command == "list"sv) {
-    out << "total: 0 issues\n";
+    domain::application_service application_service;
+    auto const count = application_service.list();
+    out << fmt::format("total: {} issues\n", count);
     return EXIT_SUCCESS;
   }
 

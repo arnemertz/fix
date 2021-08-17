@@ -24,3 +24,7 @@ std::string application_service::create(std::string_view title, std::string_view
 
   return id_prefix + "-0000000"s;
 }
+
+size_t application_service::list() const { // NOLINT
+  return 0;
+}

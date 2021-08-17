@@ -16,3 +16,8 @@ TEST_CASE("Create issue returns issue ID") {
   auto const id_pattern = id_prefix + "-[0-9a-f]{7}"s;
   CHECK_THAT(application_service.create(title, description), Catch::Matches(id_pattern));
 }
+
+TEST_CASE("List issues returns number of issues") {
+  application_service application_service;
+  CHECK(application_service.list() == 0);
+}

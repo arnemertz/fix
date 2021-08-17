@@ -9,6 +9,9 @@ class application_service {
 public:
   // cppcheck-suppress functionStatic
   std::string create(std::string_view title, std::string_view description);
+
+  // cppcheck-suppress functionStatic
+  size_t list() const;
 };
 
 }
