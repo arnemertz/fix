@@ -86,8 +86,12 @@ TEST_CASE("List command prints number of issues") {
 }
 
 TEST_CASE("Create issue command prints issue ID") {
-  auto const [output, exit_code] = run_app({"create", "-t", "this is a new issue", "-d", "some text"});
+  auto const& [title, description, id_prefix]
+  = GENERATE(std::tuple("this is a new issue", "some text", "thi-is-a-new"),
+             std::tuple("My first issue in Fix", "Dorem Fixum dolor sit amet", "my-fir-iss-in"));
 
-  CHECK_THAT(output, Catch::Matches("Issue created: thi-is-a-new-[0-9a-f]{7}\n"));
+  auto const [output, exit_code] = run_app({"create", "-t", title, "-d", description});
+
+  CHECK_THAT(output, Catch::Matches(fmt::format("Issue created: {}-[0-9a-f]{{7}}\n", id_prefix)));
   CHECK(exit_code == EXIT_SUCCESS);
 }

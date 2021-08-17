@@ -16,7 +16,7 @@ public:
   auto run(std::vector<std::string_view> const& args) -> int;
 
 private:
-  int run_command(std::string const& command);
+  int run_command(std::string const& command, const std::vector<std::string>& argv);
 };
 
 } // namespace fix::cli

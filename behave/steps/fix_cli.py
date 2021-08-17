@@ -12,7 +12,7 @@ def _start_fix_with_args(context, args):
 
 @when(u'we call Fix with argument list "{args}"')
 def start_fix(context, args):
-    _start_fix_with_args(context, shlex.split(args.strip(), posix=False))
+    _start_fix_with_args(context, shlex.split(args.strip(), posix=True))
 
 
 @when(u'we call Fix without arguments')
