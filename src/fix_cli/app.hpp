@@ -17,6 +17,8 @@ public:
 
 private:
   int run_command(std::string const& command, const std::vector<std::string>& argv);
+  int list();
+  int create(std::vector<std::string> const& argv);
 };
 
 } // namespace fix::cli

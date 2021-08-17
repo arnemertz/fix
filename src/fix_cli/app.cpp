@@ -52,23 +52,31 @@ auto app::run(const std::vector<std::string_view>& args) -> int {
 
 int app::run_command(std::string const& command, const std::vector<std::string>& argv) {
   if (command == "list"sv) {
-    domain::application_service application_service;
-    auto const count = application_service.list();
-    out << fmt::format("total: {} issues\n", count);
-    return EXIT_SUCCESS;
+    return list();
   }
 
   if (command == "create"sv) {
-    auto const& parsed_args = docopt::docopt_parse(std::string(CREATE_USAGE), argv, false, false, false);
-    auto const& title = parsed_args.at("--title").asString();
-    auto const& description = parsed_args.at("--descr").asString();
-
-    domain::application_service application_service;
-    const auto issue_id = application_service.create(title, description);
-    out << fmt::format("Issue created: {}\n", issue_id);
-    return EXIT_SUCCESS;
+    return create(argv);
   }
 
   out << fmt::format("fix: '{}' is not a fix command. See 'fix --help'.\n", command);
   return EXIT_FAILURE;
+}
+
+int app::list() {
+  domain::application_service application_service;
+  auto const count = application_service.list();
+  out << fmt::format("total: {} issues\n", count);
+  return EXIT_SUCCESS;
+}
+
+int app::create(std::vector<std::string> const& argv) {
+  auto const& parsed_args = docopt::docopt_parse(std::string(CREATE_USAGE), argv, false, false, false);
+  auto const& title = parsed_args.at("--title").asString();
+  auto const& description = parsed_args.at("--descr").asString();
+
+  domain::application_service application_service;
+  const auto issue_id = application_service.create(title, description);
+  this->out << fmt::format("Issue created: {}\n", issue_id);
+  return EXIT_SUCCESS;
 }
