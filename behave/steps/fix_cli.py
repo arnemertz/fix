@@ -20,11 +20,15 @@ def start_fix_no_args(context):
     _start_fix_with_args(context, [])
 
 
+def check_output_regex(context, pattern):
+    context.fix.expect(pattern)
+
+
 @then(u'it prints "{output}"')
 def check_output(context, output):
     pattern = output.replace("[hash]", "[0-9a-f]{7}")
     if pattern != output:
-        context.fix.expect(pattern)
+        check_output_regex(context, pattern)
     else:
         context.fix.expect_exact(output)
 

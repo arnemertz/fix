@@ -33,7 +33,7 @@ Feature: Creating and listing issues
       | thi-iss-yyy-zzz | Third issue                 | open   |
     And it prints "total: 3 issues"
 
-  @skip
+  @wip
   Scenario: creation of identical issues is rejected
     Given an empty issue repository
     When we create an issue titled "A unique issue" with description
@@ -49,7 +49,7 @@ Feature: Creating and listing issues
     Then it prints "Issue already exists: a-uni-iss-zzz-[hash]"
     And terminates with exit code ERROR
 
-  @skip
+  @wip
   Scenario: creation of issues with identical title but different description is allowed
     Given an empty issue repository
     When we create an issue titled "A unique issue" with description

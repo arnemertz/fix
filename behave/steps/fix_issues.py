@@ -32,6 +32,12 @@ def create_issue_random_description(context, title):
 def check_issue_list(context):
     # first: column headings, separated by non-word characters,
     # then: entries for each column, again separated by non-word characters
-    context.fix.expect(r'ID\W+STATUS\W+TITLE') # TODO: call fix_cli
+    fix_cli.check_output_regex(context, r'ID\W+STATUS\W+TITLE')
     for row in context.table:
         fix_cli.check_output(context, fr'{row["issue ID prefix"]}-[hash]\W+{row["status"]}\W+"{row["title"]}"')
+
+
+@then(u'it prints a list of {count:d} issues')
+def check_issue_list_count(context, count):
+    check_issue_list(context)
+    fix_cli.check_output(f"total: {count} issues")
