@@ -7,7 +7,7 @@ namespace fix::domain {
 
 class title {
 public:
-  static bool create(std::string_view str);
+  static bool create(std::string_view text);
 };
 
 } // namespace fix::domain
