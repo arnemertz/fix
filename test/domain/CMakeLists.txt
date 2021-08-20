@@ -1,5 +1,6 @@
 set(DOMAIN_TEST_SOURCES
     application_service_test.cpp
+    title_test.cpp
     )
 
 add_executable(domain_tests ${DOMAIN_TEST_SOURCES})

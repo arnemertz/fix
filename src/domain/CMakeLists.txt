@@ -1,5 +1,6 @@
 set(DOMAIN_SOURCES
     application_service.cpp
+    title.cpp
     )
 
 add_library(domain ${DOMAIN_SOURCES})

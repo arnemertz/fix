@@ -36,4 +36,5 @@ For this first milestone, I want to be able to do the following:
 - more allowed values for status
 
 ### Notes:
-- **2021-08-13**: issue IDs should be all lower case (prefix and hash)
+- **2021-08-13**: issue IDs are all lower case (prefix and hash)
+- **2021-08-20**: titles are further restricted to printable ASCII characters (except backspace and backtick)
