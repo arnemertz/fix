@@ -10,6 +10,12 @@ using namespace std::literals;
 constexpr size_t MIN_LENGTH = 6;
 constexpr size_t MAX_LENGTH = 120;
 
+TEST_CASE("Titles can be converted back to strings") {
+  const auto title_text = "just some normal title"sv;
+  const auto title = title::create(title_text);
+  CHECK(title->str() == title_text);
+}
+
 TEST_CASE("Titles have restricted length") {
   SECTION("titles may not be empty") {
     CHECK_FALSE(title::create(""));
@@ -22,7 +28,8 @@ TEST_CASE("Titles have restricted length") {
     CHECK_FALSE(title::create(long_scream));
   }
   SECTION("titles with a length in the allowed range can be created") {
-    const auto valid_string = GENERATE(std::string(MIN_LENGTH, 'n'), std::string(MAX_LENGTH, 'x'), "some title with sufficient length"s);
+    const auto valid_string
+        = GENERATE(std::string(MIN_LENGTH, 'n'), std::string(MAX_LENGTH, 'x'), "some title with sufficient length"s);
     const auto title = title::create(valid_string);
     CHECK(title);
   }
