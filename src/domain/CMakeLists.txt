@@ -1,5 +1,6 @@
 set(DOMAIN_SOURCES
     application_service.cpp
+    domain_error.cpp
     title.cpp
     )
 
