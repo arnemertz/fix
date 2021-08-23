@@ -7,8 +7,10 @@ std::string error_message(fix::domain::domain_error error) {
   switch (error) {
   case domain_error::MISSING_IMPLEMENTATION:
     return "feature is not implemented yet";
-  case domain_error::TITLE_LENGTH_OUT_OF_BOUNDS:
-    return "";
+  case domain_error::TITLE_TOO_LONG:
+    return "title is too long";
+  case domain_error::TITLE_TOO_SHORT:
+    return "title is too short";
   }
   return "unknown domain error";
 }

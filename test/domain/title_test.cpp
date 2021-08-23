@@ -2,6 +2,7 @@
 
 #include "title.hpp"
 
+#include "catch2_expected_matcher.hpp"
 #include <string>
 
 using fix::domain::title;
@@ -18,14 +19,15 @@ TEST_CASE("Titles can be converted back to strings") {
 
 TEST_CASE("Titles have restricted length") {
   SECTION("titles may not be empty") {
-    CHECK_FALSE(title::create(""));
+    CHECK_THAT(title::create(""), FailsWithMessage("title is too short"));
   }
   SECTION("titles may not be too short") {
-    CHECK_FALSE(title::create("short"));
+    const auto& short_string = std::string(MIN_LENGTH - 1, 's');
+    CHECK_THAT(title::create(short_string), FailsWithMessage("title is too short"));
   }
   SECTION("titles may not be too long") {
-    const auto long_scream = std::string(MAX_LENGTH, 'a') + "h"s;
-    CHECK_FALSE(title::create(long_scream));
+    auto const long_scream = std::string(MAX_LENGTH, 'a') + "h"s;
+    CHECK_THAT(title::create(long_scream), FailsWithMessage("title is too long"));
   }
   SECTION("titles with a length in the allowed range can be created") {
     const auto valid_string

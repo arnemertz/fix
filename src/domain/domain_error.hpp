@@ -8,7 +8,8 @@ namespace fix::domain {
 
 enum class domain_error {
   MISSING_IMPLEMENTATION = 1,
-  TITLE_LENGTH_OUT_OF_BOUNDS = 10,
+  TITLE_TOO_LONG = 10,
+  TITLE_TOO_SHORT = 11,
 };
 
 template <typename T>
