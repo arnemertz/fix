@@ -5,12 +5,15 @@
 #include <string>
 #include <string_view>
 
+#include <domain_error.hpp>
+
 namespace fix::domain {
 
 class title {
 public:
-  static std::optional<title> create(std::string_view text);
+  static expected<title> create(std::string_view text);
 
+  // cppcheck-suppress functionStatic
   std::string str() const;
 };
 

@@ -1,14 +1,15 @@
 #include "title.hpp"
 
-using fix::domain::title;
+using namespace fix::domain;
 
 constexpr size_t MIN_LENGTH = 6;
 constexpr size_t MAX_LENGTH = 120;
 
-std::optional<title> title::create(std::string_view text) {
+expected<title> title::create(std::string_view text) {
   if ((text.length() < MIN_LENGTH) || (text.length() > MAX_LENGTH)) {
-    return std::nullopt;
+    return unexpected(domain_error::TITLE_LENGTH_OUT_OF_BOUNDS);
   }
+
   return title{};
 }
 

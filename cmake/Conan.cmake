@@ -20,6 +20,7 @@ macro(run_conan)
       docopt.cpp/0.6.3
       fmt/8.0.1
       range-v3/0.11.0
+      tl-expected/20190710
       OPTIONS
       ${CONAN_EXTRA_OPTIONS}
       BASIC_SETUP

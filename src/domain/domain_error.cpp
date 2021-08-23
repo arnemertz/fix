@@ -7,6 +7,8 @@ std::string error_message(fix::domain::domain_error error) {
   switch (error) {
   case domain_error::MISSING_IMPLEMENTATION:
     return "feature is not implemented yet";
+  case domain_error::TITLE_LENGTH_OUT_OF_BOUNDS:
+    return "";
   }
   return "unknown domain error";
 }
@@ -17,7 +19,7 @@ std::string error_message(fix::domain::domain_error error) {
 
 struct fix_error_category_t : std::error_category {
   [[nodiscard]] char const* name() const noexcept override {
-    return "fix_domain_error";
+    return "fix domain error";
   }
 
   [[nodiscard]] std::string message(int condition) const override {

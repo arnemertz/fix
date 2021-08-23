@@ -11,4 +11,8 @@ target_link_libraries(domain
     project_options
     CONAN_PKG::range-v3
     )
+target_link_libraries(domain
+    PUBLIC
+    CONAN_PKG::tl-expected
+    )
 target_include_directories(domain PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)

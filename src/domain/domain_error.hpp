@@ -2,12 +2,21 @@
 #define FIX_SRC_DOMAIN_DOMAIN_ERROR_HPP
 
 #include <system_error>
+#include <tl/expected.hpp>
 
 namespace fix::domain {
 
 enum class domain_error {
   MISSING_IMPLEMENTATION = 1,
+  TITLE_LENGTH_OUT_OF_BOUNDS = 10,
 };
+
+template <typename T>
+using expected = tl::expected<T, std::error_code>;
+
+inline auto unexpected(domain_error error) {
+  return tl::unexpected(error);
+}
 
 }
 
