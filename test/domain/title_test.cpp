@@ -38,13 +38,31 @@ TEST_CASE("Titles have restricted length") {
 }
 
 TEST_CASE("Titles have a restricted character set") {
-  SECTION("titles may contain alphanumeric characters and spaces") {}
-  SECTION("titles may not contain line breaks and other non-space whitespace") {}
-  SECTION("titles may not contain special punctuation characters") {
-    SECTION("backspace") {}
-    SECTION("backtick") {}
+  SECTION("titles may contain alphanumeric characters and spaces") {
+    CHECK(title::create("some VALID_CHARACTERS and 18583075 numbers"));
   }
-  SECTION("titles may contain other punctuation characters") {}
-  SECTION("titles may not contain backspace characters") {}
-  SECTION("titles may not contain non-ASCII characters") {}
+  SECTION("titles may not contain line breaks and other non-space whitespace") {
+    auto const non_space_whitespace = GENERATE("\t"s, "\n", "\r", "\v", "\f");
+    CHECK_THAT(title::create("title with a "s + non_space_whitespace + " character"),
+               FailsWithMessage("title can only contain letters, digits, and punctuation"));
+  }
+  SECTION("titles may not contain special punctuation characters") {
+    SECTION("backslash") {
+      CHECK_THAT(title::create("problematic \\ backslash"), FailsWithMessage("title may not contain '\\' or '`'"));
+    }
+    SECTION("backtick") {
+      CHECK_THAT(title::create("no `backticks` please"), FailsWithMessage("title may not contain '\\' or '`'"));
+    }
+  }
+  SECTION("titles may contain other punctuation characters") {
+    CHECK(title::create("the $*@=%<> characters are \"fine\"! (really.) []{ return a?1:~0; }"));
+  }
+  SECTION("titles may not contain backspace characters") {
+    CHECK_THAT(title::create("with a \backspace"),
+               FailsWithMessage("title can only contain letters, digits, and punctuation"));
+  }
+  SECTION("titles may not contain non-ASCII characters") {
+    CHECK_THAT(title::create("we \xE2\x99\xA5 unicode. Not."),
+               FailsWithMessage("title may not contain non-ASCII characters"));
+  }
 }

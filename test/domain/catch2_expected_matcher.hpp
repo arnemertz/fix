@@ -35,4 +35,24 @@ public:
   }
 };
 
+namespace Catch {
+template<typename T>
+struct StringMaker<fix::domain::expected<T>> {
+  constexpr static size_t MAX_MESSAGE_LENGTH = 30;
+
+  static std::string convert(fix::domain::expected<T> const& expected) {
+    if (!expected) {
+      auto const& error_code = expected.error();
+      return "unexpected(" + std::to_string(error_code.value()) + ": '"
+           + error_code.message().substr(0, MAX_MESSAGE_LENGTH) + "')";
+    }
+    if constexpr (std::is_same_v<T, void>) {
+      return "expected(void)";
+    } else {
+      return "expected(" + StringMaker<T>::convert(expected.template value()) + ")";
+    }
+  }
+};
+} // namespace Catch
+
 #endif // FIX_TEST_DOMAIN_CATCH2_EXPECTED_MATCHER_HPP

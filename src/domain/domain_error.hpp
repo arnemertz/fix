@@ -10,16 +10,19 @@ enum class domain_error {
   MISSING_IMPLEMENTATION = 1,
   TITLE_TOO_LONG = 10,
   TITLE_TOO_SHORT = 11,
+  TITLE_HAS_NON_PRINTABLES = 12,
+  TITLE_HAS_SPECIAL_PUNCTUATION = 13,
+  TITLE_HAS_NON_ASCII_CHARS = 14,
 };
 
-template <typename T>
+template<typename T>
 using expected = tl::expected<T, std::error_code>;
 
 inline auto unexpected(domain_error error) {
   return tl::unexpected(error);
 }
 
-}
+} // namespace fix::domain
 
 // =========================================================
 // wiring to enable use of std::error_code with domain_error
