@@ -10,11 +10,14 @@
 namespace fix::domain {
 
 class title {
+  std::string text;
+
+  explicit title(std::string_view text);
+
 public:
   static expected<title> create(std::string_view text);
 
-  // cppcheck-suppress functionStatic
-  std::string str() const;
+  std::string to_string() const;
 };
 
 } // namespace fix::domain

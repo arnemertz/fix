@@ -9,6 +9,8 @@ using namespace fix::domain;
 constexpr size_t MIN_LENGTH = 6;
 constexpr size_t MAX_LENGTH = 120;
 
+title::title(std::string_view text) : text{text} {}
+
 expected<title> title::create(std::string_view text) {
   if (text.length() < MIN_LENGTH) {
     return unexpected(domain_error::TITLE_TOO_SHORT);
@@ -27,9 +29,9 @@ expected<title> title::create(std::string_view text) {
     return unexpected(domain_error::TITLE_HAS_SPECIAL_PUNCTUATION);
   }
 
-  return title{};
+  return title{text};
 }
 
-std::string title::str() const { // NOLINT
-  return "just some normal title";
+std::string title::to_string() const {
+  return text;
 }

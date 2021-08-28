@@ -11,10 +11,18 @@ using namespace std::literals;
 constexpr size_t MIN_LENGTH = 6;
 constexpr size_t MAX_LENGTH = 120;
 
+TEST_CASE("Public construction of titles is only possible via copy, move") {
+  STATIC_REQUIRE(std::is_copy_constructible_v<title>);
+  STATIC_REQUIRE(std::is_move_constructible_v<title>);
+
+  STATIC_REQUIRE_FALSE(std::is_default_constructible_v<title>);
+  STATIC_REQUIRE_FALSE(std::is_constructible_v<title, std::string_view>);
+}
+
 TEST_CASE("Titles can be converted back to strings") {
-  const auto title_text = "just some normal title"sv;
+  const auto title_text = GENERATE("just some normal title"sv, "another title"sv);
   const auto title = title::create(title_text);
-  CHECK(title->str() == title_text);
+  CHECK(title->to_string() == title_text);
 }
 
 TEST_CASE("Titles have restricted length") {
