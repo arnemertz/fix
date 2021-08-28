@@ -3,6 +3,7 @@
 #include <cctype>
 #include <climits>
 #include <range/v3/algorithm/any_of.hpp>
+#include <range/v3/view/trim.hpp>
 
 using namespace fix::domain;
 
@@ -12,6 +13,11 @@ constexpr size_t MAX_LENGTH = 120;
 title::title(std::string_view text) : text{text} {}
 
 expected<title> title::create(std::string_view text) {
+  const auto trimmed_length = ranges::size(text | ranges::views::trim([](char c) { return isspace(c); }));
+  if (trimmed_length != text.length()) {
+    return unexpected(domain_error::TITLE_NOT_TRIMMED);
+  }
+
   if (text.length() < MIN_LENGTH) {
     return unexpected(domain_error::TITLE_TOO_SHORT);
   }

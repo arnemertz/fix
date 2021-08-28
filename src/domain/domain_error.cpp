@@ -17,6 +17,8 @@ std::string error_message(fix::domain::domain_error error) {
     return "title may not contain '\\' or '`'";
   case domain_error::TITLE_HAS_NON_ASCII_CHARS:
     return "title may not contain non-ASCII characters";
+  case domain_error::TITLE_NOT_TRIMMED:
+    return "title may not start or end with whitespace";
   }
   return "unknown domain error";
 }

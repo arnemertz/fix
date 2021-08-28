@@ -74,3 +74,9 @@ TEST_CASE("Titles have a restricted character set") {
                FailsWithMessage("title may not contain non-ASCII characters"));
   }
 }
+
+TEST_CASE("Title text may not start or end with whitespace") {
+  const auto untrimmed_title = GENERATE("  may not start with blanks"sv, "nor end with blanks  "sv,
+                                        "\t\ttabs are whitespace"sv, "linebreaks, too\n"sv);
+  CHECK_THAT(title::create(untrimmed_title), FailsWithMessage("title may not start or end with whitespace"));
+}
