@@ -19,11 +19,12 @@ expected<std::string_view> check_charset(std::string_view text);
 title::title(std::string_view text) : text{text} {}
 
 expected<title> title::create(std::string_view text) {
+  auto const make_title = [](auto text) { return title{text}; };
   // clang-format off
   return check_trimmed(text)
       .and_then(check_length)
       .and_then(check_charset)
-      .map([](auto text){ return title{text}; });
+      .map(make_title);
   // clang-format on
 }
 
@@ -33,8 +34,10 @@ std::string title::to_string() const {
 
 namespace {
 expected<std::string_view> check_trimmed(std::string_view text) {
-  const auto trimmed_length = ranges::size(text | ranges::views::trim([](char c) { return isspace(c); }));
-  if (trimmed_length != text.length()) {
+  if (text.empty()) {
+    return text;
+  }
+  if ((std::isspace(text.front()) != 0) || (std::isspace(text.back()) != 0)) {
     return unexpected(domain_error::TITLE_NOT_TRIMMED);
   }
   return text;
