@@ -1,5 +1,6 @@
 set(DOMAIN_TEST_SOURCES
     application_service_test.cpp
+    description_test.cpp
     domain_error_test.cpp
     title_test.cpp
     )
