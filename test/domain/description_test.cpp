@@ -8,7 +8,7 @@
 using fix::domain::description;
 using namespace std::literals;
 
-TEST_CASE("Public construction of descriptions is only possible via copy, move") {
+TEST_CASE("Descriptions can be copied and moved, but not default-constructed") {
   STATIC_REQUIRE(std::is_copy_constructible_v<description>);
   STATIC_REQUIRE(std::is_move_constructible_v<description>);
 
