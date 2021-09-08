@@ -2,6 +2,7 @@ set(DOMAIN_SOURCES
     application_service.cpp
     description.cpp
     domain_error.cpp
+    issue_id.cpp
     title.cpp
     )
 

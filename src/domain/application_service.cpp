@@ -1,28 +1,22 @@
 #include "application_service.hpp"
 
-#include <range/v3/view.hpp>
-#include <range/v3/range/conversion.hpp>
 #include <string>
+
+#include "description.hpp"
+#include "issue_id.hpp"
+#include "title.hpp"
 
 using namespace fix::domain;
 using namespace std::literals;
-namespace rv = ranges::views;
 
 std::string application_service::create(std::string_view title, std::string_view description) { // NOLINT
-  (void) description;
+  auto const the_title = title::create(title);
+  if (!the_title) {
+    return ""; // TODO: proper error handling
+  }
 
-  // clang-format off
-  const auto id_prefix = title
-      | rv::split(' ')
-      | rv::take(4)
-      | rv::transform([](auto&& word) {
-        return word | rv::take(3) | rv::transform([](char c){ return std::tolower(c); });
-      })
-      | rv::join('-')
-      | ranges::to<std::string>;
-  // clang-format on
-
-  return id_prefix + "-0000000"s;
+  const auto issue_id = issue_id::generate(*the_title, fix::domain::description(description));
+  return issue_id.to_string();
 }
 
 size_t application_service::list() const { // NOLINT

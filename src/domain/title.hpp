@@ -17,7 +17,7 @@ class title {
 public:
   static expected<title> create(std::string_view text);
 
-  std::string to_string() const;
+  std::string const& to_string() const;
 };
 
 } // namespace fix::domain

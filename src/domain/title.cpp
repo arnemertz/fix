@@ -28,7 +28,7 @@ expected<title> title::create(std::string_view text) {
   // clang-format on
 }
 
-std::string title::to_string() const {
+std::string const& title::to_string() const {
   return text;
 }
 
