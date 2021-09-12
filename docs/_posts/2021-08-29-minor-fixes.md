@@ -19,6 +19,6 @@ After writing the previous diary entry on Sunday, I only fixed the two findings 
 - I could have made `make_title` a static member function, but that would only be more code and unnecessarily add that detail to the header, which feels even more awkward than the named lambda. I wish modules would already work out of the box with CMake and everything.
 - Not using `map` here would not make the code much more readable.
 
-The second finding was that trimming the text and comparing lengths to check whether it has been trimmed was overkill. Checking whether the first or last character is a whitespace is more readable as it directly conveys the meaning of what "not trimmed" means.
+The second finding was that trimming the text and comparing lengths to check whether it has been trimmed was overkill. Checking whether the first or last character is whitespace is more readable as it directly conveys the meaning of what "not trimmed" means.
 
-The added check for an empty text is necessary here in any case. Yes, I could have moved the `check_trimmed` call after the `check_length` call and then it would exit early on empty strings, but making the implementation undefined behavior or not depending on the call order is a bad idea. There's no need to cut corners here.
+The added check for an empty text is necessary here in any case. Yes, I could have moved the `check_trimmed` call after the `check_length` call, and then it would exit early on empty strings, but making the implementation undefined behavior or not depending on the call order is a bad idea. There's no need to cut corners here.
