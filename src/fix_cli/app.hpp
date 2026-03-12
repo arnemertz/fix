@@ -2,6 +2,7 @@
 #define FIX_APP_HPP
 
 #include <iosfwd>
+#include <string>
 #include <string_view>
 #include <vector>
 

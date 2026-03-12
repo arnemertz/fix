@@ -16,7 +16,7 @@ issue_id issue_id::generate(title const& title, description const& description) 
       | rv::split(' ')
       | rv::take(4)
       | rv::transform([](auto&& word) {
-        return word | rv::take(3) | rv::transform([](char c){ return std::tolower(c); });
+        return word | rv::take(3) | rv::transform([](char c){ return static_cast<char>(std::tolower(c)); });
       })
       | rv::join('-')
       | ranges::to<std::string>;

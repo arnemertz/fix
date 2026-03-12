@@ -44,7 +44,7 @@ auto app::run(const std::vector<std::string_view>& args) -> int {
     out << USAGE;
     return EXIT_SUCCESS;
 
-  } catch (docopt::DocoptArgumentError& argError) {
+  } catch (docopt::DocoptArgumentError const&) {
     out << USAGE;
     return EXIT_FAILURE;
   }
