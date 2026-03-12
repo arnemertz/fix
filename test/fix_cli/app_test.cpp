@@ -29,7 +29,7 @@ auto split(std::string_view sv) {
   return sv
       | ranges::views::split(' ')
       | ranges::views::transform([](auto&& range) {
-          return std::string_view{&*range.begin(), size_t(ranges::distance(range))};
+          return std::string{&*range.begin(), size_t(ranges::distance(range))};
         })
       | ranges::to<std::vector>;
   // clang-format on
@@ -40,13 +40,15 @@ struct run_result {
   int exit_code;
 };
 
-run_result run_app(std::vector<std::string_view> const& argv) {
-  // Convert string_views to argc/argv format for app::run
-  std::vector<const char*> argv_ptrs;
-  argv_ptrs.reserve(argv.size() + 1);
-  argv_ptrs.push_back("fix"); // Program name
-  for (const auto& arg : argv) {
-    argv_ptrs.push_back(arg.data());
+run_result run_app(std::vector<std::string> argv) {
+  // Prepend program name
+  argv.insert(argv.begin(), "fix");
+
+  // Create argv pointer array from stored strings
+  std::vector<char const*> argv_ptrs;
+  argv_ptrs.reserve(argv.size());
+  for (auto const& arg : argv) {
+    argv_ptrs.push_back(arg.c_str());
   }
 
   std::stringstream out;
