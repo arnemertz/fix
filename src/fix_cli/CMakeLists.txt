@@ -8,7 +8,7 @@ target_link_libraries(fix_cli
     PRIVATE
     project_warnings
     project_options
-    docopt_s
+    CLI11::CLI11
     fmt::fmt
     domain
     )

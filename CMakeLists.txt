@@ -70,7 +70,7 @@ endif()
 
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/build/generators")
 find_package(fmt REQUIRED)
-find_package(docopt REQUIRED)
+find_package(CLI11 REQUIRED)
 find_package(range-v3 REQUIRED)
 find_package(tl-expected REQUIRED)
 if (ENABLE_TESTING)

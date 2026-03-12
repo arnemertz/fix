@@ -1,6 +1,6 @@
 #include "app.hpp"
 
-#include <docopt/docopt.h>
+#include <CLI/CLI.hpp>
 #include <fmt/core.h>
 #include <ostream>
 
@@ -10,57 +10,59 @@ using namespace fix::cli;
 using namespace std::string_view_literals;
 
 namespace {
-constexpr auto USAGE = R"(usage: fix [--help] <command> [<args>...]
-
-Options:
-  -h --help      This help page
-
-Available commands:
-   create        Create a new issue
-   setstatus     Set the status of an issue
-   list          List all existing issues
-   show          Show a specific issue
-)"sv;
-
-constexpr auto CREATE_USAGE = R"(usage: fix create -t <title> -d <descr>
-
-Options:
-  -t <title> --title=<title> Title of the new issue
-  -d <descr> --descr=<descr> Description text
-)";
+constexpr auto DESCRIPTION = R"(fix - Issue tracker)"sv;
 } // namespace
 
 app::app(std::ostream& out) : out{out} {}
 
-auto app::run(const std::vector<std::string_view>& args) -> int {
-  std::vector<std::string> const argv(args.begin(), args.end());
+auto app::run(int argc, const char* const* argv) -> int {
+  CLI::App cli_app{std::string(DESCRIPTION), "fix"};
+  cli_app.require_subcommand(0, 1); // 0 or 1 subcommand (allow none for better error handling)
+  cli_app.fallthrough(); // Allow unrecognized arguments to pass through
 
+  // List command
+  auto* list_cmd = cli_app.add_subcommand("list", "List all existing issues");
+  list_cmd->callback([this]() { 
+    list();
+  });
+
+  // Create command
+  auto* create_cmd = cli_app.add_subcommand("create", "Create a new issue");
+  std::string title;
+  std::string description;
+  create_cmd->add_option("-t,--title", title, "Title of the new issue")->required();
+  create_cmd->add_option("-d,--descr", description, "Description text")->required();
+  create_cmd->callback([this, &title, &description]() {
+    create(title, description);
+  });
+
+  // Parse arguments using argc/argv
   try {
-    auto const& parsed_args = docopt::docopt_parse(std::string(USAGE), argv, true, false, true);
-    auto const& command = parsed_args.at("<command>").asString();
-    return run_command(command, argv);
-
-  } catch (docopt::DocoptExitHelp const&) {
-    out << USAGE;
+    cli_app.parse(argc, argv);
+  } catch (const CLI::CallForHelp&) {
+    out << cli_app.help();
     return EXIT_SUCCESS;
-
-  } catch (docopt::DocoptArgumentError const&) {
-    out << USAGE;
+  } catch (const CLI::ExtrasError&) {
+    // Unknown arguments/subcommands
+    out << "fix: unknown subcommand. See 'fix --help'.\n";
+    return EXIT_FAILURE;
+  } catch (const CLI::ParseError& e) {
+    // Other parse errors
+    out << e.what() << "\n";
+    out << "Run with --help for more information.\n";
     return EXIT_FAILURE;
   }
-}
 
-int app::run_command(std::string const& command, const std::vector<std::string>& argv) {
-  if (command == "list"sv) {
-    return list();
+  // Check if a subcommand was parsed
+  auto subcommands = cli_app.get_subcommands();
+  if (subcommands.empty()) {
+    // No subcommand provided
+    out << "A subcommand is required\n";
+    out << "Run with --help for more information.\n";
+    return EXIT_FAILURE;
   }
 
-  if (command == "create"sv) {
-    return create(argv);
-  }
-
-  out << fmt::format("fix: '{}' is not a fix command. See 'fix --help'.\n", command);
-  return EXIT_FAILURE;
+  return EXIT_SUCCESS;
 }
 
 int app::list() {
@@ -70,13 +72,9 @@ int app::list() {
   return EXIT_SUCCESS;
 }
 
-int app::create(std::vector<std::string> const& argv) {
-  auto const& parsed_args = docopt::docopt_parse(std::string(CREATE_USAGE), argv, false, false, false);
-  auto const& title = parsed_args.at("--title").asString();
-  auto const& description = parsed_args.at("--descr").asString();
-
+int app::create(std::string const& title, std::string const& description) {
   domain::application_service application_service;
   const auto issue_id = application_service.create(title, description);
-  this->out << fmt::format("Issue created: {}\n", issue_id);
+  out << fmt::format("Issue created: {}\n", issue_id);
   return EXIT_SUCCESS;
 }

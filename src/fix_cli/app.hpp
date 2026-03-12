@@ -3,8 +3,6 @@
 
 #include <iosfwd>
 #include <string>
-#include <string_view>
-#include <vector>
 
 namespace fix::cli {
 
@@ -14,12 +12,11 @@ class app {
 public:
   explicit app(std::ostream& out);
 
-  auto run(std::vector<std::string_view> const& args) -> int;
+  auto run(int argc, const char* const* argv) -> int;
 
 private:
-  int run_command(std::string const& command, const std::vector<std::string>& argv);
   int list();
-  int create(std::vector<std::string> const& argv);
+  int create(std::string const& title, std::string const& description);
 };
 
 } // namespace fix::cli

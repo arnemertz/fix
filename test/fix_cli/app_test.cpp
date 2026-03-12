@@ -13,16 +13,15 @@ using namespace std::literals;
 using fix::cli::app;
 
 namespace {
-constexpr auto USAGE = R"(usage: fix [--help] <command> [<args>...]
+constexpr auto USAGE = R"(fix - Issue tracker
+Usage: fix [OPTIONS] [SUBCOMMAND]
 
 Options:
-  -h --help      This help page
+  -h,--help                   Print this help message and exit
 
-Available commands:
-   create        Create a new issue
-   setstatus     Set the status of an issue
-   list          List all existing issues
-   show          Show a specific issue
+Subcommands:
+  list                        List all existing issues
+  create                      Create a new issue
 )"sv;
 
 auto split(std::string_view sv) {
@@ -38,13 +37,21 @@ auto split(std::string_view sv) {
 
 struct run_result {
   std::string output;
-  decltype(std::declval<app>().run({})) exit_code;
+  int exit_code;
 };
 
 run_result run_app(std::vector<std::string_view> const& argv) {
+  // Convert string_views to argc/argv format for app::run
+  std::vector<const char*> argv_ptrs;
+  argv_ptrs.reserve(argv.size() + 1);
+  argv_ptrs.push_back("fix"); // Program name
+  for (const auto& arg : argv) {
+    argv_ptrs.push_back(arg.data());
+  }
+
   std::stringstream out;
   app app{out};
-  auto const exit_code = app.run(argv);
+  auto const exit_code = app.run(static_cast<int>(argv_ptrs.size()), argv_ptrs.data());
   return {out.str(), exit_code};
 }
 
@@ -58,7 +65,7 @@ TEST_CASE("Prints usage and commands...") {
   SECTION("... when run without commands") {
     auto const [output, exit_code] = run_app("");
 
-    CHECK(output == USAGE);
+    CHECK(output == "A subcommand is required\nRun with --help for more information.\n");
     CHECK(exit_code == EXIT_FAILURE);
   }
   SECTION("... when run with --help or -h option") {
@@ -74,7 +81,7 @@ TEST_CASE("Prints 'not a command' ...") {
   auto const args = GENERATE("foo"sv, "bar baz"sv, "fruits: apple banana cherries"sv);
   auto const [output, exit_code] = run_app(args);
 
-  CHECK(output == fmt::format("fix: '{}' is not a fix command. See 'fix --help'.\n", split(args).front()));
+  CHECK(output == "fix: unknown subcommand. See 'fix --help'.\n");
   CHECK(exit_code == EXIT_FAILURE);
 }
 
