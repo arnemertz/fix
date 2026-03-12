@@ -1,6 +1,5 @@
 Feature: Fix CLI behavior
 
-  @wip
   Scenario: Show usage when called without arguments
     When we call Fix without arguments
     Then it prints usage information
