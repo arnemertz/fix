@@ -12,7 +12,7 @@ class app {
 public:
   explicit app(std::ostream& out);
 
-  auto run(int argc, const char* const* argv) -> int;
+  auto run(int argc, char const* const* argv) -> int;
 
 private:
   int list();

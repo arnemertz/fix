@@ -6,9 +6,6 @@
 
 using namespace fix::domain;
 
-constexpr size_t MIN_LENGTH = 6;
-constexpr size_t MAX_LENGTH = 120;
-
 namespace {
 expected<std::string_view> check_trimmed(std::string_view text);
 expected<std::string_view> check_length(std::string_view text);
@@ -43,10 +40,10 @@ expected<std::string_view> check_trimmed(std::string_view text) {
 }
 
 expected<std::string_view> check_length(std::string_view text) {
-  if (text.length() < MIN_LENGTH) {
+  if (text.length() < title::MIN_LENGTH) {
     return unexpected(domain_error::TITLE_TOO_SHORT);
   }
-  if (text.length() > MAX_LENGTH) {
+  if (text.length() > title::MAX_LENGTH) {
     return unexpected(domain_error::TITLE_TOO_LONG);
   }
   return text;

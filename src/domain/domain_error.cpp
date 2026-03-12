@@ -3,7 +3,7 @@
 namespace fix::domain {
 namespace {
 
-std::string error_message(fix::domain::domain_error error) {
+std::string error_message(domain_error error) {
   switch (error) {
   case domain_error::MISSING_IMPLEMENTATION:
     return "feature is not implemented yet";

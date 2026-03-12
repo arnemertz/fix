@@ -20,7 +20,7 @@ issue_id issue_id::generate(title const& title, description const& description) 
       | rv::join_with('-')
       | std::ranges::to<std::string>();
   // clang-format on
-  return issue_id{id_prefix + "-0000000"s};
+  return issue_id{id_prefix + "-0000000"s}; // TODO: replace placeholder with actual content hash
 }
 
 std::string const& issue_id::to_string() const {
