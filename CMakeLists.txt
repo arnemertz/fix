@@ -21,7 +21,7 @@ set_project_warnings(project_warnings)
 
 # Link this 'library' to set the c++ standard / compile-time options requested
 add_library(project_options INTERFACE)
-target_compile_features(project_options INTERFACE cxx_std_20)
+target_compile_features(project_options INTERFACE cxx_std_23)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
   option(ENABLE_BUILD_WITH_TIME_TRACE "Enable -ftime-trace to generate time tracing .json files on clang" OFF)
@@ -56,7 +56,7 @@ if(NOT EXISTS "${CMAKE_BINARY_DIR}/build/generators/conan_toolchain.cmake")
             --output-folder=${CMAKE_BINARY_DIR} 
             --build=missing 
             -s build_type=${CMAKE_BUILD_TYPE}
-            -s compiler.cppstd=20
+            -s compiler.cppstd=23
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     RESULT_VARIABLE CONAN_RESULT
   )
