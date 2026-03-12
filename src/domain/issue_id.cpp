@@ -1,11 +1,10 @@
 #include "issue_id.hpp"
 
-#include <range/v3/range/conversion.hpp>
-#include <range/v3/view.hpp>
+#include <ranges>
 
 using namespace fix::domain;
 using namespace std::literals;
-namespace rv = ranges::views;
+namespace rv = std::ranges::views;
 
 issue_id::issue_id(std::string text) : text{std::move(text)} {}
 
@@ -18,8 +17,8 @@ issue_id issue_id::generate(title const& title, description const& description) 
       | rv::transform([](auto&& word) {
         return word | rv::take(3) | rv::transform([](char c){ return static_cast<char>(std::tolower(c)); });
       })
-      | rv::join('-')
-      | ranges::to<std::string>;
+      | rv::join_with('-')
+      | std::ranges::to<std::string>();
   // clang-format on
   return issue_id{id_prefix + "-0000000"s};
 }

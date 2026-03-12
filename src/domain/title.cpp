@@ -1,9 +1,8 @@
 #include "title.hpp"
 
+#include <algorithm>
 #include <cctype>
 #include <climits>
-#include <range/v3/algorithm/any_of.hpp>
-#include <range/v3/view/trim.hpp>
 
 using namespace fix::domain;
 
@@ -54,10 +53,10 @@ expected<std::string_view> check_length(std::string_view text) {
 }
 
 expected<std::string_view> check_charset(std::string_view text) {
-  if (ranges::any_of(text, [](int c) { return (c > CHAR_MAX) || (c < 0); })) {
+  if (std::ranges::any_of(text, [](int c) { return (c > CHAR_MAX) || (c < 0); })) {
     return unexpected(domain_error::TITLE_HAS_NON_ASCII_CHARS);
   }
-  if (ranges::any_of(text, [](char c) { return std::isprint(c) == 0; })) {
+  if (std::ranges::any_of(text, [](char c) { return std::isprint(c) == 0; })) {
     return unexpected(domain_error::TITLE_HAS_NON_PRINTABLES);
   }
   if (text.find_first_of("\\`") != std::string_view::npos) {

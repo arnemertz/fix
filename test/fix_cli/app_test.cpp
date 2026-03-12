@@ -1,9 +1,7 @@
 #include <catch2/catch.hpp>
 
 #include <fmt/core.h>
-#include <range/v3/range/conversion.hpp>
-#include <range/v3/view/split.hpp>
-#include <range/v3/view/transform.hpp>
+#include <ranges>
 #include <sstream>
 #include <string_view>
 
@@ -11,6 +9,7 @@
 
 using namespace std::literals;
 using fix::cli::app;
+
 
 namespace {
 constexpr auto USAGE = R"(fix - Issue tracker
@@ -27,11 +26,11 @@ Subcommands:
 auto split(std::string_view sv) {
   // clang-format off
   return sv
-      | ranges::views::split(' ')
-      | ranges::views::transform([](auto&& range) {
-          return std::string{&*range.begin(), size_t(ranges::distance(range))};
+      | std::ranges::views::split(' ')
+      | std::ranges::views::transform([](auto&& range) {
+          return std::string{&*range.begin(), static_cast<size_t>(std::ranges::distance(range))};
         })
-      | ranges::to<std::vector>;
+      | std::ranges::to<std::vector>();
   // clang-format on
 }
 

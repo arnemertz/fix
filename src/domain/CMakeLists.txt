@@ -11,7 +11,6 @@ target_link_libraries(domain
     PRIVATE
     project_warnings
     project_options
-    range-v3::range-v3
     )
 target_link_libraries(domain
     PUBLIC
