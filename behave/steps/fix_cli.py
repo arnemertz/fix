@@ -37,17 +37,15 @@ def check_output(context, output):
 
 @then(u'it prints usage information')
 def check_usage(context):
-    usage = "usage: fix [--help] <command> [<args>...]"
+    usage = "Usage: fix [OPTIONS] [SUBCOMMAND]"
     check_output(context, usage)
 
 
 @then(u'it prints a list of available commands')
 def check_commands(context):
-    command_list = """Available commands:
-   create        Create a new issue
-   setstatus     Set the status of an issue
-   list          List all existing issues
-   show          Show a specific issue
+    command_list = """Subcommands:
+  list                        List all existing issues
+  create                      Create a new issue
 """.replace("\n", "\r\n")
     check_output(context, command_list)
 
