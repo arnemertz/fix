@@ -17,8 +17,8 @@ app::app(std::ostream& out) : out{out} {}
 
 auto app::run(int argc, const char* const* argv) -> int {
   CLI::App cli_app{std::string(DESCRIPTION), "fix"};
-  cli_app.require_subcommand(0, 1); // 0 or 1 subcommand (allow none for better error handling)
-  cli_app.fallthrough(); // Allow unrecognized arguments to pass through
+  cli_app.require_subcommand(0, 1);
+  cli_app.fallthrough();
 
   // List command
   auto* list_cmd = cli_app.add_subcommand("list", "List all existing issues");
@@ -53,12 +53,8 @@ auto app::run(int argc, const char* const* argv) -> int {
     return EXIT_FAILURE;
   }
 
-  // Check if a subcommand was parsed
-  auto subcommands = cli_app.get_subcommands();
-  if (subcommands.empty()) {
-    // No subcommand provided
-    out << "A subcommand is required\n";
-    out << "Run with --help for more information.\n";
+  if (cli_app.get_subcommands().empty()) {
+    out << cli_app.help();
     return EXIT_FAILURE;
   }
 

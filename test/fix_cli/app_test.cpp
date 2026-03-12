@@ -62,21 +62,23 @@ run_result run_app(std::string_view args) {
 
 } // namespace
 
-TEST_CASE("Prints help message") {
-  auto const args = GENERATE("--help"sv, "-h"sv);
-  auto const [output, exit_code] = run_app(args);
+TEST_CASE("Prints usage...") {
+  SECTION("... for --help and -h") {
+    auto const args = GENERATE("--help"sv, "-h"sv);
+    auto const [output, exit_code] = run_app(args);
 
-  CHECK(output == USAGE);
-  CHECK(exit_code == EXIT_SUCCESS);
+    CHECK(output == USAGE);
+    CHECK(exit_code == EXIT_SUCCESS);
+  }
+  SECTION("... when called without arguments") {
+    auto const [output, exit_code] = run_app(std::vector<std::string>{});
+
+    CHECK(output == USAGE);
+    CHECK(exit_code == EXIT_FAILURE);
+  }
 }
 
 TEST_CASE("Prints error messages...") {
-  SECTION("... when run without subcommand") {
-    auto const [output, exit_code] = run_app("");
-
-    CHECK(output == "A subcommand is required\nRun with --help for more information.\n");
-    CHECK(exit_code == EXIT_FAILURE);
-  }
   SECTION("... for unknown subcommands") {
     auto const args = GENERATE("foo"sv, "bar baz"sv, "fruits: apple banana cherries"sv);
     auto const [output, exit_code] = run_app(args);
