@@ -12,8 +12,4 @@ target_link_libraries(domain
     project_warnings
     project_options
     )
-target_link_libraries(domain
-    PUBLIC
-    tl::expected
-    )
 target_include_directories(domain PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)

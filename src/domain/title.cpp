@@ -23,7 +23,7 @@ expected<title> title::create(std::string_view text) {
   return check_trimmed(text)
       .and_then(check_length)
       .and_then(check_charset)
-      .map(make_title);
+      .transform(make_title);
   // clang-format on
 }
 

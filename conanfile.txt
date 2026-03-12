@@ -1,7 +1,6 @@
 [requires]
 catch2/2.13.10
 cli11/2.3.2
-tl-expected/1.1.0
 
 [generators]
 CMakeDeps
