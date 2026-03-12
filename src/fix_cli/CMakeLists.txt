@@ -9,7 +9,6 @@ target_link_libraries(fix_cli
     project_warnings
     project_options
     CLI11::CLI11
-    fmt::fmt
     domain
     )
 target_include_directories(fix_cli PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)

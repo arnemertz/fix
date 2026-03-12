@@ -1,7 +1,7 @@
 #include "app.hpp"
 
 #include <CLI/CLI.hpp>
-#include <fmt/core.h>
+#include <format>
 #include <ostream>
 
 #include "application_service.hpp"
@@ -64,13 +64,13 @@ auto app::run(int argc, const char* const* argv) -> int {
 int app::list() {
   domain::application_service application_service;
   auto const count = application_service.list();
-  out << fmt::format("total: {} issues\n", count);
+  out << std::format("total: {} issues\n", count);
   return EXIT_SUCCESS;
 }
 
 int app::create(std::string const& title, std::string const& description) {
   domain::application_service application_service;
   const auto issue_id = application_service.create(title, description);
-  out << fmt::format("Issue created: {}\n", issue_id);
+  out << std::format("Issue created: {}\n", issue_id);
   return EXIT_SUCCESS;
 }

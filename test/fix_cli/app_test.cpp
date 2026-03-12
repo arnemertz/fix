@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include <fmt/core.h>
+#include <format>
 #include <ranges>
 #include <sstream>
 #include <string_view>
@@ -102,6 +102,6 @@ TEST_CASE("Create issue command prints issue ID") {
 
   auto const [output, exit_code] = run_app({"create", "-t", title, "-d", description});
 
-  CHECK_THAT(output, Catch::Matches(fmt::format("Issue created: {}-[0-9a-f]{{7}}\n", id_prefix)));
+  CHECK_THAT(output, Catch::Matches(std::format("Issue created: {}-[0-9a-f]{{7}}\n", id_prefix)));
   CHECK(exit_code == EXIT_SUCCESS);
 }
