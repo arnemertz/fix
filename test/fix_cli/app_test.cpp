@@ -63,28 +63,28 @@ run_result run_app(std::string_view args) {
 
 } // namespace
 
-TEST_CASE("Prints usage and commands...") {
-  SECTION("... when run without commands") {
+TEST_CASE("Prints help message") {
+  auto const args = GENERATE("--help"sv, "-h"sv);
+  auto const [output, exit_code] = run_app(args);
+
+  CHECK(output == USAGE);
+  CHECK(exit_code == EXIT_SUCCESS);
+}
+
+TEST_CASE("Prints error messages...") {
+  SECTION("... when run without subcommand") {
     auto const [output, exit_code] = run_app("");
 
     CHECK(output == "A subcommand is required\nRun with --help for more information.\n");
     CHECK(exit_code == EXIT_FAILURE);
   }
-  SECTION("... when run with --help or -h option") {
-    auto const args = GENERATE("--help"sv, "-h"sv);
+  SECTION("... for unknown subcommands") {
+    auto const args = GENERATE("foo"sv, "bar baz"sv, "fruits: apple banana cherries"sv);
     auto const [output, exit_code] = run_app(args);
 
-    CHECK(output == USAGE);
-    CHECK(exit_code == EXIT_SUCCESS);
+    CHECK(output == "fix: unknown subcommand. See 'fix --help'.\n");
+    CHECK(exit_code == EXIT_FAILURE);
   }
-}
-
-TEST_CASE("Prints 'not a command' ...") {
-  auto const args = GENERATE("foo"sv, "bar baz"sv, "fruits: apple banana cherries"sv);
-  auto const [output, exit_code] = run_app(args);
-
-  CHECK(output == "fix: unknown subcommand. See 'fix --help'.\n");
-  CHECK(exit_code == EXIT_FAILURE);
 }
 
 TEST_CASE("List command prints number of issues") {
