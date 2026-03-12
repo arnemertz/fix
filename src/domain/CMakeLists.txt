@@ -11,10 +11,10 @@ target_link_libraries(domain
     PRIVATE
     project_warnings
     project_options
-    CONAN_PKG::range-v3
+    range-v3::range-v3
     )
 target_link_libraries(domain
     PUBLIC
-    CONAN_PKG::tl-expected
+    tl::expected
     )
 target_include_directories(domain PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)

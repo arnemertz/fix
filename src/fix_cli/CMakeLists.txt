@@ -8,8 +8,8 @@ target_link_libraries(fix_cli
     PRIVATE
     project_warnings
     project_options
-    CONAN_PKG::docopt.cpp
-    CONAN_PKG::fmt
+    docopt_s
+    fmt::fmt
     domain
     )
 target_include_directories(fix_cli PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
