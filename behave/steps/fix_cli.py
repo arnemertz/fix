@@ -1,13 +1,15 @@
 from behave import given, when, then
 from assertions import *
-import pexpect
+import pexpect.popen_spawn
 import shlex
+import sys
 
-fix_executable = '../cmake-build-debug/bin/fix'
+fix_executable = '../build/src/Debug/fix.exe'
 
 
 def _start_fix_with_args(context, args):
-    context.fix = pexpect.spawn(fix_executable, args=args)
+    # Use popen_spawn for Windows compatibility
+    context.fix = pexpect.popen_spawn.PopenSpawn([fix_executable] + args)
 
 
 @when(u'we call Fix with argument list "{args}"')
