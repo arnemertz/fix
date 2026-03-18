@@ -14,10 +14,10 @@ Feature: Fix CLI behavior
 
   Scenario Outline: Show error when called with an unknown argument
     When we call Fix with argument list "<args>"
-    Then it prints "fix: '<arg1>' is not a fix command. See 'fix --help'."
+    Then it prints "fix: unknown subcommand. See 'fix --help'."
     And terminates with exit code ERROR
 
     Examples:
-      | args    | arg1 |
-      | foo     | foo  |
-      | bar baz | bar  |
+      | args    |
+      | foo     |
+      | bar baz |

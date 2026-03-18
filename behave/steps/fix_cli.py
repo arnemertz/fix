@@ -1,13 +1,15 @@
 from behave import given, when, then
 from assertions import *
-import pexpect
+import pexpect.popen_spawn
 import shlex
+import sys
 
-fix_executable = '../cmake-build-debug/bin/fix'
+fix_executable = '../build/src/Debug/fix.exe'
 
 
 def _start_fix_with_args(context, args):
-    context.fix = pexpect.spawn(fix_executable, args=args)
+    # Use popen_spawn for Windows compatibility
+    context.fix = pexpect.popen_spawn.PopenSpawn([fix_executable] + args)
 
 
 @when(u'we call Fix with argument list "{args}"')
@@ -35,17 +37,15 @@ def check_output(context, output):
 
 @then(u'it prints usage information')
 def check_usage(context):
-    usage = "usage: fix [--help] <command> [<args>...]"
+    usage = "Usage: fix [OPTIONS] [SUBCOMMAND]"
     check_output(context, usage)
 
 
 @then(u'it prints a list of available commands')
 def check_commands(context):
-    command_list = """Available commands:
-   create        Create a new issue
-   setstatus     Set the status of an issue
-   list          List all existing issues
-   show          Show a specific issue
+    command_list = """Subcommands:
+  list                        List all existing issues
+  create                      Create a new issue
 """.replace("\n", "\r\n")
     check_output(context, command_list)
 

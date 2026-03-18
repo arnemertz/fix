@@ -4,8 +4,6 @@
 #include <string>
 #include <string_view>
 
-#include "domain_error.hpp"
-
 namespace fix::domain {
 
 class description {
