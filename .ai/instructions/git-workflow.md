@@ -2,7 +2,11 @@
 
 ## Branching Strategy
 
-- Trunk-based development. Commit directly to `main`.
+- Feature branches off `main`. Branch naming: `feature/<short-description>` (e.g., `feature/add-priority-field`).
+- The **Product Owner** creates the feature branch at the start of a task.
+- All agent work for a feature happens on that feature branch.
+- PR target is always `main`.
+- When the feature is complete and the Reviewer has signed off, the Product Owner notifies the user. *(Automated PR creation will be added later once repository workflows are set up.)*
 
 ## Commits
 
@@ -12,6 +16,8 @@
 
 ## Pre-commit Rule
 
-**Before every commit, run the unit tests and `behave_stable_tests`. Only commit if all of them pass.**
-
-See [testing.md](testing.md) for how to run the test suites.
+- ALL unit tests must pass before every commit — no exceptions.
+- `behave_stable_tests` must also pass before every commit.
+- Any commit that introduces new production code must include unit tests covering that new code.
+- Pure refactoring commits are exempt from the "include new tests" requirement, but must still pass all existing tests.
+- The Coder is encouraged to separate refactoring commits from behavioral increment commits to keep commits concise and satisfy these rules cleanly.

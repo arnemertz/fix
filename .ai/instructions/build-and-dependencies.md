@@ -1,14 +1,12 @@
 # Build & Dependencies
 
-## Build System
+For general build instructions (prerequisites, Conan install, CMake configure, Visual Studio integration), see [BUILD.md](../../BUILD.md).
 
-- CMake ≥ 3.15 with Ninja generator.
-- C++23 language standard.
+This file covers agent-specific knowledge beyond the general build procedure.
 
-## Package Manager
+## Conan Auto-invocation
 
-- Conan 2 (`conanfile.txt`).
-- Conan is invoked automatically during CMake configure if dependencies are not yet installed.
+- Conan is invoked automatically during CMake configure if dependencies are not yet installed. Agents do not need to run Conan manually.
 - Conan output folder: `<build_dir>/build/generators/`.
 
 ## Dependencies
@@ -17,19 +15,6 @@
 |---------|----------------------|
 | Catch2  | `catch2/2.13.10`     |
 | CLI11   | `cli11/2.3.2`        |
-
-## Building
-
-```powershell
-cmake -S . -B out/build -G Ninja -DCMAKE_BUILD_TYPE=Debug
-cmake --build out/build
-```
-
-## Running Tests
-
-```powershell
-ctest --test-dir out/build --output-on-failure
-```
 
 ## Static Analysis & Sanitizers
 

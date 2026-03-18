@@ -1,13 +1,12 @@
 # C++ Code Style
 
+## Baseline
+
+Follow [Jason Turner's C++ best practices](https://github.com/lefticus/cppbestpractices) as a baseline. The project-specific rules below take precedence where they overlap or extend it.
+
 ## General Rules
 
-- **East const**: `char const*`, `int const&` — not `const char*`, `const int&`.
-- Pointer alignment: left (`int* p`, not `int *p`).
-- Column limit: 120 characters.
 - Header guards: `#ifndef FIX_<PATH>_<FILE>_HPP` / `#define` / `#endif` with comment.
-- Apply `[[nodiscard]]` by default to all non-`void` functions.
-- Mark functions `constexpr` wherever possible.
 
 ## Naming Conventions
 

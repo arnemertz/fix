@@ -58,7 +58,7 @@ fix/
 | Coder | [coder.md](.ai/agents/coder.md) | C++ implementation |
 | Tester | [tester.md](.ai/agents/tester.md) | Catch2 unit tests, behave BDD tests |
 | Reviewer | [reviewer.md](.ai/agents/reviewer.md) | Code review, static analysis, convention checks |
-| Build | [build.md](.ai/agents/build.md) | CMake, Conan, CI/CD, tooling |
+| Toolsmith | [toolsmith.md](.ai/agents/toolsmith.md) | CMake, Conan, CI/CD, tooling |
 
 ---
 
