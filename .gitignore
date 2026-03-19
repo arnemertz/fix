@@ -15,3 +15,6 @@ CMakeFiles/
 
 # Fix data directory
 .fix/
+
+# Script output logs
+scripts/verify_log.txt
