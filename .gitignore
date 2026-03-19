@@ -12,3 +12,6 @@ conanrun.bat
 # CMake generated files
 CMakeCache.txt
 CMakeFiles/
+
+# Fix data directory
+.fix/
