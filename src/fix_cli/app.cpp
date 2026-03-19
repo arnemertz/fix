@@ -24,20 +24,22 @@ auto app::run(int argc, const char* const* argv) -> int {
   cli_app.require_subcommand(0, 1);
   cli_app.fallthrough();
 
+  int subcommand_exit_code = EXIT_SUCCESS;
+
   // List command
   auto* list_cmd = cli_app.add_subcommand("list", "List all existing issues");
-  list_cmd->callback([this]() { 
-    list();
+  list_cmd->callback([this, &subcommand_exit_code]() {
+    subcommand_exit_code = list();
   });
 
   // Create command
   auto* create_cmd = cli_app.add_subcommand("create", "Create a new issue");
   std::string title;
   std::string description;
-  create_cmd->add_option("-t,--title", title, "Title of the new issue")->required();
-  create_cmd->add_option("-d,--descr", description, "Description text")->required();
-  create_cmd->callback([this, &title, &description]() {
-    create(title, description);
+  create_cmd->add_option("-t,--title", title, "Title of the new issue");
+  create_cmd->add_option("-d,--descr", description, "Description text");
+  create_cmd->callback([this, &title, &description, &subcommand_exit_code]() {
+    subcommand_exit_code = create(title, description);
   });
 
   // Parse arguments using argc/argv
@@ -62,7 +64,7 @@ auto app::run(int argc, const char* const* argv) -> int {
     return EXIT_FAILURE;
   }
 
-  return EXIT_SUCCESS;
+  return subcommand_exit_code;
 }
 
 int app::list() {

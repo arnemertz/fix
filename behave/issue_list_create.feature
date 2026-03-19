@@ -128,5 +128,5 @@ Feature: Creating and listing issues
     Trimmed description
 
     """
-    Then it prints "Issue created: tri-tit-xxx-yyy-[hash]"
+    Then it prints "Issue created: tri-tit-yyy-zzz-[hash]"
     And terminates with exit code OK
