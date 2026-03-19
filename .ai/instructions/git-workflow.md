@@ -1,5 +1,10 @@
 # Git Workflow
 
+## Terminal Usage
+
+- Always use `git --no-pager` for commands that may open a pager (e.g., `git --no-pager log`, `git --no-pager diff`, `git --no-pager show`).
+- Never modify global git configuration (`git config --global`). All configuration changes must be scoped to the repository (`git config --local`) and require explicit user approval.
+
 ## Branching Strategy
 
 - Feature branches off `main`. Branch naming: `feature/<short-description>` (e.g., `feature/add-priority-field`).
