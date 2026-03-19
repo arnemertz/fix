@@ -3,9 +3,15 @@
 #include "issue.hpp"
 
 #include "catch2_expected_matcher.hpp"
+#include "description.hpp"
+#include "issue_id.hpp"
+#include "title.hpp"
 #include <string>
 
+using fix::domain::description;
 using fix::domain::issue;
+using fix::domain::issue_id;
+using fix::domain::title;
 using namespace std::literals;
 
 TEST_CASE("Issues can be moved, but not copied or default-constructed") {
@@ -40,11 +46,7 @@ TEST_CASE("Issue creation fails with empty description") {
 }
 
 TEST_CASE("Issue creation with both empty returns title error first") {
-  auto const result = issue::create("", "");
-  REQUIRE_FALSE(result);
-
-  // When both fail, title error is returned (validated first)
-  CHECK(result.error().message().find("Title is empty") != std::string::npos);
+  CHECK_THAT(issue::create("", ""), FailsWithMessage("Title is empty"));
 }
 
 TEST_CASE("Issue creation with whitespace-only inputs fails") {
@@ -57,8 +59,14 @@ TEST_CASE("Issue creation with whitespace-only inputs fails") {
 }
 
 TEST_CASE("Issue has an ID generated from title and description") {
+  auto const the_title = title::create("Test title");
+  auto const the_description = description::create("Test description");
+  REQUIRE(the_title);
+  REQUIRE(the_description);
+
+  auto const expected_id = issue_id::generate(*the_title, *the_description).to_string();
   auto const result = issue::create("Test title", "Test description");
   REQUIRE(result);
-  
-  CHECK_FALSE(result->id().to_string().empty());
+
+  CHECK(result->id().to_string() == expected_id);
 }

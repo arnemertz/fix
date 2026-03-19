@@ -16,6 +16,15 @@ Feature: Creating and listing issues
     Then it prints "Issue created: my-fir-iss-in-[hash]"
     And terminates with exit code OK
 
+  Scenario: create an issue with a too-short title fails
+    Given an empty issue repository
+    When we create an issue titled "Short" with description
+    """
+    A valid description for this test
+    """
+    Then it prints "Error: title is too short"
+    And terminates with exit code ERROR
+
   @wip
   Scenario: created issues are listed in alphabetic order by ID
     Given an empty issue repository

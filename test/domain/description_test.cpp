@@ -14,7 +14,21 @@ TEST_CASE("Descriptions can be copied and moved, but not default-constructed") {
   STATIC_REQUIRE(std::is_move_constructible_v<description>);
 
   STATIC_REQUIRE_FALSE(std::is_default_constructible_v<description>);
-  STATIC_REQUIRE_FALSE(std::is_constructible_v<description, std::string_view>);
+}
+
+TEST_CASE("Description creation fails for...") {
+  SECTION("...an empty string") {
+    CHECK_THAT(description::create(""), FailsWithMessage("Description is empty"));
+  }
+  SECTION("...a whitespace-only string") {
+    CHECK_THAT(description::create("   "), FailsWithMessage("Description is empty"));
+  }
+}
+
+TEST_CASE("Description text is trimmed of leading and trailing whitespace") {
+  auto const the_description = description::create("  some description  ");
+  REQUIRE(the_description);
+  CHECK(the_description->to_string() == "some description");
 }
 
 TEST_CASE("Descriptions can be created from non-empty strings") {
