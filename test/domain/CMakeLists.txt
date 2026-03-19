@@ -3,6 +3,7 @@ set(DOMAIN_TEST_SOURCES
     description_test.cpp
     domain_error_test.cpp
     issue_id_test.cpp
+    issue_test.cpp
     title_test.cpp
     )
 
