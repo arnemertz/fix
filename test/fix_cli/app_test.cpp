@@ -1,20 +1,19 @@
 #include <catch2/catch.hpp>
 
-#include <chrono>
-#include <filesystem>
 #include <format>
 #include <ranges>
 #include <sstream>
 #include <string_view>
 
 #include "app.hpp"
+#include "issue.hpp"
+#include "issue_service.hpp"
 
 using namespace std::literals;
 using fix::cli::app;
-namespace fs = std::filesystem;
-
 
 namespace {
+
 constexpr auto USAGE = R"(fix - Issue tracker
 Usage: fix [OPTIONS] [SUBCOMMAND]
 
@@ -25,6 +24,21 @@ Subcommands:
   list                        List all existing issues
   create                      Create a new issue
 )"sv;
+
+// Minimal fake: create() delegates to domain logic for ID generation;
+// list() returns an empty list. No repository, no filesystem.
+struct stub_issue_service : fix::domain::issue_service {
+  fix::domain::expected<std::string> create(std::string_view title,
+                                            std::string_view description) override {
+    auto result = fix::domain::issue::create(title, description);
+    if (!result) return std::unexpected(result.error());
+    return result->id().to_string();
+  }
+
+  fix::domain::expected<std::vector<fix::domain::issue>> list() const override {
+    return std::vector<fix::domain::issue>{};
+  }
+};
 
 auto split(std::string_view sv) {
   // clang-format off
@@ -42,11 +56,9 @@ struct run_result {
   int exit_code;
 };
 
-run_result run_app(std::vector<std::string> argv) {
-  // Prepend program name
+run_result run_app(fix::domain::issue_service& service, std::vector<std::string> argv) {
   argv.insert(argv.begin(), "fix");
 
-  // Create argv pointer array from stored strings
   std::vector<char const*> argv_ptrs;
   argv_ptrs.reserve(argv.size());
   for (auto const& arg : argv) {
@@ -54,34 +66,24 @@ run_result run_app(std::vector<std::string> argv) {
   }
 
   std::stringstream out;
-  app app{out};
+  app app{out, service};
   auto const exit_code = app.run(static_cast<int>(argv_ptrs.size()), argv_ptrs.data());
   return {out.str(), exit_code};
+}
+
+run_result run_app(fix::domain::issue_service& service, std::string_view args) {
+  return run_app(service, split(args));
+}
+
+// Overload for tests that don't exercise repository behaviour
+run_result run_app(std::vector<std::string> argv) {
+  stub_issue_service stub;
+  return run_app(stub, std::move(argv));
 }
 
 run_result run_app(std::string_view args) {
   return run_app(split(args));
 }
-
-// RAII helper: creates a temporary .fix/ directory in a temp folder and
-// changes the working directory to it for the duration of the test.
-struct temp_fix_repo {
-  fs::path original_dir;
-  fs::path temp_dir;
-
-  temp_fix_repo() {
-    original_dir = fs::current_path();
-    temp_dir = fs::temp_directory_path() / fs::path{"fix_test_" + std::to_string(
-        std::chrono::steady_clock::now().time_since_epoch().count())};
-    fs::create_directories(temp_dir / ".fix" / "issues");
-    fs::current_path(temp_dir);
-  }
-
-  ~temp_fix_repo() {
-    fs::current_path(original_dir);
-    fs::remove_all(temp_dir);
-  }
-};
 
 } // namespace
 
@@ -112,7 +114,6 @@ TEST_CASE("Prints error messages...") {
 }
 
 TEST_CASE("List command prints number of issues") {
-  temp_fix_repo repo;
   auto const [output, exit_code] = run_app("list");
 
   CHECK(output == "total: 0 issues\n");
@@ -120,7 +121,6 @@ TEST_CASE("List command prints number of issues") {
 }
 
 TEST_CASE("Create issue command prints issue ID") {
-  temp_fix_repo repo;
   auto const& [title, description, id_prefix]
   = GENERATE(std::tuple("this is a new issue", "some text", "thi-is-a-new"),
              std::tuple("My first issue in Fix", "Dorem Fixum dolor sit amet", "my-fir-iss-in"));

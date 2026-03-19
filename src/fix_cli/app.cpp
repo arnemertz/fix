@@ -4,11 +4,10 @@
 #include <format>
 #include <ostream>
 
-#include "application_service.hpp"
 #include "description.hpp"
 #include "issue_id.hpp"
+#include "issue_service.hpp"
 #include "title.hpp"
-#include "toml_issue_repository.hpp"
 
 using namespace fix::cli;
 using namespace std::string_view_literals;
@@ -17,7 +16,7 @@ namespace {
 constexpr auto DESCRIPTION = R"(fix - Issue tracker)"sv;
 } // namespace
 
-app::app(std::ostream& out) : out{out} {}
+app::app(std::ostream& out, domain::issue_service& service) : out{out}, service_{service} {}
 
 auto app::run(int argc, const char* const* argv) -> int {
   CLI::App cli_app{std::string(DESCRIPTION), "fix"};
@@ -68,10 +67,7 @@ auto app::run(int argc, const char* const* argv) -> int {
 }
 
 int app::list() {
-  infrastructure::toml_issue_repository repository{".fix"};
-  domain::application_service service{repository};
-
-  auto const result = service.list();
+  auto const result = service_.list();
   if (!result) {
     out << std::format("Error: {}\n", result.error().message());
     return EXIT_FAILURE;
@@ -103,10 +99,7 @@ int app::create(std::string const& title, std::string const& description) {
     return EXIT_FAILURE;
   }
 
-  infrastructure::toml_issue_repository repository{".fix"};
-  domain::application_service service{repository};
-
-  auto const result = service.create(title, description);
+  auto const result = service_.create(title, description);
   if (!result) {
     // Must be a duplicate (validation already passed above)
     // Re-generate the ID so we can show it in the error message

@@ -10,6 +10,5 @@ target_link_libraries(fix_cli
     project_options
     CLI11::CLI11
     domain
-    infrastructure
     )
 target_include_directories(fix_cli PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
