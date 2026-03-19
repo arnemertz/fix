@@ -29,3 +29,24 @@ TEST_CASE("Issue ID is contains abbreviated first words of the title") {
   auto const id_pattern = id_prefix + "-[0-9a-f]{7}"s;
   CHECK_THAT(issue_id::generate(the_title.value(), the_description.value()).to_string(), Catch::Matches(id_pattern));
 }
+
+TEST_CASE("Issue ID hash is deterministic") {
+  auto const title1 = title::create("Test title");
+  auto const desc1 = description::create("Test description");
+
+  auto const id1 = issue_id::generate(*title1, *desc1).to_string();
+  auto const id2 = issue_id::generate(*title1, *desc1).to_string();
+
+  CHECK(id1 == id2);
+}
+
+TEST_CASE("Issue ID hash differentiates issues") {
+  auto const title1 = title::create("Same title");
+  auto const desc1 = description::create("Description one");
+  auto const desc2 = description::create("Description two");
+
+  auto id1 = issue_id::generate(*title1, *desc1);
+  auto id2 = issue_id::generate(*title1, *desc2);
+
+  CHECK(id1.to_string() != id2.to_string());
+}
