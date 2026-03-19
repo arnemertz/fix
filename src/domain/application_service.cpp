@@ -15,7 +15,12 @@ std::string application_service::create(std::string_view title, std::string_view
     return ""; // TODO: proper error handling
   }
 
-  const auto issue_id = issue_id::generate(*the_title, fix::domain::description(description));
+  auto const the_description = fix::domain::description::create(description);
+  if (!the_description) {
+    return ""; // TODO: proper error handling
+  }
+
+  const auto issue_id = issue_id::generate(*the_title, *the_description);
   return issue_id.to_string();
 }
 

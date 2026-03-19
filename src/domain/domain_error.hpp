@@ -14,6 +14,7 @@ enum class domain_error {
   TITLE_HAS_SPECIAL_PUNCTUATION = 13,
   TITLE_HAS_NON_ASCII_CHARS = 14,
   TITLE_NOT_TRIMMED = 15,
+  DESCRIPTION_EMPTY = 20,
 };
 
 template<typename T>
