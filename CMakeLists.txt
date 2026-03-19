@@ -69,6 +69,7 @@ else()
 endif()
 
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/build/generators")
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/generators")
 find_package(CLI11 REQUIRED)
 find_package(tomlplusplus REQUIRED)
 if (ENABLE_TESTING)

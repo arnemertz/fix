@@ -2,6 +2,7 @@
 
 add_subdirectory(fix_cli)
 add_subdirectory(domain)
+add_subdirectory(infrastructure)
 
 add_executable(fix main.cpp)
 target_link_libraries(
