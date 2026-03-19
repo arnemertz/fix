@@ -6,6 +6,8 @@
 
 namespace fix::domain {
 
+// Error codes are grouped by category, each occupying a reserved numeric range
+// (e.g. 1–9 general, 10–19 title, 20–29 description) to leave room for future additions.
 enum class domain_error {
   MISSING_IMPLEMENTATION = 1,
   TITLE_TOO_LONG = 10,

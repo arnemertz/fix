@@ -3,12 +3,12 @@
 #include <algorithm>
 #include <cctype>
 #include <climits>
-#include <string>
+
+#include "text_utils.hpp"
 
 using namespace fix::domain;
 
 namespace {
-std::string trim(std::string_view text);
 expected<std::string_view> check_length(std::string_view text);
 expected<std::string_view> check_charset(std::string_view text);
 } // namespace
@@ -30,14 +30,6 @@ std::string const& title::to_string() const {
 }
 
 namespace {
-std::string trim(std::string_view text) {
-  auto const start = text.find_first_not_of(" \t\n\r\f\v");
-  if (start == std::string_view::npos) {
-    return "";
-  }
-  auto const end = text.find_last_not_of(" \t\n\r\f\v");
-  return std::string{text.substr(start, end - start + 1)};
-}
 
 expected<std::string_view> check_length(std::string_view text) {
   if (text.length() < title::MIN_LENGTH) {
