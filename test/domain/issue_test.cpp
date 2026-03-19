@@ -32,11 +32,11 @@ TEST_CASE("Issue creation trims title and description") {
 }
 
 TEST_CASE("Issue creation fails with empty title") {
-  CHECK_THAT(issue::create("", "Valid description"), FailsWithMessage("title is too short"));
+  CHECK_THAT(issue::create("", "Valid description"), FailsWithMessage("Title is empty"));
 }
 
 TEST_CASE("Issue creation fails with empty description") {
-  CHECK_THAT(issue::create("Valid title", ""), FailsWithMessage("description is empty"));
+  CHECK_THAT(issue::create("Valid title", ""), FailsWithMessage("Description is empty"));
 }
 
 TEST_CASE("Issue creation with both empty returns title error first") {
@@ -44,15 +44,15 @@ TEST_CASE("Issue creation with both empty returns title error first") {
   REQUIRE_FALSE(result);
 
   // When both fail, title error is returned (validated first)
-  CHECK(result.error().message().find("title is too short") != std::string::npos);
+  CHECK(result.error().message().find("Title is empty") != std::string::npos);
 }
 
 TEST_CASE("Issue creation with whitespace-only inputs fails") {
   SECTION("whitespace-only title") {
-    CHECK_THAT(issue::create("   ", "Valid description"), FailsWithMessage("title is too short"));
+    CHECK_THAT(issue::create("   ", "Valid description"), FailsWithMessage("Title is empty"));
   }
   SECTION("whitespace-only description") {
-    CHECK_THAT(issue::create("Valid title", "   "), FailsWithMessage("description is empty"));
+    CHECK_THAT(issue::create("Valid title", "   "), FailsWithMessage("Description is empty"));
   }
 }
 

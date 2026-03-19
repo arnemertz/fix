@@ -5,6 +5,10 @@
 #include <ostream>
 
 #include "application_service.hpp"
+#include "description.hpp"
+#include "issue_id.hpp"
+#include "title.hpp"
+#include "toml_issue_repository.hpp"
 
 using namespace fix::cli;
 using namespace std::string_view_literals;
@@ -62,15 +66,53 @@ auto app::run(int argc, const char* const* argv) -> int {
 }
 
 int app::list() {
-  domain::application_service application_service;
-  auto const count = application_service.list();
-  out << std::format("total: {} issues\n", count);
+  infrastructure::toml_issue_repository repository{".fix"};
+  domain::application_service service{repository};
+
+  auto const result = service.list();
+  if (!result) {
+    out << std::format("Error: {}\n", result.error().message());
+    return EXIT_FAILURE;
+  }
+
+  for (auto const& iss : *result) {
+    out << std::format("{} | {} | open\n", iss.id().to_string(), iss.get_title().to_string());
+  }
+
+  out << std::format("total: {} issues\n", result->size());
   return EXIT_SUCCESS;
 }
 
 int app::create(std::string const& title, std::string const& description) {
-  domain::application_service application_service;
-  const auto issue_id = application_service.create(title, description);
-  out << std::format("Issue created: {}\n", issue_id);
+  // Pre-validate both fields to collect all errors
+  auto const title_result = domain::title::create(title);
+  auto const desc_result = domain::description::create(description);
+
+  bool any_error = false;
+  if (!title_result) {
+    out << std::format("Error: {}\n", title_result.error().message());
+    any_error = true;
+  }
+  if (!desc_result) {
+    out << std::format("Error: {}\n", desc_result.error().message());
+    any_error = true;
+  }
+  if (any_error) {
+    return EXIT_FAILURE;
+  }
+
+  infrastructure::toml_issue_repository repository{".fix"};
+  domain::application_service service{repository};
+
+  auto const result = service.create(title, description);
+  if (!result) {
+    // Must be a duplicate (validation already passed above)
+    // Re-generate the ID so we can show it in the error message
+    auto id = domain::issue_id::generate(*title_result, *desc_result);
+    out << std::format("Issue already exists: {}\n", id.to_string());
+    return EXIT_FAILURE;
+  }
+
+  out << std::format("Issue created: {}\n", *result);
   return EXIT_SUCCESS;
 }

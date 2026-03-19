@@ -41,7 +41,7 @@ std::string trim(std::string_view text) {
 
 expected<std::string_view> check_length(std::string_view text) {
   if (text.length() < title::MIN_LENGTH) {
-    return unexpected(domain_error::TITLE_TOO_SHORT);
+    return unexpected(text.empty() ? domain_error::TITLE_EMPTY : domain_error::TITLE_TOO_SHORT);
   }
   if (text.length() > title::MAX_LENGTH) {
     return unexpected(domain_error::TITLE_TOO_LONG);

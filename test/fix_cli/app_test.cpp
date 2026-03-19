@@ -1,5 +1,7 @@
 #include <catch2/catch.hpp>
 
+#include <chrono>
+#include <filesystem>
 #include <format>
 #include <ranges>
 #include <sstream>
@@ -9,6 +11,7 @@
 
 using namespace std::literals;
 using fix::cli::app;
+namespace fs = std::filesystem;
 
 
 namespace {
@@ -60,6 +63,26 @@ run_result run_app(std::string_view args) {
   return run_app(split(args));
 }
 
+// RAII helper: creates a temporary .fix/ directory in a temp folder and
+// changes the working directory to it for the duration of the test.
+struct temp_fix_repo {
+  fs::path original_dir;
+  fs::path temp_dir;
+
+  temp_fix_repo() {
+    original_dir = fs::current_path();
+    temp_dir = fs::temp_directory_path() / fs::path{"fix_test_" + std::to_string(
+        std::chrono::steady_clock::now().time_since_epoch().count())};
+    fs::create_directories(temp_dir / ".fix" / "issues");
+    fs::current_path(temp_dir);
+  }
+
+  ~temp_fix_repo() {
+    fs::current_path(original_dir);
+    fs::remove_all(temp_dir);
+  }
+};
+
 } // namespace
 
 TEST_CASE("Prints usage...") {
@@ -89,6 +112,7 @@ TEST_CASE("Prints error messages...") {
 }
 
 TEST_CASE("List command prints number of issues") {
+  temp_fix_repo repo;
   auto const [output, exit_code] = run_app("list");
 
   CHECK(output == "total: 0 issues\n");
@@ -96,6 +120,7 @@ TEST_CASE("List command prints number of issues") {
 }
 
 TEST_CASE("Create issue command prints issue ID") {
+  temp_fix_repo repo;
   auto const& [title, description, id_prefix]
   = GENERATE(std::tuple("this is a new issue", "some text", "thi-is-a-new"),
              std::tuple("My first issue in Fix", "Dorem Fixum dolor sit amet", "my-fir-iss-in"));

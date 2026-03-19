@@ -24,7 +24,7 @@ TEST_CASE("Titles can be converted back to strings") {
 
 TEST_CASE("Titles have restricted length") {
   SECTION("titles may not be empty") {
-    CHECK_THAT(title::create(""), FailsWithMessage("title is too short"));
+    CHECK_THAT(title::create(""), FailsWithMessage("Title is empty"));
   }
   SECTION("titles may not be too short") {
     const auto& short_string = std::string(title::MIN_LENGTH - 1, 's');
@@ -79,9 +79,9 @@ TEST_CASE("Title text is trimmed of leading and trailing whitespace") {
     CHECK(result->to_string() == "some title");
   }
   SECTION("whitespace-only title is empty after trimming") {
-    CHECK_THAT(title::create("   "), FailsWithMessage("title is too short"));
+    CHECK_THAT(title::create("   "), FailsWithMessage("Title is empty"));
   }
   SECTION("empty title fails validation") {
-    CHECK_THAT(title::create(""), FailsWithMessage("title is too short"));
+    CHECK_THAT(title::create(""), FailsWithMessage("Title is empty"));
   }
 }
