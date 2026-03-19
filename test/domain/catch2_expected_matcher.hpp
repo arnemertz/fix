@@ -4,7 +4,7 @@
 #include "domain_error.hpp"
 #include <catch2/catch.hpp>
 
-namespace detail {
+namespace fix::testing::detail {
 struct inspect_expect {
   bool has_value;
   std::error_code error;
@@ -14,15 +14,15 @@ struct inspect_expect {
       : has_value(expected.has_value()), error(expected ? std::error_code{} : expected.error()) {}
 };
 
-} // namespace detail
+} // namespace fix::testing::detail
 
-class FailsWithMessage : public Catch::MatcherBase<detail::inspect_expect> {
+class FailsWithMessage : public Catch::MatcherBase<fix::testing::detail::inspect_expect> {
   std::string_view message;
 
 public:
   explicit FailsWithMessage(std::string_view message) : message{message} {}
 
-  bool match(detail::inspect_expect const& inspector) const override {
+  bool match(fix::testing::detail::inspect_expect const& inspector) const override {
     if (inspector.has_value) {
       return false;
     }
@@ -38,7 +38,7 @@ public:
 namespace Catch {
 template<typename T>
 struct StringMaker<fix::domain::expected<T>> {
-  constexpr static size_t MAX_MESSAGE_LENGTH = 30;
+  constexpr static std::size_t MAX_MESSAGE_LENGTH = 30;
 
   static std::string convert(fix::domain::expected<T> const& expected) {
     if (!expected) {
@@ -49,7 +49,7 @@ struct StringMaker<fix::domain::expected<T>> {
     if constexpr (std::is_same_v<T, void>) {
       return "expected(void)";
     } else {
-      return "expected(" + StringMaker<T>::convert(expected.template value()) + ")";
+      return "expected(" + StringMaker<T>::convert(expected.value()) + ")";
     }
   }
 };

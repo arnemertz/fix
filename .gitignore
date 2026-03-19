@@ -1,0 +1,14 @@
+# Build directories
+out/
+build/
+cmake-build-*/
+
+# Conan generated files
+CMakeUserPresets.json
+conan_toolchain.cmake
+conanbuild.bat
+conanrun.bat
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/

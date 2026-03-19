@@ -1,8 +1,8 @@
 #ifndef FIX_SRC_DOMAIN_DOMAIN_ERROR_HPP
 #define FIX_SRC_DOMAIN_DOMAIN_ERROR_HPP
 
+#include <expected>
 #include <system_error>
-#include <tl/expected.hpp>
 
 namespace fix::domain {
 
@@ -17,10 +17,10 @@ enum class domain_error {
 };
 
 template<typename T>
-using expected = tl::expected<T, std::error_code>;
+using expected = std::expected<T, std::error_code>;
 
 inline auto unexpected(domain_error error) {
-  return tl::unexpected(error);
+  return std::unexpected(error);
 }
 
 } // namespace fix::domain

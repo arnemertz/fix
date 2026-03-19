@@ -1,6 +1,7 @@
 #ifndef FIX_DOMAIN_APPLICATION_SERVICE_HPP
 #define FIX_DOMAIN_APPLICATION_SERVICE_HPP
 
+#include <cstddef>
 #include <string>
 
 namespace fix::domain {
@@ -11,7 +12,7 @@ public:
   std::string create(std::string_view title, std::string_view description);
 
   // cppcheck-suppress functionStatic
-  size_t list() const;
+  std::size_t list() const;
 };
 
 }

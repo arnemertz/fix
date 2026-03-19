@@ -19,6 +19,6 @@ std::string application_service::create(std::string_view title, std::string_view
   return issue_id.to_string();
 }
 
-size_t application_service::list() const { // NOLINT
+std::size_t application_service::list() const { // NOLINT
   return 0;
 }

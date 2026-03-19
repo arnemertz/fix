@@ -4,6 +4,5 @@
 
 int main(int argc, char* argv[]) {
   fix::cli::app app{std::cout};
-  const std::vector<std::string_view> args(std::next(argv), std::next(argv, argc));
-  return app.run(args);
+  return app.run(argc, argv);
 }

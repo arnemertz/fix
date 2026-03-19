@@ -10,6 +10,7 @@ BinPackParameters: false
 BreakBeforeBinaryOperators: All
 ColumnLimit:     120
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
+QualifierAlignment: Right
 DeriveLineEnding: false
 IncludeIsMainRegex: '(_test)?$'
 PointerAlignment: Left

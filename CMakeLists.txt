@@ -21,7 +21,7 @@ set_project_warnings(project_warnings)
 
 # Link this 'library' to set the c++ standard / compile-time options requested
 add_library(project_options INTERFACE)
-target_compile_features(project_options INTERFACE cxx_std_20)
+target_compile_features(project_options INTERFACE cxx_std_23)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
   option(ENABLE_BUILD_WITH_TIME_TRACE "Enable -ftime-trace to generate time tracing .json files on clang" OFF)
@@ -39,12 +39,40 @@ include(cmake/StaticAnalyzers.cmake)
 
 option(ENABLE_TESTING "Enable Test Builds" ON)
 
-# Set up some extra Conan dependencies based on our needs before loading Conan
-set(CONAN_EXTRA_REQUIRES "")
-set(CONAN_EXTRA_OPTIONS "")
+# Conan 2 integration - automatically install dependencies
+# Only run if conan hasn't been run yet (to avoid infinite configure loop)
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/build/generators/conan_toolchain.cmake")
+  message(STATUS "Detecting Conan profile...")
+  execute_process(
+    COMMAND conan profile detect --force
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_QUIET
+    ERROR_QUIET
+  )
 
-include(cmake/Conan.cmake)
-run_conan()
+  message(STATUS "Running Conan install...")
+  execute_process(
+    COMMAND conan install ${CMAKE_SOURCE_DIR} 
+            --output-folder=${CMAKE_BINARY_DIR} 
+            --build=missing 
+            -s build_type=${CMAKE_BUILD_TYPE}
+            -s compiler.cppstd=23
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    RESULT_VARIABLE CONAN_RESULT
+  )
+
+  if(NOT CONAN_RESULT EQUAL 0)
+    message(FATAL_ERROR "Conan install failed with exit code: ${CONAN_RESULT}")
+  endif()
+else()
+  message(STATUS "Conan already configured, skipping conan install")
+endif()
+
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/build/generators")
+find_package(CLI11 REQUIRED)
+if (ENABLE_TESTING)
+  find_package(Catch2 REQUIRED)
+endif()
 
 add_subdirectory(src)
 
