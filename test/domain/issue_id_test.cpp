@@ -27,7 +27,7 @@ TEST_CASE("Issue ID is contains abbreviated first words of the title") {
   REQUIRE(the_description);
 
   auto const id_pattern = id_prefix + "-[0-9a-f]{7}"s;
-  CHECK_THAT(issue_id::generate(the_title.value(), the_description.value()).to_string(), Catch::Matches(id_pattern));
+  CHECK_THAT(issue_id::generate(*the_title, *the_description).to_string(), Catch::Matches(id_pattern));
 }
 
 TEST_CASE("Issue ID prefix is padded with xxx/yyy/zzz for short titles") {
@@ -35,27 +35,27 @@ TEST_CASE("Issue ID prefix is padded with xxx/yyy/zzz for short titles") {
   REQUIRE(desc);
 
   SECTION("one word pads with xxx-yyy-zzz") {
-    auto const t = title::create("Minimum");
-    REQUIRE(t);
-    auto id = issue_id::generate(*t, *desc);
+    auto const the_title = title::create("Minimum");
+    REQUIRE(the_title);
+    auto id = issue_id::generate(*the_title, *desc);
     CHECK_THAT(id.to_string(), Catch::Matches("min-xxx-yyy-zzz-[0-9a-f]{7}"));
   }
   SECTION("two words pads with yyy-zzz") {
-    auto const t = title::create("Two words");
-    REQUIRE(t);
-    auto id = issue_id::generate(*t, *desc);
+    auto const the_title = title::create("Two words");
+    REQUIRE(the_title);
+    auto id = issue_id::generate(*the_title, *desc);
     CHECK_THAT(id.to_string(), Catch::Matches("two-wor-yyy-zzz-[0-9a-f]{7}"));
   }
   SECTION("three words pads with zzz") {
-    auto const t = title::create("Three word title");
-    REQUIRE(t);
-    auto id = issue_id::generate(*t, *desc);
+    auto const the_title = title::create("Three word title");
+    REQUIRE(the_title);
+    auto id = issue_id::generate(*the_title, *desc);
     CHECK_THAT(id.to_string(), Catch::Matches("thr-wor-tit-zzz-[0-9a-f]{7}"));
   }
   SECTION("four or more words - no padding") {
-    auto const t = title::create("Four words in title");
-    REQUIRE(t);
-    auto id = issue_id::generate(*t, *desc);
+    auto const the_title = title::create("Four words in title");
+    REQUIRE(the_title);
+    auto id = issue_id::generate(*the_title, *desc);
     CHECK_THAT(id.to_string(), Catch::Matches("fou-wor-in-tit-[0-9a-f]{7}"));
   }
 }
