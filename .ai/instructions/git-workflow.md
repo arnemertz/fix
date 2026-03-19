@@ -8,7 +8,12 @@
 ## Branching Strategy
 
 - Feature branches off `main`. Branch naming: `feature/<short-description>` (e.g., `feature/add-priority-field`).
-- The **Product Owner** creates the feature branch at the start of a task.
+- The **Product Owner** creates the feature branch at the start of a task. Before branching, always check out `main` and pull from `origin` to ensure the branch starts from the latest state:
+  ```
+  git checkout main
+  git pull origin main
+  git checkout -b feature/<short-description>
+  ```
 - All agent work for a feature happens on that feature branch.
 - PR target is always `main`.
 - When the feature is complete and the Reviewer has signed off, the Product Owner notifies the user. *(Automated PR creation will be added later once repository workflows are set up.)*
