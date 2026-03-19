@@ -1,18 +1,19 @@
 param(
-    [string]$BuildDir = "build"
+    [string]$BuildDir = "build",
+    [string]$BaseBranch = "main"
 )
 
 # Save current branch so we can return to it at the end
 $currentBranch = git --no-pager branch --show-current
 
 # Get commits oldest-first
-$commits = git --no-pager log --oneline copilot_playground..HEAD --reverse |
+$commits = git --no-pager log --oneline "${BaseBranch}..HEAD" --reverse |
     ForEach-Object { $_.Split(" ")[0] }
 $total = $commits.Count
 $failed = @()
 $firstCommit = $true
 
-Write-Host "Verifying $total commits (will return to '$currentBranch')...`n"
+Write-Host "Verifying $total commits from '${BaseBranch}..HEAD' (will return to '$currentBranch')...`n"
 
 foreach ($sha in $commits) {
     $msg = git --no-pager log --oneline -1 $sha

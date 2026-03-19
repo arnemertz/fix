@@ -15,6 +15,7 @@
   git checkout -b feature/<short-description>
   ```
 - All agent work for a feature happens on that feature branch.
+- **Agent instructions and project meta-files** (`.ai/`, `AGENTS.md`) must not be mixed into feature branches. Changes to these files go on a dedicated branch (`meta/<short-description>`), submitted as a separate PR.
 - PR target is always `main`.
 - When the feature is complete and the Reviewer has signed off, the Product Owner notifies the user. *(Automated PR creation will be added later once repository workflows are set up.)*
 
