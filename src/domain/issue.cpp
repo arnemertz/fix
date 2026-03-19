@@ -1,8 +1,6 @@
 #include "issue.hpp"
 
-#include <format>
 #include <string>
-#include <vector>
 
 using namespace fix::domain;
 

@@ -7,7 +7,6 @@
 #include <string>
 
 using namespace fix::domain;
-using namespace std::literals;
 namespace rv = std::ranges::views;
 
 issue_id::issue_id(std::string text) : text{std::move(text)} {}
