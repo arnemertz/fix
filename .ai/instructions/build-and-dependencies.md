@@ -4,10 +4,13 @@ For general build instructions (prerequisites, Conan install, CMake configure, V
 
 This file covers agent-specific knowledge beyond the general build procedure.
 
-## Conan Auto-invocation
+## Conan Setup
 
-- Conan is invoked automatically during CMake configure if dependencies are not yet installed. Agents do not need to run Conan manually.
-- Conan output folder: `<build_dir>/build/generators/`.
+- Conan **must be run manually** before CMake configure. CMake will fail with a clear error if the toolchain is missing.
+- CWD for the `conan install` command: `<fix-root>` (repository root).
+- Command: `conan install . --output-folder=. --build=missing -s build_type=<Debug|Release> -s compiler.cppstd=23`
+- Generators output to `<fix-root>/build/generators/`; CMake binary dir is `<fix-root>/build/`.
+- Re-run whenever `conanfile.txt` changes.
 
 ## Dependencies
 

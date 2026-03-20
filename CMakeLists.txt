@@ -39,36 +39,13 @@ include(cmake/StaticAnalyzers.cmake)
 
 option(ENABLE_TESTING "Enable Test Builds" ON)
 
-# Conan 2 integration - automatically install dependencies
-# Only run if conan hasn't been run yet (to avoid infinite configure loop)
-if(NOT EXISTS "${CMAKE_BINARY_DIR}/build/generators/conan_toolchain.cmake")
-  message(STATUS "Detecting Conan profile...")
-  execute_process(
-    COMMAND conan profile detect --force
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    OUTPUT_QUIET
-    ERROR_QUIET
-  )
-
-  message(STATUS "Running Conan install...")
-  execute_process(
-    COMMAND conan install ${CMAKE_SOURCE_DIR} 
-            --output-folder=${CMAKE_BINARY_DIR} 
-            --build=missing 
-            -s build_type=${CMAKE_BUILD_TYPE}
-            -s compiler.cppstd=23
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-    RESULT_VARIABLE CONAN_RESULT
-  )
-
-  if(NOT CONAN_RESULT EQUAL 0)
-    message(FATAL_ERROR "Conan install failed with exit code: ${CONAN_RESULT}")
-  endif()
-else()
-  message(STATUS "Conan already configured, skipping conan install")
+# Conan 2 integration - run manually from <fix-root> before configuring:
+#   conan install . --output-folder=. --build=missing -s build_type=<Debug|Release> -s compiler.cppstd=23
+# The cmake_layout in conanfile.txt places generators in build/generators/ relative to --output-folder.
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/generators/conan_toolchain.cmake")
+  message(FATAL_ERROR "Conan packages not found. Run 'conan install' first (see comment above).")
 endif()
 
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/build/generators")
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/generators")
 find_package(CLI11 REQUIRED)
 find_package(tomlplusplus REQUIRED)
