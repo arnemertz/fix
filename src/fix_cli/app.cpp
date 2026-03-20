@@ -3,6 +3,7 @@
 #include <CLI/CLI.hpp>
 #include <format>
 #include <ostream>
+#include <string>
 
 #include "description.hpp"
 #include "issue_id.hpp"
@@ -13,46 +14,108 @@ using namespace fix::cli;
 using namespace std::string_view_literals;
 
 namespace {
+
 constexpr auto DESCRIPTION = R"(fix - Issue tracker)"sv;
+
+struct app_environment {
+  std::ostream& out;
+  CLI::App& cli;
+  int& exit_code;
+};
+
+struct list_command {
+  app_environment environment;
+  fix::domain::issue_service& service;
+
+  list_command(app_environment environment, fix::domain::issue_service& service)
+      : environment{environment}, service{service} {
+    environment.cli.add_subcommand("list", "List all existing issues")->callback([this] {
+      this->environment.exit_code = execute();
+    });
+  }
+
+private:
+  int execute() const {
+    auto const result = service.list();
+    if (!result) {
+      environment.out << std::format("Error: {}\n", result.error().message());
+      return EXIT_FAILURE;
+    }
+    for (auto const& iss : *result) {
+      environment.out << std::format("{} | {} | open\n", iss.id().to_string(), iss.get_title().to_string());
+    }
+    environment.out << std::format("total: {} issues\n", result->size());
+    return EXIT_SUCCESS;
+  }
+};
+
+struct create_command {
+  app_environment environment;
+  fix::domain::issue_service& service;
+  std::string title;
+  std::string description;
+
+  create_command(app_environment environment, fix::domain::issue_service& service)
+      : environment{environment}, service{service} {
+    auto* const cmd = environment.cli.add_subcommand("create", "Create a new issue");
+    cmd->add_option("-t,--title", title, "Title of the new issue");
+    cmd->add_option("-d,--descr", description, "Description text");
+    cmd->callback([this] { this->environment.exit_code = execute(); });
+  }
+
+private:
+  int execute() const {
+    auto const title_result = fix::domain::title::create(title);
+    auto const desc_result = fix::domain::description::create(description);
+
+    bool any_error = false;
+    if (!title_result) {
+      environment.out << std::format("Error: {}\n", title_result.error().message());
+      any_error = true;
+    }
+    if (!desc_result) {
+      environment.out << std::format("Error: {}\n", desc_result.error().message());
+      any_error = true;
+    }
+    if (any_error) {
+      return EXIT_FAILURE;
+    }
+
+    auto const result = service.create(title, description);
+    if (!result) {
+      auto const id = fix::domain::issue_id::generate(*title_result, *desc_result);
+      environment.out << std::format("Issue already exists: {}\n", id.to_string());
+      return EXIT_FAILURE;
+    }
+
+    environment.out << std::format("Issue created: {}\n", *result);
+    return EXIT_SUCCESS;
+  }
+};
+
 } // namespace
 
 app::app(std::ostream& out, domain::issue_service& service) : out{out}, service_{service} {}
 
-auto app::run(int argc, const char* const* argv) -> int {
+auto app::run(int argc, char const* const* argv) -> int {
   CLI::App cli_app{std::string(DESCRIPTION), "fix"};
   cli_app.require_subcommand(0, 1);
   cli_app.fallthrough();
+  int exit_code = EXIT_SUCCESS;
 
-  int subcommand_exit_code = EXIT_SUCCESS;
+  app_environment const environment{out, cli_app, exit_code};
+  list_command list{environment, service_};
+  create_command create{environment, service_};
 
-  // List command
-  auto* list_cmd = cli_app.add_subcommand("list", "List all existing issues");
-  list_cmd->callback([this, &subcommand_exit_code]() {
-    subcommand_exit_code = list();
-  });
-
-  // Create command
-  auto* create_cmd = cli_app.add_subcommand("create", "Create a new issue");
-  std::string title;
-  std::string description;
-  create_cmd->add_option("-t,--title", title, "Title of the new issue");
-  create_cmd->add_option("-d,--descr", description, "Description text");
-  create_cmd->callback([this, &title, &description, &subcommand_exit_code]() {
-    subcommand_exit_code = create(title, description);
-  });
-
-  // Parse arguments using argc/argv
   try {
     cli_app.parse(argc, argv);
-  } catch (const CLI::CallForHelp&) {
+  } catch (CLI::CallForHelp const&) {
     out << cli_app.help();
     return EXIT_SUCCESS;
-  } catch (const CLI::ExtrasError&) {
-    // Unknown arguments/subcommands
+  } catch (CLI::ExtrasError const&) {
     out << "fix: unknown subcommand. See 'fix --help'.\n";
     return EXIT_FAILURE;
-  } catch (const CLI::ParseError& e) {
-    // Other parse errors
+  } catch (CLI::ParseError const& e) {
     out << e.what() << "\n";
     out << "Run with --help for more information.\n";
     return EXIT_FAILURE;
@@ -63,51 +126,5 @@ auto app::run(int argc, const char* const* argv) -> int {
     return EXIT_FAILURE;
   }
 
-  return subcommand_exit_code;
-}
-
-int app::list() {
-  auto const result = service_.list();
-  if (!result) {
-    out << std::format("Error: {}\n", result.error().message());
-    return EXIT_FAILURE;
-  }
-
-  for (auto const& iss : *result) {
-    out << std::format("{} | {} | open\n", iss.id().to_string(), iss.get_title().to_string());
-  }
-
-  out << std::format("total: {} issues\n", result->size());
-  return EXIT_SUCCESS;
-}
-
-int app::create(std::string const& title, std::string const& description) {
-  // Pre-validate both fields to collect all errors
-  auto const title_result = domain::title::create(title);
-  auto const desc_result = domain::description::create(description);
-
-  bool any_error = false;
-  if (!title_result) {
-    out << std::format("Error: {}\n", title_result.error().message());
-    any_error = true;
-  }
-  if (!desc_result) {
-    out << std::format("Error: {}\n", desc_result.error().message());
-    any_error = true;
-  }
-  if (any_error) {
-    return EXIT_FAILURE;
-  }
-
-  auto const result = service_.create(title, description);
-  if (!result) {
-    // Must be a duplicate (validation already passed above)
-    // Re-generate the ID so we can show it in the error message
-    auto id = domain::issue_id::generate(*title_result, *desc_result);
-    out << std::format("Issue already exists: {}\n", id.to_string());
-    return EXIT_FAILURE;
-  }
-
-  out << std::format("Issue created: {}\n", *result);
-  return EXIT_SUCCESS;
+  return exit_code;
 }
