@@ -25,7 +25,6 @@ Feature: Creating and listing issues
     Then it prints "Error: title is too short"
     And terminates with exit code ERROR
 
-  @wip
   Scenario: created issues are listed in alphabetic order by ID
     Given an empty issue repository
     When we create an issue titled "The first created issue" with description
@@ -42,7 +41,6 @@ Feature: Creating and listing issues
       | thi-iss-yyy-zzz | Third issue                 | open   |
     And it prints "total: 3 issues"
 
-  @wip
   Scenario: creation of identical issues is rejected
     Given an empty issue repository
     When we create an issue titled "A unique issue" with description
@@ -58,7 +56,6 @@ Feature: Creating and listing issues
     Then it prints "Issue already exists: a-uni-iss-zzz-[hash]"
     And terminates with exit code ERROR
 
-  @wip
   Scenario: creation of issues with identical title but different description is allowed
     Given an empty issue repository
     When we create an issue titled "A unique issue" with description
@@ -78,7 +75,6 @@ Feature: Creating and listing issues
       | a-uni-iss-zzz   | A unique issue | open   |
       | a-uni-iss-zzz   | A unique issue | open   |
 
-  @wip
   Scenario: creation with empty title is rejected
     Given an empty issue repository
     When we create an issue titled "" with description
@@ -88,7 +84,6 @@ Feature: Creating and listing issues
     Then it prints "Error: Title is empty"
     And terminates with exit code ERROR
 
-  @wip
   Scenario: creation with empty description is rejected
     Given an empty issue repository
     When we create an issue titled "Valid title" with description
@@ -97,7 +92,6 @@ Feature: Creating and listing issues
     Then it prints "Error: Description is empty"
     And terminates with exit code ERROR
 
-  @wip
   Scenario: creation with both empty title and description reports all errors
     Given an empty issue repository
     When we create an issue titled "" with description
@@ -107,7 +101,6 @@ Feature: Creating and listing issues
     And it prints "Error: Description is empty"
     And terminates with exit code ERROR
 
-  @wip
   Scenario: creation with whitespace-only title is rejected
     Given an empty issue repository
     When we create an issue titled "   " with description
@@ -117,7 +110,6 @@ Feature: Creating and listing issues
     Then it prints "Error: Title is empty"
     And terminates with exit code ERROR
 
-  @wip
   Scenario: creation with whitespace-only description is rejected
     Given an empty issue repository
     When we create an issue titled "Valid title" with description
@@ -128,7 +120,6 @@ Feature: Creating and listing issues
     Then it prints "Error: Description is empty"
     And terminates with exit code ERROR
 
-  @wip
   Scenario: title and description are trimmed before ID generation
     Given an empty issue repository
     When we create an issue titled "  Trimmed Title  " with description
