@@ -69,6 +69,11 @@ ctest --test-dir build --output-on-failure -C Debug
 ```
 
 ### Integration tests (behave)
+All `behave` commands must be run from the `behave/` subdirectory:
+```powershell
+cd behave
+```
+
 Run **stable** tests (excludes `@wip` and `@skip`):
 ```powershell
 behave -t ~skip -t ~wip
