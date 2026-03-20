@@ -19,6 +19,10 @@ std::string error_message(domain_error error) {
     return "title may not contain non-ASCII characters";
   case domain_error::TITLE_NOT_TRIMMED:
     return "title may not start or end with whitespace";
+  case domain_error::TITLE_EMPTY:
+    return "Title is empty";
+  case domain_error::DESCRIPTION_EMPTY:
+    return "Description is empty";
   }
   return "unknown domain error";
 }

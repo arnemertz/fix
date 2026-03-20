@@ -1,6 +1,7 @@
 #include <catch2/catch.hpp>
 
 #include "description.hpp"
+#include "catch2_expected_matcher.hpp"
 
 #include <string>
 #include <type_traits>
@@ -15,14 +16,31 @@ TEST_CASE("Descriptions can be copied and moved, but not default-constructed") {
   STATIC_REQUIRE_FALSE(std::is_default_constructible_v<description>);
 }
 
-TEST_CASE("Descriptions can be created from any string") {
-  auto const description_text = GENERATE(""s, "any string"s, std::string(4000, '\1'));
-  REQUIRE_NOTHROW(description{description_text});
+TEST_CASE("Description creation fails for...") {
+  SECTION("...an empty string") {
+    CHECK_THAT(description::create(""), FailsWithMessage("Description is empty"));
+  }
+  SECTION("...a whitespace-only string") {
+    CHECK_THAT(description::create("   "), FailsWithMessage("Description is empty"));
+  }
+}
+
+TEST_CASE("Description text is trimmed of leading and trailing whitespace") {
+  auto const the_description = description::create("  some description  ");
+  REQUIRE(the_description);
+  CHECK(the_description->to_string() == "some description");
+}
+
+TEST_CASE("Descriptions can be created from non-empty strings") {
+  auto const description_text = GENERATE("any string"s, std::string(4000, '\1'));
+  auto const result = description::create(description_text);
+  REQUIRE(result);
 }
 
 TEST_CASE("Descriptions can be converted back to strings") {
   auto const description_text = GENERATE(
       "some description"s, "the description:\n\t- line breaks are allowed\n\t- and other formatting as well"s);
-  auto const the_description = description{description_text};
-  CHECK(the_description.to_string() == description_text);
+  auto const the_description = description::create(description_text);
+  REQUIRE(the_description);
+  CHECK(the_description->to_string() == description_text);
 }

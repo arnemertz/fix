@@ -4,13 +4,17 @@
 #include <string>
 #include <string_view>
 
+#include "domain_error.hpp"
+
 namespace fix::domain {
 
 class description {
   std::string text;
 
-public:
   explicit description(std::string_view text);
+
+public:
+  static expected<description> create(std::string_view text);
   std::string const& to_string() const;
 };
 

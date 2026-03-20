@@ -6,6 +6,8 @@
 
 namespace fix::domain {
 
+// Error codes are grouped by category, each occupying a reserved numeric range
+// (e.g. 1–9 general, 10–19 title, 20–29 description) to leave room for future additions.
 enum class domain_error {
   MISSING_IMPLEMENTATION = 1,
   TITLE_TOO_LONG = 10,
@@ -14,6 +16,8 @@ enum class domain_error {
   TITLE_HAS_SPECIAL_PUNCTUATION = 13,
   TITLE_HAS_NON_ASCII_CHARS = 14,
   TITLE_NOT_TRIMMED = 15,
+  TITLE_EMPTY = 16,
+  DESCRIPTION_EMPTY = 20,
 };
 
 template<typename T>

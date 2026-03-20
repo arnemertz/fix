@@ -1,10 +1,12 @@
 from behave import given, when, then
 from assertions import *
+import os
 import pexpect.popen_spawn
 import shlex
 import sys
 
-fix_executable = '../build/src/Debug/fix.exe'
+_script_dir = os.path.dirname(os.path.abspath(__file__))
+fix_executable = os.path.normpath(os.path.join(_script_dir, '..', '..', 'build', 'src', 'Debug', 'fix.exe'))
 
 
 def _start_fix_with_args(context, args):

@@ -4,13 +4,16 @@
 #include <iosfwd>
 #include <string>
 
+namespace fix::domain { class issue_service; }
+
 namespace fix::cli {
 
 class app {
   std::ostream& out;
+  fix::domain::issue_service& service_;
 
 public:
-  explicit app(std::ostream& out);
+  app(std::ostream& out, fix::domain::issue_service& service);
 
   auto run(int argc, char const* const* argv) -> int;
 

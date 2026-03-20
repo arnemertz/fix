@@ -62,6 +62,12 @@ fix/
 
 ---
 
+## General Agent Rules
+
+- **No out-of-repository side effects**: No agent may perform any action with effects outside the repository (e.g., modifying global git or shell configuration, installing system packages, changing environment variables, writing files outside the repo root) unless the user has **explicitly requested** it. When in doubt, ask first rather than act.
+
+---
+
 ## Detailed Instructions
 
 Topic-specific rules are maintained in `.ai/instructions/` to avoid duplication. All agents reference these as needed.

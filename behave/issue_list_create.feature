@@ -16,6 +16,15 @@ Feature: Creating and listing issues
     Then it prints "Issue created: my-fir-iss-in-[hash]"
     And terminates with exit code OK
 
+  Scenario: create an issue with a too-short title fails
+    Given an empty issue repository
+    When we create an issue titled "Short" with description
+    """
+    A valid description for this test
+    """
+    Then it prints "Error: title is too short"
+    And terminates with exit code ERROR
+
   @wip
   Scenario: created issues are listed in alphabetic order by ID
     Given an empty issue repository
@@ -68,3 +77,65 @@ Feature: Creating and listing issues
       | issue ID prefix | title          | status |
       | a-uni-iss-zzz   | A unique issue | open   |
       | a-uni-iss-zzz   | A unique issue | open   |
+
+  @wip
+  Scenario: creation with empty title is rejected
+    Given an empty issue repository
+    When we create an issue titled "" with description
+    """
+    A valid description
+    """
+    Then it prints "Error: Title is empty"
+    And terminates with exit code ERROR
+
+  @wip
+  Scenario: creation with empty description is rejected
+    Given an empty issue repository
+    When we create an issue titled "Valid title" with description
+    """
+    """
+    Then it prints "Error: Description is empty"
+    And terminates with exit code ERROR
+
+  @wip
+  Scenario: creation with both empty title and description reports all errors
+    Given an empty issue repository
+    When we create an issue titled "" with description
+    """
+    """
+    Then it prints "Error: Title is empty"
+    And it prints "Error: Description is empty"
+    And terminates with exit code ERROR
+
+  @wip
+  Scenario: creation with whitespace-only title is rejected
+    Given an empty issue repository
+    When we create an issue titled "   " with description
+    """
+    A valid description
+    """
+    Then it prints "Error: Title is empty"
+    And terminates with exit code ERROR
+
+  @wip
+  Scenario: creation with whitespace-only description is rejected
+    Given an empty issue repository
+    When we create an issue titled "Valid title" with description
+    """
+
+
+    """
+    Then it prints "Error: Description is empty"
+    And terminates with exit code ERROR
+
+  @wip
+  Scenario: title and description are trimmed before ID generation
+    Given an empty issue repository
+    When we create an issue titled "  Trimmed Title  " with description
+    """
+
+    Trimmed description
+
+    """
+    Then it prints "Issue created: tri-tit-yyy-zzz-[hash]"
+    And terminates with exit code OK

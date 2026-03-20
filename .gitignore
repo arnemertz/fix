@@ -1,14 +1,15 @@
-# Build directories
-out/
+# Build directory
 build/
-cmake-build-*/
 
-# Conan generated files
+# Conan generated files (all land inside build/ or the repo root)
 CMakeUserPresets.json
-conan_toolchain.cmake
-conanbuild.bat
-conanrun.bat
 
 # CMake generated files
 CMakeCache.txt
 CMakeFiles/
+
+# Fix data directory
+.fix/
+
+# Script output logs
+scripts/verify_log.txt

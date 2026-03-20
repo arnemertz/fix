@@ -1,6 +1,7 @@
 [requires]
 catch2/2.13.10
 cli11/2.3.2
+tomlplusplus/3.4.0
 
 [generators]
 CMakeDeps
