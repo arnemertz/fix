@@ -28,10 +28,10 @@ Subcommands:
 // Minimal fake: create() delegates to domain logic for ID generation;
 // list() returns an empty list. No repository, no filesystem.
 struct stub_issue_service : fix::domain::issue_service {
-  fix::domain::expected<std::string> create(std::string_view title,
-                                            std::string_view description) override {
+  fix::domain::expected<std::string> create(std::string_view title, std::string_view description) override {
     auto result = fix::domain::issue::create(title, description);
-    if (!result) return std::unexpected(result.error());
+    if (!result)
+      return std::unexpected(result.error());
     return result->id().to_string();
   }
 
@@ -122,8 +122,8 @@ TEST_CASE("List command prints number of issues") {
 
 TEST_CASE("Create issue command prints issue ID") {
   auto const& [title, description, id_prefix]
-  = GENERATE(std::tuple("this is a new issue", "some text", "thi-is-a-new"),
-             std::tuple("My first issue in Fix", "Dorem Fixum dolor sit amet", "my-fir-iss-in"));
+      = GENERATE(std::tuple("this is a new issue", "some text", "thi-is-a-new"),
+                 std::tuple("My first issue in Fix", "Dorem Fixum dolor sit amet", "my-fir-iss-in"));
 
   auto const [output, exit_code] = run_app({"create", "-t", title, "-d", description});
 

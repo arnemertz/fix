@@ -16,9 +16,8 @@ std::array<std::string, 4> title_segments(title const& t) {
   std::size_t i = 0;
 
   for (auto&& word : t.to_string() | rv::split(' ') | rv::take(4)) {
-    auto seg = word | rv::take(3)
-                    | rv::transform([](char c) { return static_cast<char>(std::tolower(c)); })
-                    | std::ranges::to<std::string>();
+    auto seg = word | rv::take(3) | rv::transform([](char c) { return static_cast<char>(std::tolower(c)); })
+             | std::ranges::to<std::string>();
     if (!seg.empty()) {
       segs[i++] = std::move(seg);
     }

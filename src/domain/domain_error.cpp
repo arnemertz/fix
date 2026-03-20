@@ -41,7 +41,7 @@ struct fix_error_category_t : std::error_category {
   };
 };
 
-const fix_error_category_t fix_error_category;
+fix_error_category_t const fix_error_category;
 } // namespace
 
 std::error_code make_error_code(domain_error error) {
