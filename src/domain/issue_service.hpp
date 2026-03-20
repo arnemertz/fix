@@ -1,12 +1,12 @@
 #ifndef FIX_SRC_DOMAIN_ISSUE_SERVICE_HPP
 #define FIX_SRC_DOMAIN_ISSUE_SERVICE_HPP
 
-#include "domain_error.hpp"
-#include "issue.hpp"
-
 #include <string>
 #include <string_view>
 #include <vector>
+
+#include "domain_error.hpp"
+#include "issue.hpp"
 
 namespace fix::domain {
 

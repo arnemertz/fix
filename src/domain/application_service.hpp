@@ -1,14 +1,14 @@
 #ifndef FIX_DOMAIN_APPLICATION_SERVICE_HPP
 #define FIX_DOMAIN_APPLICATION_SERVICE_HPP
 
+#include <string>
+#include <string_view>
+#include <vector>
+
 #include "domain_error.hpp"
 #include "issue.hpp"
 #include "issue_repository.hpp"
 #include "issue_service.hpp"
-
-#include <string>
-#include <string_view>
-#include <vector>
 
 namespace fix::domain {
 

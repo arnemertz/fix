@@ -1,11 +1,11 @@
 #ifndef FIX_SRC_DOMAIN_ISSUE_REPOSITORY_HPP
 #define FIX_SRC_DOMAIN_ISSUE_REPOSITORY_HPP
 
+#include <vector>
+
 #include "domain_error.hpp"
 #include "issue.hpp"
 #include "issue_id.hpp"
-
-#include <vector>
 
 namespace fix::domain {
 

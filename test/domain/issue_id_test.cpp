@@ -1,7 +1,6 @@
-#include <catch2/catch.hpp>
-
 #include "issue_id.hpp"
 
+#include <catch2/catch.hpp>
 #include <string>
 
 #include "description.hpp"

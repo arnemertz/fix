@@ -1,11 +1,11 @@
-#include <catch2/catch.hpp>
+#include "app.hpp"
 
+#include <catch2/catch.hpp>
 #include <format>
 #include <ranges>
 #include <sstream>
 #include <string_view>
 
-#include "app.hpp"
 #include "issue.hpp"
 #include "issue_service.hpp"
 

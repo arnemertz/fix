@@ -1,11 +1,11 @@
 #ifndef FIX_TEST_DOMAIN_IN_MEMORY_ISSUE_REPOSITORY_HPP
 #define FIX_TEST_DOMAIN_IN_MEMORY_ISSUE_REPOSITORY_HPP
 
-#include "issue_repository.hpp"
-
 #include <map>
 #include <ranges>
 #include <string>
+
+#include "issue_repository.hpp"
 
 namespace fix::test {
 

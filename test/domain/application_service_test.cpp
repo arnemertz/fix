@@ -1,10 +1,10 @@
-#include <catch2/catch.hpp>
-
 #include "application_service.hpp"
-#include "in_memory_issue_repository.hpp"
 
+#include <catch2/catch.hpp>
 #include <string>
 #include <tuple>
+
+#include "in_memory_issue_repository.hpp"
 using namespace std::literals;
 
 using fix::domain::application_service;

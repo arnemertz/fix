@@ -1,9 +1,9 @@
-#include <catch2/catch.hpp>
-
 #include "title.hpp"
 
-#include "catch2_expected_matcher.hpp"
+#include <catch2/catch.hpp>
 #include <string>
+
+#include "catch2_expected_matcher.hpp"
 
 using fix::domain::title;
 using namespace std::literals;
