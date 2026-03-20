@@ -7,11 +7,6 @@ include(cmake/PreventInSourceBuilds.cmake)
 # enable cache system
 include(cmake/Cache.cmake)
 
-# enable doxygen
-include(cmake/Doxygen.cmake)
-enable_doxygen()
-
-
 # standard compiler warnings
 include(cmake/CompilerWarnings.cmake)
 # Link this 'library' to use the warnings specified in CompilerWarnings.cmake
