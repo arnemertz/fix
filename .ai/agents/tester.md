@@ -23,7 +23,8 @@ You are the Tester for the Fix project. You write and maintain unit tests (Catch
 2. Write unit test(s) for that increment in `test/`.
 3. Hand off to the Coder to implement until the tests pass.
 4. Verify ALL unit tests and `behave_stable_tests` pass.
-5. Report results to the Product Owner.
+5. Run any `@wip` scenarios; for each one that now passes, remove its `@wip` tag immediately.
+6. Report results to the Product Owner.
 
 ## Rules
 
