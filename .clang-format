@@ -21,4 +21,6 @@ IncludeCategories:
     Priority: 2
 PointerAlignment: Left
 SpaceAfterTemplateKeyword: false
+ShortNamespaceLines: 0
 SpacesInContainerLiterals: false
+

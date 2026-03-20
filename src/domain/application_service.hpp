@@ -22,6 +22,6 @@ public:
   expected<std::vector<issue>> list() const override;
 };
 
-}
+} // namespace fix::domain
 
 #endif // FIX_DOMAIN_APPLICATION_SERVICE_HPP

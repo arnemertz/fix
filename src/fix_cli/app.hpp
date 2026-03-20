@@ -5,7 +5,7 @@
 
 namespace fix::domain {
 class issue_service;
-}
+} // namespace fix::domain
 
 namespace fix::cli {
 

@@ -39,6 +39,6 @@ struct is_error_code_enum<fix::domain::domain_error> : true_type {};
 
 namespace fix::domain {
 std::error_code make_error_code(domain_error);
-}
+} // namespace fix::domain
 
 #endif // FIX_SRC_DOMAIN_DOMAIN_ERROR_HPP

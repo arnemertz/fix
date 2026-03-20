@@ -17,8 +17,8 @@ TEST_CASE("Public construction of titles is only possible via copy, move") {
 }
 
 TEST_CASE("Titles can be converted back to strings") {
-  const auto title_text = GENERATE("just some normal title"sv, "another title"sv);
-  const auto title = title::create(title_text);
+  auto const title_text = GENERATE("just some normal title"sv, "another title"sv);
+  auto const title = title::create(title_text);
   CHECK(title->to_string() == title_text);
 }
 
@@ -27,7 +27,7 @@ TEST_CASE("Titles have restricted length") {
     CHECK_THAT(title::create(""), FailsWithMessage("Title is empty"));
   }
   SECTION("titles may not be too short") {
-    const auto& short_string = std::string(title::MIN_LENGTH - 1, 's');
+    auto const& short_string = std::string(title::MIN_LENGTH - 1, 's');
     CHECK_THAT(title::create(short_string), FailsWithMessage("title is too short"));
   }
   SECTION("titles may not be too long") {
@@ -35,9 +35,9 @@ TEST_CASE("Titles have restricted length") {
     CHECK_THAT(title::create(long_scream), FailsWithMessage("title is too long"));
   }
   SECTION("titles with a length in the allowed range can be created") {
-    const auto valid_string
-        = GENERATE(std::string(title::MIN_LENGTH, 'n'), std::string(title::MAX_LENGTH, 'x'), "some title with sufficient length"s);
-    const auto title = title::create(valid_string);
+    auto const valid_string = GENERATE(std::string(title::MIN_LENGTH, 'n'), std::string(title::MAX_LENGTH, 'x'),
+                                       "some title with sufficient length"s);
+    auto const title = title::create(valid_string);
     CHECK(title);
   }
 }
