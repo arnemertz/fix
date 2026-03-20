@@ -63,20 +63,16 @@ Visual Studio reads `CMakeUserPresets.json` automatically. After running Step 1:
 
 ## Running Tests
 
-### Unit tests
+### All non-wip tests (unit + stable behave)
 ```powershell
-ctest --test-dir build --output-on-failure -C Debug
+ctest --test-dir build --output-on-failure -C Debug -LE wip
 ```
 
-### Integration tests (behave)
-Run **stable** tests (excludes `@wip` and `@skip`):
+### WIP behave tests only
+Run from the `behave/` subdirectory:
 ```powershell
-behave -t ~skip -t ~wip
-```
-
-Run **WIP** tests only:
-```powershell
+cd behave
 behave -t wip --no-capture --no-logcapture
 ```
 
-Both are also registered as CTest targets (`behave_stable_tests`, `behave_wip_tests`) and can be run via CTest.
+The behave acceptance tests are also registered as individual CTest targets (`behave_stable_tests`, `behave_wip_tests`) and can be addressed by name via `ctest -R <target-name>`.

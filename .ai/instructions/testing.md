@@ -9,7 +9,8 @@ This file covers agent-specific conventions for writing and organising tests.
 ### Feature level (BDD-first)
 - After requirements and architecture are approved, the Tester writes Gherkin scenarios for the feature **before any implementation begins**.
 - New scenarios are tagged `@wip`. They are expected to fail initially.
-- The feature is considered done when all `@wip` scenarios pass and are promoted to stable.
+- **As soon as a `@wip` scenario passes, remove its tag immediately** — do not wait until the full feature is done.
+- The feature is considered done when all `@wip` scenarios have passed and had their tags removed.
 
 ### Commit level (TDD)
 - The Tester and Coder work in tandem on each behavioral increment.

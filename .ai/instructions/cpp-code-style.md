@@ -32,6 +32,11 @@ Follow [Jason Turner's C++ best practices](https://github.com/lefticus/cppbestpr
 - Use a private constructor + `static expected<T> create(...)` factory only when construction can fail and inputs must be validated.
 - `cppcheck-suppress functionStatic` is used where cppcheck false-positives on methods that will become non-static later.
 
+## Modern C++ Idioms
+
+- **Ranges**: prefer `std::ranges` algorithms over hand-written loops over containers where the intent is clearer (e.g. `std::ranges::find_if`, `std::ranges::transform`, range pipelines with `|`). Raw loops are acceptable when they are genuinely simpler or when performance considerations apply.
+- **Monadic operations**: prefer the monadic interface of `std::optional` (`and_then`, `transform`, `or_else`) and `fix::domain::expected` / `std::expected` (`and_then`, `transform`, `or_else`) over explicit `if`/`has_value` checks where the chain reads more clearly.
+
 ## Formatting
 
 - Formatting is handled by clang-format (`.clang-format`, LLVM base style).

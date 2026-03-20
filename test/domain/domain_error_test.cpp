@@ -1,8 +1,9 @@
+#include "domain_error.hpp"
+
 #include <catch2/catch.hpp>
 #include <string_view>
 
 #include "catch2_expected_matcher.hpp"
-#include "domain_error.hpp"
 
 using namespace fix::domain;
 using namespace std::literals;

@@ -25,6 +25,10 @@ Future stories and enhancements identified during development.
 - Collision probability is low; currently out of scope
 - Future consideration: If two different issues produce the same ID, detect and handle gracefully (e.g., append disambiguator, or warn user)
 
+### Malformed TOML Error Reporting
+- The TOML repository class currently silently ignores malformed or unreadable TOML files
+- Should warn or error when a `.toml` file cannot be parsed, so data corruption is visible to the user
+
 ---
 
 ## Meta

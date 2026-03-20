@@ -1,8 +1,9 @@
 #ifndef FIX_TEST_DOMAIN_CATCH2_EXPECTED_MATCHER_HPP
 #define FIX_TEST_DOMAIN_CATCH2_EXPECTED_MATCHER_HPP
 
-#include "domain_error.hpp"
 #include <catch2/catch.hpp>
+
+#include "domain_error.hpp"
 
 namespace fix::testing::detail {
 struct inspect_expect {

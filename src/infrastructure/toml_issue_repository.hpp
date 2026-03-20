@@ -1,9 +1,9 @@
 #ifndef FIX_SRC_INFRASTRUCTURE_TOML_ISSUE_REPOSITORY_HPP
 #define FIX_SRC_INFRASTRUCTURE_TOML_ISSUE_REPOSITORY_HPP
 
-#include "issue_repository.hpp"
-
 #include <filesystem>
+
+#include "issue_repository.hpp"
 
 namespace fix::infrastructure {
 

@@ -1,10 +1,10 @@
-#include <catch2/catch.hpp>
-
 #include "description.hpp"
-#include "catch2_expected_matcher.hpp"
 
+#include <catch2/catch.hpp>
 #include <string>
 #include <type_traits>
+
+#include "catch2_expected_matcher.hpp"
 
 using fix::domain::description;
 using namespace std::literals;

@@ -13,6 +13,12 @@ ConstructorInitializerAllOnOneLineOrOnePerLine: true
 QualifierAlignment: Right
 DeriveLineEnding: false
 IncludeIsMainRegex: '(_test)?$'
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex:    '^<'
+    Priority: 1
+  - Regex:    '^"'
+    Priority: 2
 PointerAlignment: Left
 SpaceAfterTemplateKeyword: false
 SpacesInContainerLiterals: false

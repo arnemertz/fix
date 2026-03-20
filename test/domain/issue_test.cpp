@@ -1,12 +1,12 @@
-#include <catch2/catch.hpp>
-
 #include "issue.hpp"
+
+#include <catch2/catch.hpp>
+#include <string>
 
 #include "catch2_expected_matcher.hpp"
 #include "description.hpp"
 #include "issue_id.hpp"
 #include "title.hpp"
-#include <string>
 
 using fix::domain::description;
 using fix::domain::issue;

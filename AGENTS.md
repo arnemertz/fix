@@ -65,6 +65,7 @@ fix/
 ## General Agent Rules
 
 - **No out-of-repository side effects**: No agent may perform any action with effects outside the repository (e.g., modifying global git or shell configuration, installing system packages, changing environment variables, writing files outside the repo root) unless the user has **explicitly requested** it. When in doubt, ask first rather than act.
+- **Ask for help after repeated failures**: If a build, Toolsmith task, or test run cannot be resolved after ~3 retries, stop and ask the user for help rather than looping further. Note: on Windows, C++ assertion failures may show a modal popup dialog that blocks the process — from an agent's perspective this looks like a hanging command. If a command appears to hang indefinitely, ask the user whether a dialog is waiting for dismissal.
 
 ---
 
