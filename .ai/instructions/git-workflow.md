@@ -25,10 +25,19 @@
 - Commit messages must be concise and must not note what *didn't* change.
 - Never amend commits or rewrite git history without an explicit request from the user. Only use `git commit --amend` or `git rebase` when specifically asked.
 
-## Pre-commit Rule
+## Pre-commit Checklist
 
-- ALL unit tests must pass before every commit — no exceptions.
-- `behave_stable_tests` must also pass before every commit.
+Run these steps in order before every commit — no exceptions:
+
+1. **clang-format** — apply to all modified `.cpp` and `.hpp` files:
+   ```
+   clang-format -i <modified files>
+   ```
+2. **Build** — the project must compile without errors.
+3. **Unit tests** — ALL unit tests must pass.
+4. **`behave_stable_tests`** — must pass.
+
+Additional rules:
 - Any commit that introduces new production code must include unit tests covering that new code.
 - Pure refactoring commits are exempt from the "include new tests" requirement, but must still pass all existing tests.
 - The Coder is encouraged to separate refactoring commits from behavioral increment commits to keep commits concise and satisfy these rules cleanly.
