@@ -75,4 +75,4 @@ cd behave
 behave -t wip --no-capture --no-logcapture
 ```
 
-Both are also registered as CTest targets (`behave_stable_tests`, `behave_wip_tests`) and can be run via CTest.
+The behave acceptance tests are also registered as individual CTest targets (`behave_stable_tests`, `behave_wip_tests`) and can be addressed by name via `ctest -R <target-name>`.
