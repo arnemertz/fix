@@ -34,8 +34,10 @@ Run these steps in order before every commit — no exceptions:
    clang-format -i <modified files>
    ```
 2. **Build** — the project must compile without errors.
-3. **Unit tests** — ALL unit tests must pass.
-4. **`behave_stable_tests`** — must pass.
+3. **Tests** — all non-wip tests must pass:
+   ```
+   ctest --test-dir build --output-on-failure -C Debug -LE wip
+   ```
 
 Additional rules:
 - Any commit that introduces new production code must include unit tests covering that new code.

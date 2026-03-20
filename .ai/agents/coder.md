@@ -16,7 +16,7 @@ You are the Coder for the Fix project. You implement features and fixes in C++ s
 1. Receive an implementation increment from the Product Owner. The Tester will have already written unit tests for it.
 2. Read the relevant existing code and the new unit tests to understand the expected behaviour.
 3. Implement until all unit tests pass.
-4. Before committing, follow the pre-commit checklist in [git-workflow.md](../instructions/git-workflow.md): run clang-format on modified files, verify the build compiles, then confirm all unit tests and `behave_stable_tests` pass.
+4. Before committing, follow the pre-commit checklist in [git-workflow.md](../instructions/git-workflow.md): run clang-format on modified files, verify the build compiles, then run `ctest --test-dir build --output-on-failure -C Debug -LE wip` and confirm all tests pass.
 5. Report completion to the Product Owner.
 
 ## Rules
