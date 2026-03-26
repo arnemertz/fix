@@ -24,7 +24,7 @@ TEST_CASE("Issues can be moved, but not copied or default-constructed") {
 TEST_CASE("Issue can be created with valid title and description") {
   auto const result = issue::create("Valid title", "Valid description");
   REQUIRE(result);
-  
+
   CHECK(result->get_title().to_string() == "Valid title");
   CHECK(result->get_description().to_string() == "Valid description");
 }
@@ -32,7 +32,7 @@ TEST_CASE("Issue can be created with valid title and description") {
 TEST_CASE("Issue creation trims title and description") {
   auto const result = issue::create("  Trimmed title  ", "  Trimmed description  ");
   REQUIRE(result);
-  
+
   CHECK(result->get_title().to_string() == "Trimmed title");
   CHECK(result->get_description().to_string() == "Trimmed description");
 }

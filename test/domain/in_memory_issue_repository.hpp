@@ -13,8 +13,7 @@ class in_memory_issue_repository : public domain::issue_repository {
   std::map<std::string, domain::issue> issues_;
 
   static domain::issue clone(domain::issue const& iss) {
-    return domain::issue::create(iss.get_title().to_string(),
-                                 iss.get_description().to_string()).value();
+    return domain::issue::create(iss.get_title().to_string(), iss.get_description().to_string()).value();
   }
 
 public:
@@ -26,9 +25,8 @@ public:
   }
 
   domain::expected<std::vector<domain::issue>> find_all() const override {
-    return issues_ | std::views::values
-                   | std::views::transform([](domain::issue const& iss) { return clone(iss); })
-                   | std::ranges::to<std::vector<domain::issue>>();
+    return issues_ | std::views::values | std::views::transform([](domain::issue const& iss) { return clone(iss); })
+         | std::ranges::to<std::vector<domain::issue>>();
   }
 
   bool exists(domain::issue_id const& id) const override {

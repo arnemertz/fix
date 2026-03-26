@@ -18,9 +18,10 @@ TEST_CASE("Issue IDs can be moved, but not default-constructed or copied") {
 }
 
 TEST_CASE("Issue ID is contains abbreviated first words of the title") {
-  auto const& [the_title, the_description, id_prefix] = GENERATE(
-      std::tuple(title::create("this is a new issue"), description::create("some text"), "thi-is-a-new"),
-      std::tuple(title::create("My first issue in Fix"), description::create("Dorem Fixum dolor sit amet"), "my-fir-iss-in"));
+  auto const& [the_title, the_description, id_prefix]
+      = GENERATE(std::tuple(title::create("this is a new issue"), description::create("some text"), "thi-is-a-new"),
+                 std::tuple(title::create("My first issue in Fix"), description::create("Dorem Fixum dolor sit amet"),
+                            "my-fir-iss-in"));
 
   REQUIRE(the_title);
   REQUIRE(the_description);
