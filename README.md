@@ -10,3 +10,5 @@ See http://arne-mertz.de/category/fix/ for more info.
 In the current state I won't accept pull requests.
 
 Resurrected in 2026 after a long hiatus to experiment with AI agents for software development.
+
+Just a test line.
